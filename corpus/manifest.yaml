@@ -1,0 +1,68 @@
+version: "0.1.0"
+corpus_id: "mit-6.046j-spring-2015-lecture-06"
+description: "Primary source manifest for the AlgoLens lecture tutor."
+default_license: "CC BY-NC-SA 4.0"
+
+sources:
+  - id: "L06_VIDEO"
+    lecture: 6
+    type: "video"
+    url: "https://archive.org/download/MIT6.046JS15/MIT6_046JS15_lec06_300k.mp4"
+    resource_page: "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-6-randomization-matrix-multiply-quicksort/"
+    licence: "CC BY-NC-SA 4.0"
+    sha256: null
+    tier: 1
+    trust: "primary"
+    scope: "randomized_quicksort"
+    status: "pending_download_and_hash"
+
+  - id: "L06_TRANSCRIPT"
+    lecture: 6
+    type: "official_transcript"
+    url: "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-6-randomization-matrix-multiply-quicksort/"
+    licence: "CC BY-NC-SA 4.0"
+    sha256: null
+    tier: 1
+    trust: "primary"
+    scope: "randomized_quicksort"
+    status: "verify_transcript_extraction"
+
+  - id: "L06_TYPED_NOTES"
+    lecture: 6
+    type: "typed_notes_pdf"
+    url: "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/cb55cb123a557eed0738a1187a452c24_MIT6_046JS15_lec06.pdf"
+    resource_page: "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-6-randomization-matrix-multiply-quicksort/"
+    licence: "CC BY-NC-SA 4.0"
+    sha256: "fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55"
+    local_path: "corpus/raw/L06_TYPED_NOTES.pdf"
+    tier: 1
+    trust: "primary"
+    scope: "randomized_quicksort"
+    status: "downloaded_hash_pinned_content_review_pending"
+
+  - id: "L06_HANDWRITTEN_NOTES"
+    lecture: 6
+    type: "handwritten_notes_pdf"
+    url: "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/7d59cd5e4d6cb323739deff687ed1bff_MIT6_046JS15_writtenlec6.pdf"
+    resource_page: "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-6-notes-handwritten/"
+    licence: "CC BY-NC-SA 4.0"
+    sha256: null
+    tier: 1
+    trust: "lower_than_typed_notes"
+    scope: "randomized_quicksort"
+    status: "pending_download_and_hash"
+
+  - id: "L06_YOUTUBE_CAPTIONS"
+    lecture: 6
+    type: "youtube_caption_track"
+    url: "https://www.youtube.com/watch?v=cNB2lADK3_s"
+    retrieval_method: "yt-dlp subtitles"
+    track_id: "en-qlPKC2UN_YU"
+    format: "vtt"
+    local_path: "corpus/raw/L06_CAPTIONS.en-qlPKC2UN_YU.vtt"
+    licence: "CC BY-NC-SA 4.0"
+    sha256: "3e6ce969b47c94fdfa7108eff91b2ec0029e5151b0b9f9a75b74f3df31beeed1"
+    tier: 1
+    trust: "caption_track_pending_spot_check"
+    scope: "randomized_quicksort"
+    status: "hash_pinned_content_review_pending"
