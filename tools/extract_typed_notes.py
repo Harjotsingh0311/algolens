@@ -31,7 +31,7 @@ def main() -> None:
         raise SystemExit("Typed-notes local_path is missing.")
 
     pdf_path = ROOT / local_path
-    output_path = ROOT / "corpus" / "processed" / "notes.md"
+    output_path = ROOT / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
 
     if not pdf_path.is_file():
         raise SystemExit(f"PDF not found: {pdf_path}")

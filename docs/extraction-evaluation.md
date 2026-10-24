@@ -59,3 +59,15 @@ This is a review of selected formula-bearing passages, not a complete validation
 The lecture PDF is MIT OpenCourseWare course material. Review the applicable source notices before redistributing derived content. MIT OpenCourseWare's general license is [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), subject to source-specific notices and exceptions.
 
 Derived source content must retain appropriate attribution, indicate changes, remain noncommercial, and follow the applicable share-alike terms. This source-content requirement is distinct from the license chosen for independently written application code.
+
+## Local artifact paths
+
+The automatic extraction experiments are stored under
+`corpus/experiments/pdf_extraction/`:
+
+- `notes.md` ? PyMuPDF4LLM extraction.
+- `notes_docling_cuda.md` ? Docling with the CUDA accelerator configured.
+- `notes_docling_cuda_torch_ocr.md` ? Docling with the Torch OCR backend.
+
+These are experimental outputs, not approved canonical lecture content.
+See the README in that directory for the limitations and handling policy.

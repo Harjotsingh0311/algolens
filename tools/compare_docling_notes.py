@@ -22,7 +22,7 @@ SOURCE_ID = "L06_TYPED_NOTES"
 EXPECTED_SHA256 = "fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55"
 
 DEFAULT_SOURCE = ROOT / "corpus" / "raw" / "L06_TYPED_NOTES.pdf"
-OUTPUT_PATH = ROOT / "corpus" / "processed" / "notes_docling_cuda_torch_ocr.md"
+OUTPUT_PATH = ROOT / "corpus" / "experiments" / "pdf_extraction" / "notes_docling_cuda_torch_ocr.md"
 
 # Lines matching likely formulas, notation, or important lecture topics.
 CANDIDATE_PATTERN = re.compile(
@@ -220,8 +220,8 @@ def main() -> None:
 
     # Compare the available extraction outputs without modifying them.
     comparison_files = [
-        ROOT / "corpus" / "processed" / "notes.md",
-        ROOT / "corpus" / "processed" / "notes_docling.md",
+        ROOT / "corpus" / "experiments" / "pdf_extraction" / "notes.md",
+        ROOT / "corpus" / "experiments" / "pdf_extraction" / "notes_docling.md",
         OUTPUT_PATH,
     ]
 
