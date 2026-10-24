@@ -1,0 +1,103 @@
+{
+  "child_count": 32,
+  "chunking_parameters": {
+    "child_max_words": 200,
+    "child_min_words": 120,
+    "child_target_words": 160,
+    "parent_max_words": 600,
+    "parent_min_words": 400,
+    "parent_target_words": 480
+  },
+  "outputs": {
+    "children": "corpus/experiments/chunking/children.jsonl",
+    "parents": "corpus/experiments/chunking/parents.jsonl"
+  },
+  "parent_count": 12,
+  "quality_note": "Chunk sizes are approximate. Small terminal chunks may occur. The chunker preserves provenance but does not verify extracted mathematics or caption accuracy.",
+  "schema_version": 1,
+  "sources": [
+    {
+      "artifact_sha256": "8406a9ec236772085ea15ee921825797949231d2baf995ba5fbf954662e87817",
+      "child_count": 4,
+      "child_word_counts": [
+        190,
+        134,
+        84,
+        151
+      ],
+      "parent_count": 2,
+      "parent_word_counts": [
+        408,
+        151
+      ],
+      "parser": "pdf",
+      "review_status": "unreviewed_extraction",
+      "scope_filter": "quicksort_sections",
+      "scope_note": "Keep Quicksort, basic Quicksort, pivot selection, randomized Quicksort, paranoid Quicksort, and related expectations sections.",
+      "source_id": "L06_TYPED_NOTES",
+      "source_path": "corpus/experiments/pdf_extraction/notes.md",
+      "source_sha256_verified": "fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55",
+      "time_start_seconds": null,
+      "unit_count": 44,
+      "word_count": 559
+    },
+    {
+      "artifact_sha256": "f1c084dbee2194e0fd746287c79042566918c8e3da9d67719259d771e3fe5668",
+      "child_count": 28,
+      "child_word_counts": [
+        160,
+        162,
+        166,
+        166,
+        165,
+        155,
+        160,
+        160,
+        160,
+        160,
+        166,
+        154,
+        170,
+        166,
+        146,
+        166,
+        168,
+        152,
+        167,
+        164,
+        152,
+        161,
+        165,
+        157,
+        166,
+        125,
+        110,
+        148
+      ],
+      "parent_count": 10,
+      "parent_word_counts": [
+        488,
+        486,
+        480,
+        480,
+        482,
+        486,
+        483,
+        483,
+        401,
+        148
+      ],
+      "parser": "transcript",
+      "review_status": "pending_spot_check",
+      "scope_filter": "timestamp_lower_bound",
+      "scope_note": "Start at the Quicksort transition cue at 2997.340 seconds. Earlier mentions are introductory references rather than the sustained Quicksort section.",
+      "source_id": "L06_YOUTUBE_CAPTIONS",
+      "source_path": "corpus/processed/transcript.jsonl",
+      "source_sha256_verified": "3e6ce969b47c94fdfa7108eff91b2ec0029e5151b0b9f9a75b74f3df31beeed1",
+      "time_start_seconds": 2997.34,
+      "unit_count": 554,
+      "word_count": 4417
+    }
+  ],
+  "status": "experimental_unreviewed_chunks"
+}
