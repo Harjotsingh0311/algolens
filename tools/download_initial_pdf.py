@@ -14,10 +14,7 @@ MAX_BYTES = 25 * 1024 * 1024
 
 def main() -> None:
     manifest = load_manifest(ROOT / "corpus" / "manifest.yaml")
-    matches = [
-        source for source in manifest["sources"]
-        if source["id"] == SOURCE_ID
-    ]
+    matches = [source for source in manifest["sources"] if source["id"] == SOURCE_ID]
 
     if len(matches) != 1:
         raise SystemExit(f"Expected exactly one source record for {SOURCE_ID}.")
@@ -25,9 +22,7 @@ def main() -> None:
     source = matches[0]
 
     if source.get("sha256") is not None:
-        raise SystemExit(
-            "This source already has a pinned hash. Use the verified downloader."
-        )
+        raise SystemExit("This source already has a pinned hash. Use the verified downloader.")
 
     url = source.get("url")
     if not isinstance(url, str):
@@ -45,9 +40,7 @@ def main() -> None:
     temporary = destination.with_name(destination.name + ".part")
 
     if destination.exists():
-        raise SystemExit(
-            f"Destination already exists: {destination}. Inspect it first."
-        )
+        raise SystemExit(f"Destination already exists: {destination}. Inspect it first.")
 
     digest = hashlib.sha256()
     total_bytes = 0
@@ -65,9 +58,7 @@ def main() -> None:
             with client.stream("GET", url) as response:
                 response.raise_for_status()
                 final_url = str(response.url)
-                content_type = response.headers.get(
-                    "content-type", "unknown"
-                )
+                content_type = response.headers.get("content-type", "unknown")
 
                 final_host = response.url.host
                 if final_host not in {
@@ -75,15 +66,11 @@ def main() -> None:
                     "www.ocw.mit.edu",
                     "live.ocw.mit.edu",
                 }:
-                    raise RuntimeError(
-                        f"Unexpected final host after redirect: {final_host}"
-                    )
+                    raise RuntimeError(f"Unexpected final host after redirect: {final_host}")
 
                 declared_size = response.headers.get("content-length")
                 if declared_size and int(declared_size) > MAX_BYTES:
-                    raise RuntimeError(
-                        f"Response exceeds the {MAX_BYTES:,}-byte size limit."
-                    )
+                    raise RuntimeError(f"Response exceeds the {MAX_BYTES:,}-byte size limit.")
 
                 with temporary.open("wb") as output:
                     for chunk in response.iter_bytes(64 * 1024):
@@ -92,9 +79,7 @@ def main() -> None:
 
                         total_bytes += len(chunk)
                         if total_bytes > MAX_BYTES:
-                            raise RuntimeError(
-                                f"Download exceeded {MAX_BYTES:,} bytes."
-                            )
+                            raise RuntimeError(f"Download exceeded {MAX_BYTES:,} bytes.")
 
                         if len(prefix) < 5:
                             prefix.extend(chunk[: 5 - len(prefix)])
@@ -103,9 +88,7 @@ def main() -> None:
                         output.write(chunk)
 
         if bytes(prefix) != b"%PDF-":
-            raise RuntimeError(
-                "Downloaded content does not have a PDF signature."
-            )
+            raise RuntimeError("Downloaded content does not have a PDF signature.")
 
         if total_bytes == 0:
             raise RuntimeError("Downloaded file is empty.")

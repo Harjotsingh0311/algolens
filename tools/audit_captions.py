@@ -3,12 +3,7 @@ import re
 from pathlib import Path
 
 project = Path(__file__).resolve().parents[1]
-caption_path = (
-    project
-    / "corpus"
-    / "raw"
-    / "L06_CAPTIONS.en-qlPKC2UN_YU.vtt"
-)
+caption_path = project / "corpus" / "raw" / "L06_CAPTIONS.en-qlPKC2UN_YU.vtt"
 
 if not caption_path.is_file():
     raise SystemExit(f"FAIL: Caption file not found: {caption_path}")
@@ -27,9 +22,11 @@ matches = list(pattern.finditer(raw))
 if not matches:
     raise SystemExit("FAIL: No timestamp cues found.")
 
+
 def seconds(value: str) -> float:
     hours, minutes, remainder = value.split(":")
     return int(hours) * 3600 + int(minutes) * 60 + float(remainder)
+
 
 issues: list[str] = []
 max_gap = 0.0
@@ -50,10 +47,8 @@ for i, match in enumerate(matches):
     if i and start > previous_end:
         max_gap = max(max_gap, start - previous_end)
 
-    next_position = (
-        matches[i + 1].start() if i + 1 < len(matches) else len(raw)
-    )
-    cue_text = raw[match.end():next_position]
+    next_position = matches[i + 1].start() if i + 1 < len(matches) else len(raw)
+    cue_text = raw[match.end() : next_position]
     cue_text = re.sub(r"<[^>]*>", " ", cue_text)
     cue_text = re.sub(r"&(?:amp|lt|gt|nbsp);", " ", cue_text)
     cue_text = re.sub(r"\s+", " ", cue_text).strip()

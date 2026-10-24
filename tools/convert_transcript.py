@@ -15,16 +15,10 @@ def main() -> None:
     manifest_path = ROOT / "corpus" / "manifest.yaml"
     manifest = load_manifest(manifest_path)
 
-    matches = [
-        source
-        for source in manifest["sources"]
-        if source["id"] == SOURCE_ID
-    ]
+    matches = [source for source in manifest["sources"] if source["id"] == SOURCE_ID]
 
     if len(matches) != 1:
-        raise SystemExit(
-            f"Expected exactly one manifest record for {SOURCE_ID}."
-        )
+        raise SystemExit(f"Expected exactly one manifest record for {SOURCE_ID}.")
 
     record = matches[0]
     expected_hash = record.get("sha256")
@@ -59,10 +53,7 @@ def main() -> None:
 
     output_path = convert_vtt_to_jsonl(source_path, destination)
 
-    rows = [
-        json.loads(line)
-        for line in output_path.read_text(encoding="utf-8").splitlines()
-    ]
+    rows = [json.loads(line) for line in output_path.read_text(encoding="utf-8").splitlines()]
 
     if not rows:
         raise SystemExit("Conversion produced no transcript records.")
@@ -77,9 +68,7 @@ def main() -> None:
             raise SystemExit(f"Record {number} is not a JSON object.")
 
         if set(row) != {"start", "end", "text"}:
-            raise SystemExit(
-                f"Record {number} has unexpected fields: {list(row)}"
-            )
+            raise SystemExit(f"Record {number} has unexpected fields: {list(row)}")
 
         start = row["start"]
         end = row["end"]
@@ -103,9 +92,7 @@ def main() -> None:
             raise SystemExit(f"Empty transcript text in record {number}.")
 
         if start - previous_end > 30:
-            raise SystemExit(
-                f"Gap greater than 30 seconds at record {number}."
-            )
+            raise SystemExit(f"Gap greater than 30 seconds at record {number}.")
 
         if start > previous_end:
             largest_gap = max(largest_gap, start - previous_end)
