@@ -16,6 +16,9 @@ dependencies = [
     "PyYAML>=6.0.2,<7.0",
 ]
 
+[project.optional-dependencies]
+extraction = ["docling>=2.142.1"]
+
 [dependency-groups]
 dev = [
     "mypy>=1.15,<2.0",

@@ -24,3 +24,6 @@ Thumbs.db
 # Local manifest recovery artifacts
 corpus/manifest.yaml.bak.*
 corpus/manifest.repair.tmp
+
+# Local dependency-environment snapshots
+before_cuda_install.txt
