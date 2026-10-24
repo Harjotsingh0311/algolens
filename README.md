@@ -1,32 +1,43 @@
 # AlgoLens
 
-**A citation-first, evidence-grounded RAG tutor for MIT 6.046J.**
+**A citation-first RAG tutor for MIT 6.046J Lecture 6.**
 
-AlgoLens is designed to answer questions about Randomized Quicksort using the
-lecture corpus, trace every answer to supporting passages, and abstain when
+AlgoLens is being built to answer questions about Randomized Quicksort using
+approved course material, trace answers to source passages, and abstain when
 the available evidence is insufficient.
 
-## Current status
+## Current status — 25 October 2026
 
-Phase 0: repository foundation.
+### Implemented
 
-The ingestion pipeline, search index, answer generation, application, and
-deployment have not yet been completed. Evaluation numbers and deployment
-URLs will be added only after they have been measured or verified.
+- Python 3.12 development environment and reproducible dependency lockfile.
+- Validated source manifest with source IDs, URLs, licences, and SHA-256 metadata.
+- SHA-256 verification and safe temporary-file download logic.
+- VTT caption auditing and timestamped JSONL transcript conversion.
+- Page-aware PDF-to-Markdown extraction with unit tests.
+- Pytest, Ruff, mypy, documentation, and GitHub Actions CI foundation.
 
-## Planned capabilities
+### Source data verified locally
 
-- Source manifests and SHA-256 integrity checks.
-- Timestamped transcript passages and page-aware lecture notes.
-- Parent-child teaching chunks and contextual headers.
-- Hybrid BM25 and dense retrieval, merged with reciprocal rank fusion.
-- Cross-encoder reranking.
-- Evidence-aware abstention.
-- Sentence-level citations and claim-level verification.
-- Groq/Ollama provider adapter and response caching.
-- Gradio interface, evaluation report, and automated CI.
+- YouTube caption track: 1,458 cues converted to `corpus/processed/transcript.jsonl`.
+- Captions SHA-256: `3e6ce969b47c94fdfa7108eff91b2ec0029e5151b0b9f9a75b74f3df31beeed1`.
+- Typed notes PDF SHA-256: `fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55`.
+- Both raw source files remain in the git-ignored `corpus/raw/` directory.
 
-## Local setup
+Hashes identify exact files, not their factual accuracy. Caption spot-checking and
+review of the extracted mathematical content remain necessary.
+
+### Not yet implemented or completed
+
+- Actual extraction and manual formula review of the downloaded notes PDF.
+- Final transcript/source alignment and teach-unit chunking.
+- Dense embeddings, BM25 retrieval, RRF, and cross-encoder reranking.
+- Abstention calibration, cited generation, and independent claim verification.
+- Gradio application, evaluation runs, ablations, and live deployment.
+
+No retrieval metrics, answer-quality scores, or live demo URL are claimed yet.
+
+## Local development
 
 Python 3.12 is required.
 
@@ -38,16 +49,7 @@ uv run mypy src
 uv run pytest -q
 ```
 
-## Data and licensing
+## Licensing
 
-Raw MIT lecture files belong in the git-ignored `corpus/raw/` directory.
-Processed course material must retain the required attribution and applicable
-Creative Commons terms. See `CONTENT-LICENSE.md` and `docs/sources.md`.
-
-## Documentation
-
-- `docs/concept.md` — project goals and rules.
-- `docs/contract.md` — interfaces and data models.
-- `docs/tests.md` — acceptance-test catalogue.
-- `docs/architecture.md` — system architecture.
-- `docs/refinement.md` — measured changes and results.
+See `CONTENT-LICENSE.md` and `docs/sources.md` for MIT OpenCourseWare attribution
+and the project's third-party content handling policy.
