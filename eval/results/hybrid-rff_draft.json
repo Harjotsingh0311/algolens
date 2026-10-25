@@ -1,0 +1,2412 @@
+{
+  "report_version": 1,
+  "evaluation_status": "provisional_draft_labels",
+  "diagnostic_only": true,
+  "answer_generation_permitted": false,
+  "retriever": "hybrid-rff",
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "dense_device": "cuda:0",
+  "question_set_path": "eval/gold/questions_v0.jsonl",
+  "question_set_sha256": "34d1c6c8dd6d6dff4f9126d1e72e5ba80cc2d3c6489fca1497b9d746488c17a3",
+  "corpus_path": "corpus/experiments/chunking/children.jsonl",
+  "corpus_sha256": "3e08079e6eca9f60a5c14e8b4a00d35607209c4aec2d7d292401a10d21d2ad1a",
+  "label_status_counts": {
+    "draft_needs_human_review": 30,
+    "reviewed_or_human_verified": 0
+  },
+  "retrieval_depth": 10,
+  "candidate_depth": 10,
+  "answerable_question_count": 25,
+  "unanswerable_question_count": 5,
+  "retrieval_metrics": {
+    "recall@1": 0.2633333333333333,
+    "recall@3": 0.5466666666666666,
+    "recall@5": 0.6333333333333333,
+    "recall@10": 0.8,
+    "mrr@10": 0.6924444444444444,
+    "ndcg@10": 0.6461784232048144
+  },
+  "retrieval_metrics_by_type": {
+    "compare": {
+      "recall@1": 0.20833333333333331,
+      "recall@3": 0.625,
+      "recall@5": 0.8333333333333333,
+      "recall@10": 0.9166666666666666,
+      "mrr@10": 0.7083333333333334,
+      "ndcg@10": 0.7102155874264178
+    },
+    "definition_recall": {
+      "recall@1": 0.1,
+      "recall@3": 0.4,
+      "recall@5": 0.5,
+      "recall@10": 1.0,
+      "mrr@10": 0.4288888888888889,
+      "ndcg@10": 0.5839222663890639
+    },
+    "multi_hop": {
+      "recall@1": 0.14583333333333331,
+      "recall@3": 0.4583333333333333,
+      "recall@5": 0.5416666666666666,
+      "recall@10": 0.6666666666666666,
+      "mrr@10": 0.7083333333333334,
+      "ndcg@10": 0.5808617862881928
+    },
+    "procedure_trace": {
+      "recall@1": 0.20833333333333331,
+      "recall@3": 0.375,
+      "recall@5": 0.375,
+      "recall@10": 0.4583333333333333,
+      "mrr@10": 0.5416666666666666,
+      "ndcg@10": 0.44507691193291515
+    },
+    "why_reasoning": {
+      "recall@1": 0.4791666666666667,
+      "recall@3": 0.7291666666666666,
+      "recall@5": 0.7916666666666666,
+      "recall@10": 0.8541666666666666,
+      "mrr@10": 0.9166666666666666,
+      "ndcg@10": 0.7862790131981171
+    }
+  },
+  "per_question": [
+    {
+      "question_id": "GQ001",
+      "question_type": "definition_recall",
+      "gold_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.5,
+        "recall@5": 0.5,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "ndcg@10": 0.5249810332008933
+      }
+    },
+    {
+      "question_id": "GQ002",
+      "question_type": "definition_recall",
+      "gold_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.5,
+        "recall@5": 0.5,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "ndcg@10": 0.5912352048230277
+      }
+    },
+    {
+      "question_id": "GQ003",
+      "question_type": "definition_recall",
+      "gold_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+      ],
+      "metrics": {
+        "recall@1": 0.5,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0
+      }
+    },
+    {
+      "question_id": "GQ004",
+      "question_type": "definition_recall",
+      "gold_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.0,
+        "recall@5": 0.5,
+        "recall@10": 1.0,
+        "mrr@10": 0.2,
+        "ndcg@10": 0.4415801103577823
+      }
+    },
+    {
+      "question_id": "GQ005",
+      "question_type": "definition_recall",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.1111111111111111,
+        "ndcg@10": 0.36181498356361597
+      }
+    },
+    {
+      "question_id": "GQ006",
+      "question_type": "why_reasoning",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003"
+      ],
+      "retrieved_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.5,
+        "recall@5": 0.5,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "ndcg@10": 0.4911492931622974
+      }
+    },
+    {
+      "question_id": "GQ007",
+      "question_type": "why_reasoning",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003"
+      ],
+      "metrics": {
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0
+      }
+    },
+    {
+      "question_id": "GQ008",
+      "question_type": "why_reasoning",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.5,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.9197207891481876
+      }
+    },
+    {
+      "question_id": "GQ009",
+      "question_type": "why_reasoning",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002"
+      ],
+      "metrics": {
+        "recall@1": 0.5,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0
+      }
+    },
+    {
+      "question_id": "GQ010",
+      "question_type": "why_reasoning",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002"
+      ],
+      "metrics": {
+        "recall@1": 0.5,
+        "recall@3": 0.5,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.8772153153380493
+      }
+    },
+    {
+      "question_id": "GQ011",
+      "question_type": "why_reasoning",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.5,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.9197207891481876
+      }
+    },
+    {
+      "question_id": "GQ012",
+      "question_type": "why_reasoning",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.5,
+        "recall@3": 0.5,
+        "recall@5": 0.5,
+        "recall@10": 0.5,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.6131471927654584
+      }
+    },
+    {
+      "question_id": "GQ013",
+      "question_type": "why_reasoning",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+      ],
+      "metrics": {
+        "recall@1": 0.3333333333333333,
+        "recall@3": 0.3333333333333333,
+        "recall@5": 0.3333333333333333,
+        "recall@10": 0.3333333333333333,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.46927872602275644
+      }
+    },
+    {
+      "question_id": "GQ014",
+      "question_type": "procedure_trace",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "ndcg@10": 0.0
+      }
+    },
+    {
+      "question_id": "GQ015",
+      "question_type": "procedure_trace",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+      ],
+      "metrics": {
+        "recall@1": 0.5,
+        "recall@3": 0.5,
+        "recall@5": 0.5,
+        "recall@10": 0.5,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.6131471927654584
+      }
+    },
+    {
+      "question_id": "GQ016",
+      "question_type": "procedure_trace",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003"
+      ],
+      "metrics": {
+        "recall@1": 0.3333333333333333,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0
+      }
+    },
+    {
+      "question_id": "GQ017",
+      "question_type": "procedure_trace",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.3333333333333333,
+        "mrr@10": 0.16666666666666666,
+        "ndcg@10": 0.16716045496620227
+      }
+    },
+    {
+      "question_id": "GQ018",
+      "question_type": "compare",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "ndcg@10": 0.6934264036172708
+      }
+    },
+    {
+      "question_id": "GQ019",
+      "question_type": "compare",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.3333333333333333,
+        "recall@5": 0.6666666666666666,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "ndcg@10": 0.5931729515195112
+      }
+    },
+    {
+      "question_id": "GQ020",
+      "question_type": "compare",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+      ],
+      "metrics": {
+        "recall@1": 0.5,
+        "recall@3": 0.5,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.8503449055347546
+      }
+    },
+    {
+      "question_id": "GQ021",
+      "question_type": "compare",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.3333333333333333,
+        "recall@3": 0.6666666666666666,
+        "recall@5": 0.6666666666666666,
+        "recall@10": 0.6666666666666666,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.7039180890341347
+      }
+    },
+    {
+      "question_id": "GQ022",
+      "question_type": "multi_hop",
+      "gold_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+      ],
+      "metrics": {
+        "recall@1": 0.3333333333333333,
+        "recall@3": 0.6666666666666666,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.9469024295259745
+      }
+    },
+    {
+      "question_id": "GQ023",
+      "question_type": "multi_hop",
+      "gold_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.6666666666666666,
+        "recall@5": 0.6666666666666666,
+        "recall@10": 0.6666666666666666,
+        "mrr@10": 0.5,
+        "ndcg@10": 0.5307212739772434
+      }
+    },
+    {
+      "question_id": "GQ024",
+      "question_type": "multi_hop",
+      "gold_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.0,
+        "recall@3": 0.25,
+        "recall@5": 0.25,
+        "recall@10": 0.5,
+        "mrr@10": 0.3333333333333333,
+        "ndcg@10": 0.32531670832675136
+      }
+    },
+    {
+      "question_id": "GQ025",
+      "question_type": "multi_hop",
+      "gold_passage_ids": [
+        "L06_TYPED_NOTES-parent-0002-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001"
+      ],
+      "retrieved_passage_ids": [
+        "L06_TYPED_NOTES-parent-0002-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001"
+      ],
+      "metrics": {
+        "recall@1": 0.25,
+        "recall@3": 0.25,
+        "recall@5": 0.25,
+        "recall@10": 0.5,
+        "mrr@10": 1.0,
+        "ndcg@10": 0.5205067333228022
+      }
+    }
+  ],
+  "unanswerable_evaluation_note": "Unanswerable questions are excluded from retrieval relevance metrics. This report does not measure abstention or answer quality.",
+  "query_traces": [
+    {
+      "question_id": "GQ001",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ002",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ003",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ004",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ005",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ006",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ007",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ008",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ009",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ010",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ011",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ012",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ013",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ014",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ015",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ016",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ017",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ018",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ019",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+        ],
+        "dense": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ020",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ021",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ022",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ023",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ024",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ025",
+      "answerable": true,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0002-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ026",
+      "answerable": false,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ027",
+      "answerable": false,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ028",
+      "answerable": false,
+      "ranked_passage_ids": [
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_TYPED_NOTES-parent-0001-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ029",
+      "answerable": false,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_TYPED_NOTES-parent-0001-child-0001"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0002-child-0002"
+        ]
+      }
+    },
+    {
+      "question_id": "GQ030",
+      "answerable": false,
+      "ranked_passage_ids": [
+        "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0002",
+        "L06_TYPED_NOTES-parent-0001-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+        "L06_TYPED_NOTES-parent-0002-child-0001",
+        "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+        "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003"
+      ],
+      "component_rankings": {
+        "bm25": [
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0004-child-0003",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0001-child-0002"
+        ],
+        "dense": [
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0010-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0005-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0001"
+        ],
+        "hybrid_rff": [
+          "L06_YOUTUBE_CAPTIONS-parent-0009-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0002",
+          "L06_TYPED_NOTES-parent-0001-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0003-child-0002",
+          "L06_TYPED_NOTES-parent-0002-child-0001",
+          "L06_YOUTUBE_CAPTIONS-parent-0008-child-0003",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0002",
+          "L06_YOUTUBE_CAPTIONS-parent-0007-child-0003"
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Gold labels are draft until every question is human-reviewed.",
+    "The corpus contains unreviewed extracted notes and pending-review captions.",
+    "Unanswerable questions are not used to calculate retrieval Recall, MRR, or nDCG.",
+    "This is a retrieval evaluation, not an answer-quality or abstention evaluation."
+  ]
+}
