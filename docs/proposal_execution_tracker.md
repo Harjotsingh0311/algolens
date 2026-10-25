@@ -29,7 +29,7 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 234 tests passed; Ruff lint and format checks passed; Mypy passed for 26 source files. The checkpoint was committed and pushed to GitHub as `fa1756d`; local branch tracked `origin/main`. | Verified 2026-10-26 |
+| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 237 tests passed; Ruff lint and format checks passed; Mypy passed for 26 source files. The checkpoint was committed and pushed to GitHub as `fa1756d`; local branch tracked `origin/main`. | Verified 2026-10-26 |
 | Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented and tested as a reusable component |
 | Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
 | Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; 8 focused tests passed for flow, metadata preservation and eligibility controls. | Reusable component implemented; application endpoint/UI wiring pending |
@@ -137,3 +137,6 @@ The captions are auto-generated and are not independently verified against the v
 
 
 - **Provider hardening follow-up:** the fallback chain now independently rechecks review status and answer eligibility and rejects duplicate passage IDs before invoking any provider. A fallback-prefix configuration test was added; no live API keys or network calls are required for CI.
+
+
+- **Verified evidence-guard CI:** commit `dabc9a1` passed GitHub Actions on 2026-10-25. Ruff lint and format checks passed, strict mypy passed for 28 source files, and `pytest` reported **237 passed**.
