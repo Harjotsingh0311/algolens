@@ -134,3 +134,6 @@ The captions are auto-generated and are not independently verified against the v
 
 - **Verified provider failover CI:** commit `550a740` passed GitHub Actions on 2026-10-25: Ruff lint passed, 57 files formatted, mypy found no issues in 28 source files, and `pytest` reported **234 passed**.
 - **Important final gates still open:** the canonical notes passages remain retrieval-disabled; all 30 gold questions remain draft-labelled; the 80-question set and leakage-safe 50/30 split are not ready for final evaluation. The public app stays in safe mode until explicit review and evaluation gates are complete.
+
+
+- **Provider hardening follow-up:** the fallback chain now independently rechecks review status and answer eligibility and rejects duplicate passage IDs before invoking any provider. A fallback-prefix configuration test was added; no live API keys or network calls are required for CI.

@@ -58,4 +58,4 @@ before its implementation is not sufficient evidence that the test detects the b
 - T8.1: Recall@5 and faithfulness remain within two percentage points
   of the saved development baseline.
 
-These are planned acceptance tests. They are not all implemented or passing yet.
+T7.1's deterministic provider-chain and sources-only tests are implemented and pass in CI; live provider rate-limit behavior still needs a controlled integration test. T7.2's secret-redaction behavior is covered by unit tests but must also be reviewed with deployment logs. T8.1 still requires reviewed labels and a frozen development baseline.

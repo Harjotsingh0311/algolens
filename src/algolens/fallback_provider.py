@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from algolens.answering import AnswerDraft, AnswerProvider
-from algolens.contracts import Hit
+from algolens.contracts import APPROVED_REVIEW_STATUSES, Hit
 
 
 class ProviderChainError(RuntimeError):
@@ -36,7 +36,18 @@ class FallbackAnswerProvider:
         if not evidence:
             raise ValueError("At least one approved evidence passage is required.")
 
-        evidence_ids = {hit.passage.id for hit in evidence}
+        evidence_ids: set[str] = set()
+        for hit in evidence:
+            passage = hit.passage
+            if (
+                passage.eligible_for_answer is not True
+                or passage.review_status.strip().casefold() not in APPROVED_REVIEW_STATUSES
+            ):
+                raise ValueError("Provider chain requires explicitly approved evidence.")
+            if passage.id in evidence_ids:
+                raise ValueError("Evidence contains duplicate passage IDs.")
+            evidence_ids.add(passage.id)
+
         for provider in self.providers:
             try:
                 raw_draft = provider.generate(

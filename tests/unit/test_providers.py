@@ -339,3 +339,21 @@ def test_from_env_loads_dotenv_from_project_root(
     assert observed["path"] == expected_path
     assert observed["override"] is False
     assert provider.base_url == "http://localhost:11434/v1"
+
+
+
+def test_from_env_supports_optional_fallback_prefix(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ALGOLENS_FALLBACK_PROVIDER", "groq")
+    monkeypatch.setenv("ALGOLENS_FALLBACK_API_KEY", "test-fallback-key")
+    monkeypatch.delenv("ALGOLENS_FALLBACK_BASE_URL", raising=False)
+    monkeypatch.delenv("ALGOLENS_FALLBACK_MODEL", raising=False)
+    monkeypatch.delenv("ALGOLENS_FALLBACK_TIMEOUT_SECONDS", raising=False)
+
+    provider = OpenAICompatibleProvider.from_env(prefix="ALGOLENS_FALLBACK_")
+
+    assert provider.base_url == "https://api.groq.com/openai/v1"
+    assert provider.model == "openai/gpt-oss-120b"
+    assert provider.api_key == "test-fallback-key"
+    assert provider.timeout_seconds == 30.0

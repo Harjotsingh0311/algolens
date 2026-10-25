@@ -10,7 +10,9 @@ from algolens.contracts import CitationReference, Claim, Hit, Passage
 from algolens.fallback_provider import FallbackAnswerProvider, ProviderChainError
 
 
-def approved_hit() -> Hit:
+def approved_hit(
+    *, review_status: str = "reviewed", eligible_for_answer: bool = True
+) -> Hit:
     passage = Passage(
         id="passage-001",
         lecture=6,
@@ -24,8 +26,8 @@ def approved_hit() -> Hit:
             page_end=5,
         ),
         source_id="L06_TYPED_NOTES",
-        review_status="reviewed",
-        eligible_for_answer=True,
+        review_status=review_status,
+        eligible_for_answer=eligible_for_answer,
     )
     return Hit(passage=passage, score=0.9, ranks={"hybrid": 1})
 
@@ -137,5 +139,31 @@ def test_provider_chain_rejects_empty_evidence_before_calling_provider() -> None
 
     with pytest.raises(ValueError, match="evidence"):
         chain.generate("Question?", [], allow_partial=False)
+
+    assert provider.calls == 0
+
+
+
+def test_provider_chain_rejects_unapproved_evidence_without_calling_provider() -> None:
+    provider = StubProvider()
+    chain = FallbackAnswerProvider([provider])
+    unapproved = approved_hit(
+        review_status="candidate_review_pending",
+        eligible_for_answer=False,
+    )
+
+    with pytest.raises(ValueError, match="explicitly approved"):
+        chain.generate("Question?", [unapproved], allow_partial=False)
+
+    assert provider.calls == 0
+
+
+def test_provider_chain_rejects_duplicate_evidence_ids_without_calling_provider() -> None:
+    provider = StubProvider()
+    chain = FallbackAnswerProvider([provider])
+    evidence = approved_hit()
+
+    with pytest.raises(ValueError, match="duplicate"):
+        chain.generate("Question?", [evidence, evidence], allow_partial=False)
 
     assert provider.calls == 0
