@@ -108,3 +108,13 @@ The captions are auto-generated and are not independently verified against the v
 - **Current gate results:** production index reports 0 eligible chunks and is blocked as intended. Final evaluation reports 30 draft questions, no finalized 50/30 split, no approved answer corpus, and gold IDs that do not match the approved corpus.
 - **Review boundary:** pages 3–4 candidate content was compared with the official MIT PDF and the equations/partition bounds appear source-consistent. This independent source check does not substitute for project-owner approval. The existing pages 5–6 transcription remains approved but retrieval-disabled.
 - **Next work:** finish source and owner review, decide retrieval eligibility separately, validate the real approved-evidence path, then complete the 80-question gold set and held-out evaluation. Deployment remains deferred.
+
+
+## Evidence-bound answer cache (2026-10-26)
+
+- **Implementation:** `src/algolens/answer_cache.py` wraps the configured provider with a local SQLite cache; the Gradio runtime uses it for generation calls.
+- **Cache key:** SHA-256 covers normalized question text, ordered evidence payload, corpus version, model ID, and partial-answer mode. Updating source text or its approval fields changes the key.
+- **Validity rules:** only structurally valid drafts whose cited IDs exist in the supplied approved evidence can be stored. Unapproved evidence is rejected before cache access; failed provider calls are not cached.
+- **Storage policy:** the default is an OS temporary-directory SQLite file, bounded to 256 entries with a seven-day TTL. `ALGOLENS_CACHE_PATH` can override the path. Cache-write or cache-read errors fail open to a fresh provider request.
+- **Tests:** added coverage for identical-request reuse, model/corpus namespace changes, evidence/partial-mode invalidation, failure behavior, approval enforcement, invalid citations, and expiration.
+- **Limitations:** the cache is a performance optimization, not approval state. The canonical corpus remains retrieval-disabled and the production index/final evaluation remain blocked until their separate acceptance gates are satisfied.

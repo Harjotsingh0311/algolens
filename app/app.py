@@ -9,6 +9,7 @@ from typing import Any
 import gradio as gr
 import yaml
 
+from algolens.answer_cache import CachedAnswerProvider
 from algolens.grounded_answering import GroundedAnswerService
 from algolens.providers import OpenAICompatibleProvider
 from algolens.retrieval.bm25 import BM25Index, is_answer_eligible
@@ -138,6 +139,13 @@ def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
         corpus_version = str(manifest.get("version", "unknown"))
 
         provider = OpenAICompatibleProvider.from_env()
+        model_id = provider.model
+        cached_provider = CachedAnswerProvider(
+            provider,
+            corpus_version=corpus_version,
+            model_id=model_id,
+            cache_path=os.getenv("ALGOLENS_CACHE_PATH") or None,
+        )
         bm25 = BM25Index(eligible, include_unreviewed=False)
         dense = DenseIndex(eligible, include_unreviewed=False)
         hybrid = HybridIndex(
@@ -156,13 +164,13 @@ def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
 
         service = build_grounded_answer_service(
             retrieval_pipeline=pipeline,
-            provider=provider,
+            provider=cached_provider,
             corpus_version=corpus_version,
-            model_id=provider.model,
+            model_id=model_id,
             top_k=6,
         )
         status["message"] = "Grounded-answer runtime initialized."
-        status["model"] = provider.model
+        status["model"] = model_id
         return service, status
 
     except Exception as exc:

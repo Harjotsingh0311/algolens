@@ -25,7 +25,7 @@ does not support a reliable answer.
 - Caption/VTT parsing into timestamped JSONL; page-aware PDF extraction and extraction experiments.
 - Chunking, provenance/citation metadata, reviewed-candidate parsing, and eligibility checks.
 - BM25 and dense retrieval, reciprocal-rank fusion (RRF), and cross-encoder reranking.
-- Answerability/abstention logic, structured answer contracts, an OpenAI-compatible provider,
+- Evidence-bound SQLite answer caching, answerability/abstention logic, structured answer contracts, an OpenAI-compatible provider,
   and a claim-grounding verification wrapper.
 - A Gradio UI with Ask, Evidence, Trace, Evaluation, and About views.
 - CLI commands for `status`, `ingest`, `index`, and `eval`.
@@ -82,7 +82,7 @@ uv run mypy src
 uv run pytest -q
 ```
 
-Useful CLI commands:
+Set `ALGOLENS_CACHE_PATH` to a writable SQLite file path to change the answer-cache location. The default cache lives in the operating system temporary directory; it is bounded to 256 entries with a seven-day TTL. Cache keys are SHA-256 hashes over the question, evidence, model/corpus namespace, and partial-answer mode; API keys and raw questions are not persisted. Cache hits still pass through the normal answer and claim-verification checks.\n\nUseful CLI commands:
 
 ```powershell
 uv run python -m algolens.cli status
