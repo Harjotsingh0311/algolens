@@ -18,15 +18,19 @@ class FakeProvider:
         *,
         error: Exception | None = None,
     ) -> None:
-        self.result = result if result is not None else AnswerDraft(
-            answer_md="Randomized Quicksort chooses a pivot at random [p. 5].",
-            claims=[
-                Claim(
-                    text="Randomized Quicksort chooses a pivot at random.",
-                    cites=["passage-001"],
-                    support="supported",
-                )
-            ],
+        self.result = (
+            result
+            if result is not None
+            else AnswerDraft(
+                answer_md="Randomized Quicksort chooses a pivot at random [p. 5].",
+                claims=[
+                    Claim(
+                        text="Randomized Quicksort chooses a pivot at random.",
+                        cites=["passage-001"],
+                        support="supported",
+                    )
+                ],
+            )
         )
         self.error = error
         self.calls = 0
@@ -116,9 +120,7 @@ def test_cache_is_namespaced_by_corpus_and_model(
 ) -> None:
     path = tmp_path / "cache.sqlite3"
     first_provider = FakeProvider()
-    build_cache(first_provider, path).generate(
-        "Question?", [make_hit()], allow_partial=False
-    )
+    build_cache(first_provider, path).generate("Question?", [make_hit()], allow_partial=False)
 
     second_provider = FakeProvider()
     build_cache(
