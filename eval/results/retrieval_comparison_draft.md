@@ -6,7 +6,7 @@
 
 - Answerable questions scored: 25
 - Unanswerable questions excluded from retrieval ranking metrics: 5
-- Question-set SHA-256: `84b064aba7c3ce7b267c53c1a45594cecb4f1ddfbac531d585368c94191b1796`
+- Question-set SHA-256: `061aa4805330d4799280939379e664bb1db10aae770346135687b94e39a8746e`
 - Corpus SHA-256: `3e08079e6eca9f60a5c14e8b4a00d35607209c4aec2d7d292401a10d21d2ad1a`
 - All three reports passed the hash consistency checks.
 

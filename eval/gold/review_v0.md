@@ -2849,7 +2849,7 @@ The passages below are transcribed from the current extracted chunk corpus. They
 - `L06_YOUTUBE_CAPTIONS-parent-0005-child-0003`
 - `L06_TYPED_NOTES-parent-0001-child-0002`
 
-**Existing annotation caveat:** Checked against official MIT OCW typed notes, printed page 4: median selection and partitioning each add Θ(n), and the recurrence solves to Θ(n log n) worst-case time. Caption text at 01:05:14.550-01:06:31.820 states the recurrence and two Θ(n) terms. Direct video spot-check is still pending. Retain draft label status.
+**Existing annotation caveat:** The original typed notes on printed page 4 were checked. The user reported on 2026-10-25 that the video confirms the median-pivot recurrence, both ?(n) terms, and the ?(n log n) worst-case conclusion, and that caption timestamps align. This video check is user-reported; the assistant did not independently play the recording. Gold-passage IDs remain provisional. See label_recommendations_v0.md for the recommended removal of a redundant caption passage.
 
 **Overall question-label decision:**
 
@@ -3211,7 +3211,7 @@ The passages below are transcribed from the current extracted chunk corpus. They
 - `L06_YOUTUBE_CAPTIONS-parent-0010-child-0001`
 - `L06_TYPED_NOTES-parent-0002-child-0001`
 
-**Existing annotation caveat:** Checked against official MIT OCW typed notes, printed pages 5-6: good-pivot probability greater than 1/2, expected attempts at most 2, recurrence T(n) ≤ T(n/4) + T(3n/4) + 2cn, and expected runtime Θ(n log n). The extracted formula is damaged; use the original PDF for the equation. Caption text has not yet been checked against the actual video. Retain draft label status.
+**Existing annotation caveat:** The original typed notes on printed pages 5-6 were checked. The user reported on 2026-10-25 that the video confirms the recursion-tree analysis and final expected ?(n log n) conclusion, and that caption timestamps align. This video check is user-reported; the assistant did not independently play the recording. The extracted typed-notes equation remains damaged, so this chunk is not approved for answer generation. Gold-passage IDs and key points remain provisional; see label_recommendations_v0.md.
 
 **Overall question-label decision:**
 
