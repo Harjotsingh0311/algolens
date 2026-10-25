@@ -1054,17 +1054,21 @@
 
 **Question:** Combine the paranoid partition-size bound, the per-level work bound, and the recursion-tree height to explain the expected-time conclusion.
 
-**Proposed answerability:** unanswerable · **Difficulty:** hard · **Status:** `draft_needs_human_review`
+**Proposed answerability:** answerable · **Difficulty:** hard · **Status:** `draft_needs_human_review`
 
 **Proposed gold passages:**
 
-- None (this is an unanswerable candidate; verify the absence of supporting evidence within the in-scope corpus).
+- `L06_YOUTUBE_CAPTIONS-parent-0008-child-0002` — inspect video timestamp; caption-derived evidence needs spot-check.
+- `L06_YOUTUBE_CAPTIONS-parent-0009-child-0002` — inspect video timestamp; caption-derived evidence needs spot-check.
+- `L06_YOUTUBE_CAPTIONS-parent-0010-child-0001` — inspect video timestamp; caption-derived evidence needs spot-check.
+- `L06_TYPED_NOTES-parent-0002-child-0001` — pp. 5–7; extracted Expectations formula is damaged and must be checked in the original PDF.
 
 **Key points / expected behavior:**
 
-- The accepted split limits the largest child to at most 3n/4, each level's work is linear, and logarithmic height gives Θ(n log n); the N4 formula needs direct PDF review.
+- The accepted split limits the largest child to at most 3n/4.
+- The lecture describes linear work per level and logarithmic recursion-tree height, yielding expected Θ(n log n); verify every formula against the source.
 
-**Caveat:** Candidate v1 only. Verify the question, answerability, key points, and every proposed gold passage against the original source before accepting. Caption-derived evidence is pending video spot-check. Typed-note formula/notation extraction can be damaged; verify equations and inequalities directly in the original PDF. Typed-note extraction for the Expectations section is damaged; verify the recurrence directly in the original PDF.
+**Caveat:** Candidate only. Typed-note extraction for the Expectations section is known to have damaged math; verify the recurrence directly in the original PDF.
 
 - [ ] Original source checked
 - [ ] Answerability and key points verified

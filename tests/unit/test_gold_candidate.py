@@ -30,6 +30,9 @@ def test_candidate_gold_v1_is_complete_but_remains_unreviewed() -> None:
     }
     assert Counter(row["split"] for row in questions) == {"dev": 50, "test": 30}
     assert all(row["label_status"] == "draft_needs_human_review" for row in questions)
+    assert all(type(row["answerable"]) is bool for row in questions)
+    assert sum(row["answerable"] is True for row in questions) == 65
+    assert sum(row["answerable"] is False for row in questions) == 15
 
     categories = Counter(
         "unanswerable"
