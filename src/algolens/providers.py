@@ -66,10 +66,14 @@ class OpenAICompatibleProvider:
         load_dotenv(dotenv_path=env_path, override=False)
 
         if prefix == "ALGOLENS_":
-            provider_name = os.getenv(
-                f"{prefix}PROVIDER",
-                os.getenv("LLM_PROVIDER", "ollama"),
-            ).strip().lower()
+            provider_name = (
+                os.getenv(
+                    f"{prefix}PROVIDER",
+                    os.getenv("LLM_PROVIDER", "ollama"),
+                )
+                .strip()
+                .lower()
+            )
         else:
             provider_name = os.getenv(f"{prefix}PROVIDER", "").strip().lower()
             if not provider_name:

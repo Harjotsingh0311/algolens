@@ -45,9 +45,7 @@ class FallbackAnswerProvider:
                     allow_partial=allow_partial,
                 )
                 draft = AnswerDraft.model_validate(raw_draft)
-                cited_ids = {
-                    passage_id for claim in draft.claims for passage_id in claim.cites
-                }
+                cited_ids = {passage_id for claim in draft.claims for passage_id in claim.cites}
                 if not cited_ids.issubset(evidence_ids):
                     raise ValueError("Provider draft cites passage IDs absent from evidence.")
                 return draft
