@@ -75,7 +75,6 @@ def test_final_preflight_still_uses_v0_draft_set() -> None:
     assert all(row["label_status"] == "draft_needs_human_review" for row in questions)
 
 
-
 def test_final_preflight_does_not_promote_candidate_bank() -> None:
     from algolens.cli import final_evaluation_blockers
 
