@@ -10,9 +10,7 @@ from algolens.contracts import CitationReference, Claim, Hit, Passage
 from algolens.fallback_provider import FallbackAnswerProvider, ProviderChainError
 
 
-def approved_hit(
-    *, review_status: str = "reviewed", eligible_for_answer: bool = True
-) -> Hit:
+def approved_hit(*, review_status: str = "reviewed", eligible_for_answer: bool = True) -> Hit:
     passage = Passage(
         id="passage-001",
         lecture=6,

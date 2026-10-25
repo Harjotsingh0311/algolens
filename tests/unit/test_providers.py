@@ -341,7 +341,6 @@ def test_from_env_loads_dotenv_from_project_root(
     assert provider.base_url == "http://localhost:11434/v1"
 
 
-
 def test_from_env_supports_optional_fallback_prefix(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
