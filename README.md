@@ -41,8 +41,9 @@ timestamped transcript. The original raw PDF and VTT stay in the git-ignored
 The printed pages 5–6 transcription has project-owner approval, and its two
 parent/child chunks are integrated into the canonical reviewed-chunk files.
 **They remain retrieval-disabled** until a separate retrieval-eligibility decision
-is made. A page 3–4 Quicksort candidate summary and three child chunks are
-version-controlled, but project-owner review is still pending.
+is made. Page 3–4 Quicksort candidate material and its child chunks are
+version-controlled, but project-owner review is still pending. An 80-question
+evaluation candidate bank is also version-controlled in `eval/gold/questions_v1_candidate.jsonl` with a separate per-question review worksheet.
 
 ### Production readiness: intentionally blocked
 
@@ -51,10 +52,7 @@ eligibility signals**. The app should start in safe mode and must not generate
 answers from pending or retrieval-disabled content. The CLI production index
 command is expected to block until the corpus is explicitly approved.
 
-The final evaluation is also blocked: there are 30 draft questions rather than
-the required 80, labels still need human review, the 50-dev/30-test split is not
-finalized, and some gold passage IDs do not match an approved corpus. Existing
-retrieval reports are exploratory diagnostics—not final benchmark results.
+The final evaluation remains blocked. The active file `questions_v0.jsonl` still has 30 draft questions; a separate 80-question candidate bank exists but has not been promoted or reviewed. Its proposed 50-dev/30-test split is not frozen, and its gold passage IDs point to experimental chunks rather than approved canonical evidence. Existing retrieval reports are exploratory diagnostics—not final benchmark results. The candidate bank is intentionally not consumed by the CLI until a human-reviewed promotion is performed.
 
 ### Next acceptance gates
 
@@ -62,8 +60,7 @@ retrieval reports are exploratory diagnostics—not final benchmark results.
    the eligibility checks to make the app answer.
 2. Make a separate, explicit retrieval-eligibility decision and test the real
    approved-corpus path.
-3. Review all gold labels, establish the 50-development/30-test split, and add
-   the remaining questions before final evaluation.
+3. Review the separate 80-question candidate bank and each proposed source label; revise its IDs to map to canonical reviewed chunks, then freeze the development/test split before final evaluation.
 4. Validate provider integration, review claim verification on human-labelled
    examples, calibrate thresholds only on development data, and evaluate once
    on held-out test questions.

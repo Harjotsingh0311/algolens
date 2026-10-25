@@ -10,12 +10,12 @@ Purpose: Track proposal requirements beside implementation evidence.
 |---|---|---|---|---|
 | Turn 0 | Repository, concept, manifest, developer tooling, CI and deployment eligibility | Project scaffold, manifest, tests and developer tooling exist. | Mostly complete | Verify current Hugging Face/ZeroGPU eligibility. |
 | Turn 1 | Fetch and parse notes/transcript; validate locators | Typed-notes PDF is hash-pinned; captions are parsed into timestamped JSONL; extraction comparisons exist. | In progress | Finish source audit and caption-alignment review. |
-| Turn 2 | Baseline, 30-question gold set and evaluation harness | BM25, dense and RRF evaluation reports exist; 30-question gold set is draft-labelled. | Implemented, provisional | Human-review labels; finalize dev/test split and final reports. |
+| Turn 2 | Baseline and gold-question evaluation harness | BM25, dense and RRF diagnostics exist. v0 contains 30 draft questions; separate v1 candidate bank has 80 questions with a proposed 50/30 split. | Implemented, provisional | Human-review source labels, repair gold IDs to canonical reviewed chunks, then freeze split before any final report. |
 | Turn 3 | Teach-unit chunks, hybrid retrieval, RRF, reranking, context headers and ablations | BM25/dense retrieval, RRF, reranking, chunk metadata, CLI indexing, and Gradio runtime composition exist. Production indexing remains blocked because no canonical child passage has all three approval signals. | In progress | Complete source review and a separate retrieval-eligibility decision; then test on approved evidence and run systematic retrieval/reranking ablations. |
 | Turn 4 | Answerability gate, abstention and risk-coverage evaluation | Gate, metrics and diagnostic runner implemented. All production decisions currently abstain because available evidence is ineligible. Gold labels remain unreviewed. | In progress | Human-review labels, define a leakage-safe dev/test split, calibrate on development data and evaluate once on held-out test data. |
-| Turn 5 | Generation contract, grounded citations, claim verification, model adapter and cache | Structured contracts, answer service, OpenAI-compatible provider, NLI grounding verifier, and a grounded-answer wrapper exist. A synthetic positive-path integration test passes; real-provider success, threshold calibration, and caching are not yet validated. | In progress | Validate the provider with safe test configuration, review NLI decisions against human-labelled claims, calibrate on development data, and implement caching. |
-| Turn 6 | Gradio UI, live deployment, probes and operational documentation | Gradio UI and UI tests now exist. Live deployment, health probes, and end-to-end production validation remain outstanding because the approved corpus is empty for answer generation. | In progress | Complete local corpus and runtime acceptance gates first; then add health probes, deploy, and validate the live demo. |
-| Turn 7 | Two-voice pairing, Algorithm Lab, handwritten notes, Tier 2 and final 80-question evaluation | Stretch scope is documented; these features are not complete. | Not started | Begin after must-have features and final evaluation are sound. |
+| Turn 5 | Generation contract, grounded citations, claim verification, provider fallback and cache | Structured contracts, answer service, OpenAI-compatible provider adapter, NLI grounding verifier, evidence-bound SQLite cache, optional provider failover, and sources-only failure mode exist. CI verifies safe failure behavior with offline tests; live-provider and calibrated-verification evaluation remain open. | In progress | Exercise controlled provider integration/rate-limit tests, review NLI output against human-labelled claims, and calibrate thresholds only on a reviewed development set. |
+| Turn 6 | Gradio UI, live deployment, probes and operational documentation | Gradio UI and UI tests exist. Deployment and operational health probes are still outstanding; runtime remains in safe mode because zero canonical child passages meet production eligibility. | In progress | Add a health/safe-mode probe, validate the UI against a genuinely approved fixture, then deploy after corpus and evaluation gates pass. |
+| Turn 7 | Two-voice pairing, Algorithm Lab, handwritten notes and Tier 2 | Stretch scope is documented and not implemented; the 80-question bank exists only as an unreviewed candidate. | Not started | Finish review, canonical evidence mapping, and the final holdout before optional stretch work. |
 
 ## Task ledger
 
@@ -25,14 +25,14 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Source integrity | Original typed-notes PDF hash matches manifest and review metadata | Verified |
 | Experimental PDF extraction and chunks | Experimental extracts and JSONL artifacts retained separately | Complete as an experiment; extraction limitations remain documented |
 | BM25, dense retrieval and RRF evaluation | Existing retrieval tools and provisional comparison | Implemented; diagnostic only |
-| Gold question set | 30 questions with draft labels | Human review pending |
+| Gold question set | v0: 30 draft questions; v1 candidate: 80 questions, proposed 50 dev / 30 test, 65 proposed answerable / 15 proposed unanswerable, all still draft-labelled | Source/owner review pending; test split not frozen |
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 237 tests passed; Ruff lint and format checks passed; Mypy passed for 26 source files. The checkpoint was committed and pushed to GitHub as `fa1756d`; local branch tracked `origin/main`. | Verified 2026-10-26 |
+| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | On current candidate-bank checkpoint `4b121a4`: Ruff lint and format passed, strict mypy passed for 28 source files, and GitHub Actions reports 239 tests passed. | Verified 2026-10-26 |
 | Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented and tested as a reusable component |
 | Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
-| Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; 8 focused tests passed for flow, metadata preservation and eligibility controls. | Reusable component implemented; application endpoint/UI wiring pending |
+| Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; app runtime has UI wiring and eligibility gates. | Reusable component implemented/tested; live production path remains intentionally blocked until canonical passages are eligible |
 | Abstention and grounded generation | Core services, provider adapter, NLI verifier and runtime composition implemented; positive approved-evidence end-to-end validation and threshold calibration remain. | In progress |
 
 ## Evaluation interpretation
@@ -133,10 +133,18 @@ The captions are auto-generated and are not independently verified against the v
 
 
 - **Verified provider failover CI:** commit `550a740` passed GitHub Actions on 2026-10-25: Ruff lint passed, 57 files formatted, mypy found no issues in 28 source files, and `pytest` reported **234 passed**.
-- **Important final gates still open:** the canonical notes passages remain retrieval-disabled; all 30 gold questions remain draft-labelled; the 80-question set and leakage-safe 50/30 split are not ready for final evaluation. The public app stays in safe mode until explicit review and evaluation gates are complete.
+- **Important final gates still open:** the 80-question v1 candidate bank now exists separately from v0, but every label remains draft; the proposed 50/30 split is not frozen; all gold IDs still point to experimental chunks rather than approved canonical passages; and the canonical note chunks remain retrieval-disabled. The public app stays in safe mode.
 
 
 - **Provider hardening follow-up:** the fallback chain now independently rechecks review status and answer eligibility and rejects duplicate passage IDs before invoking any provider. A fallback-prefix configuration test was added; no live API keys or network calls are required for CI.
 
 
 - **Verified evidence-guard CI:** commit `dabc9a1` passed GitHub Actions on 2026-10-25. Ruff lint and format checks passed, strict mypy passed for 28 source files, and `pytest` reported **237 passed**.
+
+
+## Current main-branch checkpoint — 2026-10-26
+
+- **Latest verified CI:** `4b121a4` passed the GitHub Actions `check-and-test` job: Ruff lint, Ruff format, strict mypy (28 source files), and **239 tests passed**. Earlier red X marks visible on the commit list belong to older intermediate commits; the current main checkpoint is green.
+- **Candidate set:** `eval/gold/questions_v1_candidate.jsonl` has 80 unique IDs (65 proposed answerable, 15 proposed unanswerable), all `draft_needs_human_review`. The proposed split is 50 dev / 30 test; the test portion is public and therefore not a sealed holdout.
+- **Preflight protection:** the CLI deliberately still reads `questions_v0.jsonl`. A new regression test verifies that merely adding v1 candidate files does not bypass v0 label, split, or approved-corpus blockers.
+- **What is still not done:** no canonical child chunk currently has all three required production eligibility signals; caption sources need video spot-checking; the typed-note Expectations formula requires review against the original PDF; and gold IDs need canonical mapping after owner/source review.

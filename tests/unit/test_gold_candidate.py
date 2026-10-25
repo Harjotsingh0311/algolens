@@ -73,3 +73,16 @@ def test_final_preflight_still_uses_v0_draft_set() -> None:
     questions = _read_jsonl(root / "eval/gold/questions_v0.jsonl")
     assert len(questions) == 30
     assert all(row["label_status"] == "draft_needs_human_review" for row in questions)
+
+
+
+def test_final_preflight_does_not_promote_candidate_bank() -> None:
+    from algolens.cli import final_evaluation_blockers
+
+    blockers = final_evaluation_blockers(Path("."))
+
+    assert "Expected 80 gold questions; found 30." in blockers
+    assert "At least one question still has an unreviewed gold label." in blockers
+    assert "A leakage-safe split of exactly 50 dev and 30 test questions is required." in blockers
+    assert "No canonical passages are approved for answer generation." in blockers
+    assert "26 gold passage IDs do not match the approved corpus." in blockers
