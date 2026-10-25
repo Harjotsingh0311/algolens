@@ -13,6 +13,7 @@ dependencies = [
     "pydantic>=2.10,<3.0",
     "pymupdf>=2.0",
     "pymupdf4llm>=2.0",
+    "python-dotenv>=1.2.4",
     "PyYAML>=6.0.2,<7.0",
 ]
 

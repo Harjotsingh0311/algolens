@@ -1,0 +1,72 @@
+{
+  "artifact_id": "L06_TYPED_NOTES_QUICKSORT_P3_P4_CHUNK_CANDIDATES",
+  "candidate_markdown_path": "corpus/processed/reviewed_candidates/quicksort_printed_pages_3_4.md",
+  "candidate_markdown_sha256": "a9f09747740fecdb0f1044961754f9b68f82f336b01aec7a31317fd1f185b3c7",
+  "checks": {
+    "all_chunks_answer_ineligible": "passed",
+    "answer_eligibility_gate": "passed",
+    "candidate_markdown_hash": "passed",
+    "equation_audit": "passed",
+    "original_pdf_hash": "passed",
+    "page_specific_child_citations": "passed",
+    "parent_child_links": "passed",
+    "source_visual_review": "passed",
+    "spacing_audit": "passed",
+    "unicode_content_audit": "passed"
+  },
+  "children_jsonl_sha256": "207e987a7f17e096782c6273b79ca52f20ab8e957225fc8fe11a41b8bed2c6bb",
+  "children_path": "corpus/processed/reviewed_candidates/quicksort_pages_3_4_children.jsonl",
+  "chunks": [
+    {
+      "chunk_id": "L06_TYPED_NOTES-candidate-quicksort-p3-p4-parent-0001",
+      "citation": "pp. 3-4",
+      "eligible_for_answer": false,
+      "level": "parent",
+      "review_status": "candidate_review_pending",
+      "text_sha256": "66765a786ecec655952f0362438bf10afe196527520ff0b8054fe7664c43b4b6",
+      "word_count": 377
+    },
+    {
+      "chunk_id": "L06_TYPED_NOTES-candidate-quicksort-p3-p4-child-0001",
+      "citation": "p. 3",
+      "eligible_for_answer": false,
+      "level": "child",
+      "review_status": "candidate_review_pending",
+      "text_sha256": "64642eaed173ecd8eaf9fca9eb0f123b7db391402ea37c8a352b0de0a3495996",
+      "word_count": 167
+    },
+    {
+      "chunk_id": "L06_TYPED_NOTES-candidate-quicksort-p3-p4-child-0002",
+      "citation": "p. 4",
+      "eligible_for_answer": false,
+      "level": "child",
+      "review_status": "candidate_review_pending",
+      "text_sha256": "4e4737345ffb07093a3575af3e264a908a327a2d31566fe60f6b6efb942a06a4",
+      "word_count": 129
+    },
+    {
+      "chunk_id": "L06_TYPED_NOTES-candidate-quicksort-p3-p4-child-0003",
+      "citation": "p. 4",
+      "eligible_for_answer": false,
+      "level": "child",
+      "review_status": "candidate_review_pending",
+      "text_sha256": "2d24f49daf7e841700f97b5103e78733d6e21c6ab1a93a1a4909f2729472bbbe",
+      "word_count": 70
+    }
+  ],
+  "limitations": [
+    "Candidate artifacts only; awaiting project-owner review.",
+    "All chunks remain retrieval-ineligible.",
+    "No answer generation or retrieval benchmark was run.",
+    "The children follow source headings even when a section is shorter than the target word-count range."
+  ],
+  "parent_jsonl_sha256": "47f947d2999ccf966554b421b9cd399a01e0373cf29ce1dfe5ec202f8825e0ec",
+  "parents_path": "corpus/processed/reviewed_candidates/quicksort_pages_3_4_parents.jsonl",
+  "project_owner_approval": "pending",
+  "replaces_original_extraction": false,
+  "retrieval_eligible": false,
+  "review_status": "candidate_review_pending",
+  "schema_version": 1,
+  "source_id": "L06_TYPED_NOTES",
+  "source_sha256": "fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55"
+}

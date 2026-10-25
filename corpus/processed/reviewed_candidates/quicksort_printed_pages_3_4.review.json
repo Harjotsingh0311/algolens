@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "artifact_id": "L06_TYPED_NOTES_QUICKSORT_P3_P4_CANDIDATE",
+  "source_id": "L06_TYPED_NOTES",
+  "source_type": "typed_notes_pdf",
+  "source_url": "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/cb55cb123a557eed0738a1187a452c24_MIT6_046JS15_lec06.pdf",
+  "source_sha256": "fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55",
+  "printed_pages": [
+    3,
+    4
+  ],
+  "citation": {
+    "kind": "pdf_page",
+    "page_start": 3,
+    "page_end": 4,
+    "display": "pp. 3-4"
+  },
+  "status": "candidate_transcription_pending_owner_review",
+  "retrieval_eligible": false,
+  "project_owner_approval": "pending",
+  "based_on_visual_source_review": true,
+  "replaces_original_extraction": false,
+  "candidate_markdown_path": "corpus/processed/reviewed_candidates/quicksort_printed_pages_3_4.md",
+  "candidate_markdown_sha256": "a9f09747740fecdb0f1044961754f9b68f82f336b01aec7a31317fd1f185b3c7",
+  "claims": [
+    "quicksort_partition_into_L_E_G",
+    "basic_quicksort_worst_case_recurrence",
+    "median_selection_recurrence",
+    "median_selection_theta_n_log_n_runtime",
+    "randomized_quicksort_expected_o_n_log_n_runtime",
+    "paranoid_quicksort_three_quarters_partition_condition"
+  ],
+  "review_notes": "Prepared from visual inspection of the pinned official PDF. Awaiting project-owner review. Retrieval remains disabled."
+}
