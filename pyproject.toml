@@ -52,3 +52,7 @@ quote-style = "double"
 python_version = "3.12"
 mypy_path = "src"
 strict = true
+
+[[tool.mypy.overrides]]
+module = ["sentence_transformers", "sentence_transformers.*"]
+ignore_missing_imports = true
