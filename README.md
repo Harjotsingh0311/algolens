@@ -73,7 +73,7 @@ The final evaluation remains blocked. The active file `questions_v0.jsonl` still
 Python 3.12 is required.
 
 ```powershell
-uv sync --all-groups
+uv sync --all-groups --locked
 uv lock --check
 uv run ruff check src tests app
 uv run ruff format --check src tests app
@@ -81,11 +81,7 @@ uv run mypy src
 uv run pytest -q
 ```
 
-CI also runs `uv sync --all-groups --locked` before these checks, so dependency changes must be accompanied by a consistent `uv.lock`.
-
-```powershell
-uv run pytest -q
-```
+Dependency changes must be accompanied by a consistent `uv.lock`; CI uses the same locked-install check.
 
 Set `ALGOLENS_CACHE_PATH` to a writable SQLite file path to change the answer-cache location. The default cache lives in the operating system temporary directory; it is bounded to 256 entries with a seven-day TTL. Cache keys are SHA-256 hashes over the question, evidence, model/corpus namespace, and partial-answer mode; API keys and raw questions are not persisted. Cache hits still pass through the normal answer and claim-verification checks.
 
