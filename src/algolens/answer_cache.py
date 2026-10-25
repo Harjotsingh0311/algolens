@@ -2,15 +2,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import sqlite3
 import tempfile
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from contextlib import closing
 from pathlib import Path
-from typing import Any
-
 from pydantic import ValidationError
 
 from algolens.answering import AnswerDraft, AnswerProvider
@@ -111,7 +108,7 @@ class CachedAnswerProvider:
         ).encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()
 
-    def _load(self, cache_key: str) -> AnswerDraft | None:
+    def _load(self, cache_key: str, evidence_ids: set[str]) -> AnswerDraft | None:
         """Load one unexpired, schema-valid response; cache faults fail open."""
         try:
             with closing(self._open_database()) as connection:
@@ -132,7 +129,17 @@ class CachedAnswerProvider:
                         return None
 
                     try:
-                        return AnswerDraft.model_validate_json(str(draft_json))
+                        draft = AnswerDraft.model_validate_json(str(draft_json))
+                        cited_ids = {
+                            passage_id for claim in draft.claims for passage_id in claim.cites
+                        }
+                        if not cited_ids.issubset(evidence_ids):
+                            connection.execute(
+                                "DELETE FROM answer_cache WHERE cache_key = ?",
+                                (cache_key,),
+                            )
+                            return None
+                        return draft
                     except (ValidationError, ValueError, TypeError):
                         connection.execute(
                             "DELETE FROM answer_cache WHERE cache_key = ?",
@@ -209,11 +216,9 @@ class CachedAnswerProvider:
 
         evidence_ids = self._validate_evidence(evidence)
         cache_key = self._cache_key(question, evidence, allow_partial=allow_partial)
-        cached = self._load(cache_key)
+        cached = self._load(cache_key, evidence_ids)
         if cached is not None:
-            cited_ids = {passage_id for claim in cached.claims for passage_id in claim.cites}
-            if cited_ids.issubset(evidence_ids):
-                return cached
+            return cached
 
         raw_draft = self.provider.generate(
             question,

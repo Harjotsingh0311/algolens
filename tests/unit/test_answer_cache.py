@@ -18,7 +18,7 @@ class FakeProvider:
         *,
         error: Exception | None = None,
     ) -> None:
-        self.result = result or AnswerDraft(
+        self.result = result if result is not None else AnswerDraft(
             answer_md="Randomized Quicksort chooses a pivot at random [p. 5].",
             claims=[
                 Claim(
