@@ -29,7 +29,7 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | Checkpoint 4ffb790 passed after adding app/ to Ruff scope: Ruff lint passed, 63 files formatted, strict mypy passed for 28 source files, and 245 tests passed (one non-fatal Starlette/httpx deprecation warning). Lockfile consistency is now part of the CI gate. | Verified 2026-10-26 |
+| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | Latest verified main checkpoint `ec55a56`: locked uv install and `uv lock --check` passed; Ruff lint and format passed across src/tests/app (63 files formatted); strict mypy passed for 28 source files; 245 tests passed with one non-fatal Starlette/httpx deprecation warning. | Verified 2026-10-26 |
 | Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented and tested as a reusable component |
 | Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
 | Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; the mounted Gradio app calls it behind eligibility gates. | Reusable component implemented/tested; production answer path remains blocked until canonical passages are eligible |
@@ -158,3 +158,14 @@ The captions are auto-generated and are not independently verified against the v
 
 
 - Reproducibility gate: CI now runs uv sync --all-groups --locked and uv lock --check so the build fails instead of silently rewriting a stale dependency lock.
+
+
+## Latest green main checkpoint (2026-10-26)
+
+- Main commit: `ec55a5605df2915bc7feb9c9b327b0b7e4769126`.
+- GitHub Actions run: https://github.com/Harjotsingh0311/algolens/actions/runs/40233604493 — passed.
+- Verified gates: `uv sync --all-groups --locked`, `uv lock --check`, Ruff lint, Ruff format (63 files), strict mypy (28 source files), and **245 pytest tests passed**.
+- One non-fatal warning remains from the upstream Starlette/httpx test-client integration. It does not fail CI.
+- Older red commit badges in GitHub history are failed checks on intermediate commits; the current main checkpoint is green. Those historical run records were left intact rather than rewriting public Git history.
+- Health endpoints are implemented: `/healthz` answers liveness; `/readyz` reports not-ready (503) while approved evidence/runtime is unavailable. See `docs/operations.md`.
+- The 80-question v1 bank remains a candidate only. Human label review, canonical gold-ID mapping, actual retrieval eligibility, and deployment are still outstanding.
