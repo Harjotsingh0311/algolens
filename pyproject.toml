@@ -18,7 +18,7 @@ dependencies = [
 
 [project.optional-dependencies]
 extraction = ["docling>=2.142.1"]
-
+semantic = ["sentence-transformers>=5,<7"]
 [dependency-groups]
 dev = [
     "mypy>=1.15,<2.0",
