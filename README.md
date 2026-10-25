@@ -1,3 +1,14 @@
+---
+title: AlgoLens
+emoji: ??
+colorFrom: indigo
+colorTo: blue
+sdk: gradio
+python_version: "3.12"
+app_file: app/app.py
+pinned: false
+---
+
 # AlgoLens
 
 **A citation-first RAG tutor for MIT 6.046J Lecture 6.**

@@ -1,0 +1,12 @@
+{
+  "corpus_path": "corpus/processed/reviewed_chunks/children.jsonl",
+  "corpus_sha256": "5906acf7be4ca24dbadecfa1ceb90beaf7d5965931d137741ede5aad47be3875",
+  "candidate_chunk_count": 2,
+  "production_eligible_chunk_count": 0,
+  "indexed_chunk_count": 0,
+  "diagnostic_only": false,
+  "answer_generation_permitted": false,
+  "persistence": "in-memory; the current index classes do not serialize reusable vectors",
+  "status": "blocked_no_approved_chunks",
+  "message": "No passages have all required approval signals. Review the corpus first; diagnostic mode is available for retrieval-only experiments."
+}

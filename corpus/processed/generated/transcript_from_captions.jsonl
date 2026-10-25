@@ -1,0 +1,1458 @@
+{"start": 0.09, "end": 2.5, "text": "The following content is provided under a Creative"}
+{"start": 2.5, "end": 4.019, "text": "Commons license."}
+{"start": 4.019, "end": 6.36, "text": "Your support will help MIT OpenCourseWare"}
+{"start": 6.36, "end": 10.73, "text": "continue to offer high quality educational resources for free."}
+{"start": 10.73, "end": 13.33, "text": "To make a donation or view additional materials"}
+{"start": 13.33, "end": 17.236, "text": "from hundreds of MIT courses, visit MIT OpenCourseWare"}
+{"start": 17.236, "end": 17.861, "text": "at ocw.mit.edu."}
+{"start": 20.554, "end": 21.72, "text": "SRINIVAS DEVADAS: All right."}
+{"start": 21.72, "end": 23.61, "text": "Good morning, everyone."}
+{"start": 23.61, "end": 25.28, "text": "Let's get started."}
+{"start": 25.28, "end": 29.93, "text": "A new module today-- we're going to spend a few"}
+{"start": 29.93, "end": 34.32, "text": "lectures on randomized algorithms."}
+{"start": 34.32, "end": 39.74, "text": "And so not only will we look at slightly different ways"}
+{"start": 39.74, "end": 43.96, "text": "of solving old problems like sorting, we'll also"}
+{"start": 43.96, "end": 48.11, "text": "look at how we can analyze this new kind of algorithm that"}
+{"start": 48.11, "end": 51.47, "text": "generates random numbers in order to actually make"}
+{"start": 51.47, "end": 57.01, "text": "decisions as it's executing and that we'll end up obviously"}
+{"start": 57.01, "end": 62.23, "text": "with the analysis that gives us the expected run"}
+{"start": 62.23, "end": 65.844, "text": "time of the algorithm-- for example,"}
+{"start": 65.844, "end": 68.26, "text": "whether the algorithm is going to produce a correct result"}
+{"start": 68.26, "end": 71.55, "text": "or not, with what probability will this algorithm"}
+{"start": 71.55, "end": 73.66, "text": "produce a correct result."}
+{"start": 73.66, "end": 76.73, "text": "So I'll talk a little bit about why"}
+{"start": 76.73, "end": 78.7, "text": "we're interested in randomized algorithms"}
+{"start": 78.7, "end": 82.84, "text": "in a couple of minutes, but let me define"}
+{"start": 82.84, "end": 86.54, "text": "what a randomized algorithm, or a probabilistic algorithm,"}
+{"start": 86.54, "end": 90.65, "text": "is to start things off."}
+{"start": 98.0, "end": 102.05, "text": "And so randomized algorithm is something"}
+{"start": 102.05, "end": 107.04, "text": "that generates a random number."}
+{"start": 112.25, "end": 117.29, "text": "Now, this would be a coinage flip, but more often than not,"}
+{"start": 117.29, "end": 124.51, "text": "you're generating a real number that comes from a sudden range."}
+{"start": 124.51, "end": 126.41, "text": "Sometimes you're generating a vector."}
+{"start": 126.41, "end": 129.57, "text": "You'll see a couple of different examples"}
+{"start": 129.57, "end": 135.62, "text": "here in today's lecture and in section."}
+{"start": 135.62, "end": 143.73, "text": "And it's going to make decisions based on this value,"}
+{"start": 143.73, "end": 146.58, "text": "based on r's actual value."}
+{"start": 150.92, "end": 153.619, "text": "Now, you can imagine that an algorithm would be recursive,"}
+{"start": 153.619, "end": 155.16, "text": "and at every level of recursion, it's"}
+{"start": 155.16, "end": 157.7, "text": "going to generate a random r."}
+{"start": 157.7, "end": 161.95, "text": "So when you're executing at a particular level of recursion,"}
+{"start": 161.95, "end": 165.58, "text": "you may be doing different things based on r."}
+{"start": 165.58, "end": 169.63, "text": "And not only that, if you re-run the algorithm again"}
+{"start": 169.63, "end": 172.99, "text": "on the same input, the execution will be different"}
+{"start": 172.99, "end": 176.07, "text": "because you're resuming a true random number"}
+{"start": 176.07, "end": 179.67, "text": "generator as opposed to a pseudo random one."}
+{"start": 179.67, "end": 181.63, "text": "And the r's that you're going to get"}
+{"start": 181.63, "end": 184.57, "text": "at different levels of recursion or through the execution"}
+{"start": 184.57, "end": 187.61, "text": "of the algorithm are going to be different from the first time"}
+{"start": 187.61, "end": 190.89, "text": "to the second time."}
+{"start": 190.89, "end": 202.82, "text": "So on the same input on different executions,"}
+{"start": 202.82, "end": 203.82, "text": "two things might happen."}
+{"start": 206.85, "end": 210.53, "text": "The algorithm may run for a different number of steps."}
+{"start": 215.54, "end": 218.33, "text": "So you might get lucky on the first execution,"}
+{"start": 218.33, "end": 221.86, "text": "and the algorithm finishes, let's say at 100 time units."}
+{"start": 221.86, "end": 224.52, "text": "The second time around, it takes a long time."}
+{"start": 224.52, "end": 226.94, "text": "It takes 700 time units."}
+{"start": 226.94, "end": 231.46, "text": "Our goal here is to try and analyze"}
+{"start": 231.46, "end": 233.37, "text": "what this probabilistic runtime would"}
+{"start": 233.37, "end": 239.32, "text": "be to ask for an expectation, to be able to compute"}
+{"start": 239.32, "end": 243.12, "text": "an expectation for the runtime, or-- if you're"}
+{"start": 243.12, "end": 247.13, "text": "talking about a different scenario"}
+{"start": 247.13, "end": 249.98, "text": "where different executions-- I could actually"}
+{"start": 249.98, "end": 251.95, "text": "produce different outputs."}
+{"start": 258.839, "end": 263.56, "text": "And in this case, it's possible that one or more"}
+{"start": 263.56, "end": 265.32, "text": "of these outputs are incorrect."}
+{"start": 265.32, "end": 267.93, "text": "You actually get the wrong answer."}
+{"start": 267.93, "end": 270.98, "text": "And obviously, that's going to happen"}
+{"start": 270.98, "end": 272.81, "text": "with a certain probability."}
+{"start": 272.81, "end": 277.94, "text": "You're going to have to decide or analyze"}
+{"start": 277.94, "end": 280.2, "text": "what that probability is."}
+{"start": 280.2, "end": 284.52, "text": "And generally speaking, we won't be happy"}
+{"start": 284.52, "end": 288.11, "text": "with a high probability of error, as you can imagine."}
+{"start": 288.11, "end": 291.29, "text": "And we'd like to set up an algorithm such"}
+{"start": 291.29, "end": 296.45, "text": "that you can reduce that probability of incorrect output"}
+{"start": 296.45, "end": 299.41, "text": "to be something really, really small."}
+{"start": 299.41, "end": 303.63, "text": "And it might take you longer to get"}
+{"start": 303.63, "end": 310.62, "text": "to that low level of incorrect output"}
+{"start": 310.62, "end": 315.35, "text": "in one case for a certain set of inputs versus another case."}
+{"start": 315.35, "end": 320.78, "text": "So that's this set up here in terms of randomized."}
+{"start": 320.78, "end": 323.76, "text": "You're going to have algorithms that-- you can think"}
+{"start": 323.76, "end": 327.67, "text": "of them as probably correct."}
+{"start": 327.67, "end": 330.789, "text": "So these are algorithms-- you want"}
+{"start": 330.789, "end": 332.33, "text": "to think of them as probably correct,"}
+{"start": 332.33, "end": 333.75, "text": "and they do have a name."}
+{"start": 333.75, "end": 337.93, "text": "They're called Monte Carlo algorithms."}
+{"start": 337.93, "end": 340.425, "text": "And then you have algorithms that are probably fast."}
+{"start": 344.85, "end": 350.08, "text": "So-- indicates a probably correct--"}
+{"start": 350.08, "end": 352.95, "text": "you could have a constant probability that they're"}
+{"start": 352.95, "end": 357.15, "text": "going to give you the correct answer, 99%."}
+{"start": 357.15, "end": 359.47, "text": "And you could obviously try and parametrize that."}
+{"start": 359.47, "end": 362.44, "text": "In the case of probably fast, you"}
+{"start": 362.44, "end": 366.05, "text": "say things like, it runs an expected polynomial time."}
+{"start": 366.05, "end": 370.12, "text": "And really what that means is that you may have"}
+{"start": 370.12, "end": 372.63, "text": "to run it for more information."}
+{"start": 372.63, "end": 376.83, "text": "So rather than taking 100 iterations or 100 steps"}
+{"start": 376.83, "end": 380.41, "text": "to sort something, it might take you 110."}
+{"start": 380.41, "end": 382.23, "text": "But in the case of probably fast,"}
+{"start": 382.23, "end": 385.22, "text": "you do get the sorted result at the end."}
+{"start": 385.22, "end": 387.33, "text": "And when the algorithm has finished execution,"}
+{"start": 387.33, "end": 389.41, "text": "you do get that sorted result at the end."}
+{"start": 389.41, "end": 395.09, "text": "So it's correct and probably fast or probably correct"}
+{"start": 395.09, "end": 397.57, "text": "and deterministically fast."}
+{"start": 397.57, "end": 398.09, "text": "OK."}
+{"start": 398.09, "end": 401.06, "text": "And this is Las Vegas."}
+{"start": 401.06, "end": 404.45, "text": "So you have Monte Carlo versus Las Vegas here."}
+{"start": 404.45, "end": 407.746, "text": "So yesterday, it occurred to me--"}
+{"start": 407.746, "end": 409.62, "text": "and I've taught this class a bunch of times--"}
+{"start": 409.62, "end": 410.82, "text": "but it occurred to me for the first time"}
+{"start": 410.82, "end": 412.88, "text": "last night that there should be algorithms"}
+{"start": 412.88, "end": 416.144, "text": "that are probably correct and probably fast,"}
+{"start": 416.144, "end": 417.56, "text": "which means that they're incorrect"}
+{"start": 417.56, "end": 419.56, "text": "and slow some of the time."}
+{"start": 419.56, "end": 420.1, "text": "Right?"}
+{"start": 420.1, "end": 423.9, "text": "So what do you think those algorithms are called?"}
+{"start": 423.9, "end": 424.4, "text": "Sorry."}
+{"start": 424.4, "end": 425.222, "text": "What?"}
+{"start": 425.222, "end": 426.58, "text": "AUDIENCE: T?"}
+{"start": 426.58, "end": 427.61, "text": "SRINIVAS DEVADAS: The T?"}
+{"start": 427.61, "end": 428.13, "text": "Oh."}
+{"start": 428.13, "end": 428.33, "text": "Oh!"}
+{"start": 428.33, "end": 429.5, "text": "That deserves a Frisbee."}
+{"start": 429.5, "end": 430.7, "text": "Oh my goodness!"}
+{"start": 430.7, "end": 431.98, "text": "[LAUGHS] All right."}
+{"start": 431.98, "end": 432.92, "text": "There you go."}
+{"start": 432.92, "end": 434.125, "text": "There you go."}
+{"start": 434.125, "end": 434.68, "text": "All right."}
+{"start": 434.68, "end": 438.03, "text": "Now, they're not called the T. So we should write"}
+{"start": 438.03, "end": 441.74, "text": "that down so everyone knows."}
+{"start": 441.74, "end": 448.31, "text": "Probably correct and probably fast,"}
+{"start": 448.31, "end": 451.97, "text": "which is I guess they don't get you anywhere."}
+{"start": 451.97, "end": 454.16, "text": "I don't know what that means-- incorrect and so"}
+{"start": 454.16, "end": 457.479, "text": "in the case of the T."}
+{"start": 457.479, "end": 458.02, "text": "So the MB/TA."}
+{"start": 462.54, "end": 463.16, "text": "Any guesses?"}
+{"start": 463.16, "end": 468.82, "text": "I mean, think about what we have for Monte Carlo, Las Vegas."}
+{"start": 468.82, "end": 471.046, "text": "Extrapolate."}
+{"start": 471.046, "end": 472.67, "text": "These are the kinds of questions you're"}
+{"start": 472.67, "end": 473.753, "text": "going to get on your quiz."}
+{"start": 478.68, "end": 480.46, "text": "I guess you guys don't gamble you."}
+{"start": 480.46, "end": 481.23, "text": "Go ahead."}
+{"start": 481.23, "end": 481.61, "text": "AUDIENCE: Atlantic City."}
+{"start": 481.61, "end": 482.16, "text": "SRINIVAS DEVADAS: Atlantic City."}
+{"start": 482.16, "end": 483.93, "text": "That deserves a Frisbee."}
+{"start": 483.93, "end": 485.39, "text": "Yeah."}
+{"start": 485.39, "end": 486.1, "text": "Absolutely right."}
+{"start": 486.1, "end": 490.11, "text": "That It turns out Atlantic City isn't"}
+{"start": 490.11, "end": 492.78, "text": "a name that's really caught on, but it"}
+{"start": 492.78, "end": 500.54, "text": "was in terms of being used in this context."}
+{"start": 500.54, "end": 503.45, "text": "Most of the time, if you do have a probably correct probably"}
+{"start": 503.45, "end": 504.92, "text": "fast algorithm, you can convert it"}
+{"start": 504.92, "end": 508.4, "text": "into a Monte Carlo algorithm or a Las Vegas algorithm."}
+{"start": 508.4, "end": 512.25, "text": "There are some prime testing algorithms"}
+{"start": 512.25, "end": 515.34, "text": "to test whether a particular number is a prime or not"}
+{"start": 515.34, "end": 517.62, "text": "that run in probabilistic polynomial time,"}
+{"start": 517.62, "end": 522.33, "text": "and they may incorrectly tell you that the number is a prime."}
+{"start": 522.33, "end": 526.06, "text": "So that's an example of an Atlantic City algorithm."}
+{"start": 526.06, "end": 529.17, "text": "We won't actually do Atlantic City."}
+{"start": 529.17, "end": 530.72, "text": "What we'll do is we'll take a look"}
+{"start": 530.72, "end": 534.87, "text": "at a couple of different algorithms, and both of these"}
+{"start": 534.87, "end": 538.43, "text": "will motivate why randomized algorithms are interesting."}
+{"start": 538.43, "end": 544.44, "text": "The Monte Carlo example is checking matrix multiply."}
+{"start": 544.44, "end": 548.33, "text": "So you've gotten a couple of square matrices."}
+{"start": 548.33, "end": 550.58, "text": "Both of them are n by n matrices,"}
+{"start": 550.58, "end": 555.03, "text": "and you multiply them out-- A times B, and you produce C."}
+{"start": 555.03, "end": 556.72, "text": "And so you got the C matrix."}
+{"start": 556.72, "end": 561.31, "text": "And rather than re-multiplying and checking the result,"}
+{"start": 561.31, "end": 563.61, "text": "you'd like to do something better."}
+{"start": 563.61, "end": 567.39, "text": "You'd like to verify with some probability"}
+{"start": 567.39, "end": 570.0, "text": "that you can parametrize that the output"}
+{"start": 570.0, "end": 573.55, "text": "matrix is in fact the product of the two input matrices."}
+{"start": 573.55, "end": 575.5, "text": "And so that's a randomized algorithm"}
+{"start": 575.5, "end": 579.7, "text": "that's a Monte Carlo because you're not guaranteeing"}
+{"start": 579.7, "end": 582.62, "text": "that that output matrix is in fact the product"}
+{"start": 582.62, "end": 586.71, "text": "of the first two matrices or the operand matrices,"}
+{"start": 586.71, "end": 591.23, "text": "but you're getting a good sense of how likely that is."}
+{"start": 591.23, "end": 593.89, "text": "And you can kind of squish that probability of error"}
+{"start": 593.89, "end": 600.3, "text": "down to however low you want it to be except you have to run"}
+{"start": 600.3, "end": 602.12, "text": "the algorithm for longer."}
+{"start": 602.12, "end": 604.56, "text": "So that's an example of Monte Carlo."}
+{"start": 604.56, "end": 605.83, "text": "Now, quicksort."}
+{"start": 605.83, "end": 608.694, "text": "It doesn't make sense to say-- I guess you could--"}
+{"start": 608.694, "end": 610.11, "text": "but it doesn't make too much sense"}
+{"start": 610.11, "end": 614.09, "text": "to say that you have an almost sorted array."}
+{"start": 614.09, "end": 615.285, "text": "What does that mean exactly?"}
+{"start": 615.285, "end": 616.97, "text": "You have to categorize that."}
+{"start": 616.97, "end": 619.46, "text": "So quicksort is an example where you're"}
+{"start": 619.46, "end": 622.37, "text": "guaranteed to get a sorted array at the end of it."}
+{"start": 622.37, "end": 623.78, "text": "So it's correct."}
+{"start": 623.78, "end": 625.231, "text": "You will get a sorted ray."}
+{"start": 625.231, "end": 626.98, "text": "That's what you wanted-- descending order,"}
+{"start": 626.98, "end": 628.09, "text": "ascending order."}
+{"start": 628.09, "end": 634.63, "text": "But it might not run in order n log n time."}
+{"start": 634.63, "end": 636.2, "text": "That's expected time."}
+{"start": 636.2, "end": 638.13, "text": "Order n log n is expected time."}
+{"start": 638.13, "end": 642.07, "text": "And so that's what probably fast would correspond to."}
+{"start": 642.07, "end": 642.64, "text": "All right?"}
+{"start": 642.64, "end": 645.15, "text": "So that's the set up."}
+{"start": 645.15, "end": 648.37, "text": "You can kind of see why these are interesting because you"}
+{"start": 648.37, "end": 651.66, "text": "could imagine that in practical scenarios,"}
+{"start": 651.66, "end": 653.78, "text": "you might want to do some checking"}
+{"start": 653.78, "end": 657.13, "text": "in a probabilistic way."}
+{"start": 657.13, "end": 663.54, "text": "And you want to do that without having to redo all the work."}
+{"start": 663.54, "end": 666.29, "text": "Obviously you don't want your checker for matrix multiply"}
+{"start": 666.29, "end": 669.15, "text": "to be as slow as multiplying two matrices."}
+{"start": 669.15, "end": 670.92, "text": "Otherwise it makes no sense."}
+{"start": 670.92, "end": 675.61, "text": "So let's dive into matrix product"}
+{"start": 675.61, "end": 682.09, "text": "and our first example of a probably correct algorithm,"}
+{"start": 682.09, "end": 683.81, "text": "or Monte Carlo algorithm."}
+{"start": 683.81, "end": 686.78, "text": "So what I want to do here is C equals A"}
+{"start": 686.78, "end": 694.64, "text": "times B. And the simple algorithm-- I guess,"}
+{"start": 694.64, "end": 699.14, "text": "those of us who went to high school,"}
+{"start": 699.14, "end": 708.16, "text": "myself included, did my four years-- know of an n cube"}
+{"start": 708.16, "end": 711.04, "text": "algorithm-- or learned it back then."}
+{"start": 711.04, "end": 717.64, "text": "It simply corresponds to taking rows and columns,"}
+{"start": 717.64, "end": 719.87, "text": "and you get an entry."}
+{"start": 719.87, "end": 722.67, "text": "You have n square entries that you"}
+{"start": 722.67, "end": 726.51, "text": "need to compute corresponding to the output matrix C."}
+{"start": 726.51, "end": 731.79, "text": "And you're going to do order n multiplications and additions,"}
+{"start": 731.79, "end": 734.67, "text": "but we're really going to consider multiplications here."}
+{"start": 734.67, "end": 737.0, "text": "When I talk about n here, it's not"}
+{"start": 737.0, "end": 738.82, "text": "the total number of operations."}
+{"start": 738.82, "end": 740.64, "text": "It's the number of multiplications."}
+{"start": 740.64, "end": 742.89, "text": "And the reason for that is-- this"}
+{"start": 742.89, "end": 746.15, "text": "may have gone away a little bit, but it's still probably true--"}
+{"start": 746.15, "end": 749.54, "text": "that multiplication, in computers, it"}
+{"start": 749.54, "end": 753.28, "text": "takes longer to multiply two numbers, integers"}
+{"start": 753.28, "end": 755.86, "text": "are floating point numbers, than adding numbers."}
+{"start": 755.86, "end": 757.44, "text": "It used to be much more dramatic,"}
+{"start": 757.44, "end": 759.33, "text": "the differences between multiplying"}
+{"start": 759.33, "end": 764.3, "text": "and add in computers."}
+{"start": 764.3, "end": 768.0, "text": "But thanks to pipelining and lots of optimizations,"}
+{"start": 768.0, "end": 769.94, "text": "multiplies are actually very fast."}
+{"start": 769.94, "end": 774.09, "text": "But they are, obviously, a more sophisticated operation"}
+{"start": 774.09, "end": 775.11, "text": "than addition."}
+{"start": 775.11, "end": 777.09, "text": "So we'll be counting multiplies."}
+{"start": 777.09, "end": 781.45, "text": "So when you've seen Karatsuba divide and conquer"}
+{"start": 781.45, "end": 784.09, "text": "for multiply, back end in 006."}
+{"start": 784.09, "end": 786.68, "text": "Remember that we were counting multiplications,"}
+{"start": 786.68, "end": 789.48, "text": "and we were actually trading off multiplications for additions."}
+{"start": 789.48, "end": 792.36, "text": "We were trying to shrink that number associated"}
+{"start": 792.36, "end": 794.72, "text": "with the complexity of the algorithm"}
+{"start": 794.72, "end": 797.154, "text": "when counting the number of multiplies."}
+{"start": 797.154, "end": 798.57, "text": "And we actually counted the number"}
+{"start": 798.57, "end": 801.52, "text": "of additions that were going up--"}
+{"start": 801.52, "end": 803.84, "text": "at least from a constant factor standpoint,"}
+{"start": 803.84, "end": 805.92, "text": "not necessarily from an asymptotic complexity"}
+{"start": 805.92, "end": 807.42, "text": "standpoint."}
+{"start": 807.42, "end": 809.94, "text": "And so that's simple algorithm."}
+{"start": 809.94, "end": 811.52, "text": "You probably heard of Strassen."}
+{"start": 811.52, "end": 814.317, "text": "Some of you might have seen it."}
+{"start": 814.317, "end": 815.9, "text": "Essentially what happens with Strassen"}
+{"start": 815.9, "end": 825.08, "text": "is you multiply two two by two matrices using"}
+{"start": 825.08, "end": 827.86, "text": "seven multiplications as opposed to eight."}
+{"start": 832.765, "end": 836.18, "text": "Now, if you do that-- and this is similar to the Karatsuba"}
+{"start": 836.18, "end": 841.05, "text": "analysis-- you can do this in n raised"}
+{"start": 841.05, "end": 844.515, "text": "to log 2 7 time, which is essentially"}
+{"start": 844.515, "end": 848.65, "text": "n raised to 2.81 time."}
+{"start": 848.65, "end": 853.74, "text": "And so rather than n cubed, you can go down to n raised 2.81."}
+{"start": 853.74, "end": 856.48, "text": "Now it turns out people have obviously not"}
+{"start": 856.48, "end": 857.94, "text": "stopped with this."}
+{"start": 857.94, "end": 863.91, "text": "You can go to n raised to 2.70 by doing something of the order"}
+{"start": 863.91, "end": 869.66, "text": "of 143,000 multiplications for 70 by 70 matrices."}
+{"start": 869.66, "end": 870.76, "text": "So you can play around."}
+{"start": 870.76, "end": 872.212, "text": "Just like you had Toom-Cook."}
+{"start": 872.212, "end": 874.42, "text": "I don't know if you remember that or it got covered--"}
+{"start": 874.42, "end": 876.71, "text": "but Karatsuba could get generalized into this thing"}
+{"start": 876.71, "end": 877.8, "text": "called Toom-Cook."}
+{"start": 877.8, "end": 884.95, "text": "And the same thing, Strassen-- you could go off and divide"}
+{"start": 884.95, "end": 890.89, "text": "and conquer whose base case is not two by two, but 70 by 70,"}
+{"start": 890.89, "end": 892.26, "text": "and that improves things."}
+{"start": 892.26, "end": 896.56, "text": "But it turns out there's other arithmetic series summation"}
+{"start": 896.56, "end": 897.3, "text": "ways."}
+{"start": 897.3, "end": 903.03, "text": "And so a famous algorithm that's up until 2010"}
+{"start": 903.03, "end": 906.33, "text": "was the best complexity algorithm known."}
+{"start": 906.33, "end": 912.66, "text": "It's Coppersmith-Winograd, which is 2.376."}
+{"start": 912.66, "end": 915.98, "text": "And then at some point, we had a faculty candidate here"}
+{"start": 915.98, "end": 926.06, "text": "who either shrunk this from 2.376 to 2.373."}
+{"start": 926.06, "end": 930.47, "text": "And it turns out that there were two different researchers who"}
+{"start": 930.47, "end": 934.64, "text": "came up with a 2.373, but this particular candidate"}
+{"start": 934.64, "end": 937.65, "text": "in the sixth decimal place won."}
+{"start": 937.65, "end": 938.85, "text": "So she had an eight."}
+{"start": 938.85, "end": 940.55, "text": "Person had a nine or something."}
+{"start": 940.55, "end": 942.83, "text": "But anyway, all of these are impractical."}
+{"start": 942.83, "end": 943.9, "text": "OK."}
+{"start": 943.9, "end": 945.415, "text": "You don't want to use them."}
+{"start": 945.415, "end": 948.39, "text": "The constant factors associated with these things"}
+{"start": 948.39, "end": 952.18, "text": "are much larger than what you have here."}
+{"start": 952.18, "end": 957.2, "text": "The constant factors here, I guess it's one, right?"}
+{"start": 957.2, "end": 961.4, "text": "Makes sense that it would be one, forgetting"}
+{"start": 961.4, "end": 962.76, "text": "the additions of course."}
+{"start": 962.76, "end": 964.56, "text": "So if you have large constant factors,"}
+{"start": 964.56, "end": 968.52, "text": "then you need a billion by billion matrix in order to win."}
+{"start": 968.52, "end": 972.58, "text": "And if you have billion by billion matrices that you want"}
+{"start": 972.58, "end": 975.01, "text": "to multiply, do something else."}
+{"start": 975.01, "end": 975.836, "text": "OK."}
+{"start": 975.836, "end": 976.96, "text": "You don't want to go there."}
+{"start": 979.6, "end": 983.76, "text": "Even in the day of the internet, it's not going to work."}
+{"start": 983.76, "end": 986.35, "text": "So what we'd like to do now is do something better."}
+{"start": 986.35, "end": 993.42, "text": "So we will try-- given that theoretical computer science"}
+{"start": 993.42, "end": 999.36, "text": "class, it makes sense to say that our verification algorithm"}
+{"start": 999.36, "end": 1005.33, "text": "should be better than n raised to 2.376 or 2.3-whatever."}
+{"start": 1005.33, "end": 1006.22, "text": "Right?"}
+{"start": 1006.22, "end": 1010.14, "text": "Otherwise, it doesn't feel good."}
+{"start": 1010.14, "end": 1012.67, "text": "So what we'd like to do-- and we can do this--"}
+{"start": 1012.67, "end": 1025.91, "text": "is try and get an order n square algorithm-- that's this."}
+{"start": 1025.91, "end": 1029.89, "text": "So it's probably correct Monte Carlo algorithm"}
+{"start": 1029.89, "end": 1034.7, "text": "where if you have A times B equals C,"}
+{"start": 1034.7, "end": 1042.93, "text": "then the probability of the output equals yes is 1."}
+{"start": 1042.93, "end": 1047.02, "text": "So in fact, if you got it right, then the verifier"}
+{"start": 1047.02, "end": 1051.59, "text": "is going to not give you a false negative."}
+{"start": 1051.59, "end": 1053.52, "text": "It's not going to say-- no, you got it wrong--"}
+{"start": 1053.52, "end": 1055.16, "text": "when you got it right."}
+{"start": 1055.16, "end": 1062.86, "text": "But it could give you up a false positive with some probability"}
+{"start": 1062.86, "end": 1072.45, "text": "where you have the probability of output equals yes,"}
+{"start": 1072.45, "end": 1074.24, "text": "and that's a false positive."}
+{"start": 1074.24, "end": 1077.06, "text": "But you can bound that to be less than half."}
+{"start": 1077.06, "end": 1078.05, "text": "OK."}
+{"start": 1078.05, "end": 1080.06, "text": "So it's going to say, yes."}
+{"start": 1080.06, "end": 1084.632, "text": "So obviously, if the verifier kept saying yes all the time,"}
+{"start": 1084.632, "end": 1085.59, "text": "you wouldn't have this."}
+{"start": 1085.59, "end": 1087.44, "text": "It wouldn't be very interesting."}
+{"start": 1087.44, "end": 1092.0, "text": "I would be constant time, but it wouldn't be very interesting."}
+{"start": 1092.0, "end": 1096.88, "text": "What is interesting here is that when they're not equal,"}
+{"start": 1096.88, "end": 1100.46, "text": "you're going to get an incorrect result with some operand"}
+{"start": 1100.46, "end": 1103.06, "text": "on the probability."}
+{"start": 1103.06, "end": 1107.54, "text": "So you say, about one half seems kind of high-- 50%"}
+{"start": 1107.54, "end": 1109.01, "text": "flipping a coin."}
+{"start": 1109.01, "end": 1114.12, "text": "The good news is that these algorithms,"}
+{"start": 1114.12, "end": 1115.55, "text": "you can run them over and over."}
+{"start": 1115.55, "end": 1118.37, "text": "You can run this checker over and over."}
+{"start": 1118.37, "end": 1121.6, "text": "And as long as executions are independent,"}
+{"start": 1121.6, "end": 1124.02, "text": "and you can certainly ensure that they're"}
+{"start": 1124.02, "end": 1127.79, "text": "independent by ensuring that the randomness from one"}
+{"start": 1127.79, "end": 1130.47, "text": "execution to another-- the flipping of the coins--"}
+{"start": 1130.47, "end": 1131.67, "text": "are independent."}
+{"start": 1131.67, "end": 1132.31, "text": "OK."}
+{"start": 1132.31, "end": 1134.17, "text": "And so that's relatively easy to do,"}
+{"start": 1134.17, "end": 1136.46, "text": "in certainly all of the scenarios we'll be looking at."}
+{"start": 1136.46, "end": 1138.57, "text": "In 046, it's relatively easy to do."}
+{"start": 1138.57, "end": 1141.3, "text": "You can now drive this probability down"}
+{"start": 1141.3, "end": 1144.38, "text": "to one quarter with two executions"}
+{"start": 1144.38, "end": 1147.25, "text": "because you'll just check different things."}
+{"start": 1147.25, "end": 1150.18, "text": "And then one eighth with three and so on and so forth."}
+{"start": 1150.18, "end": 1151.51, "text": "So that's what's cool about it."}
+{"start": 1151.51, "end": 1154.02, "text": "And now, if you can look at the runtime,"}
+{"start": 1154.02, "end": 1157.05, "text": "you say, well, runtime still order n square."}
+{"start": 1157.05, "end": 1158.8, "text": "That's the beauty of this because I'm just"}
+{"start": 1158.8, "end": 1161.06, "text": "putting an extra constant factor here where"}
+{"start": 1161.06, "end": 1163.97, "text": "I have k n square, where k is a constant."}
+{"start": 1163.97, "end": 1168.36, "text": "And effectively, I have this nice relationship"}
+{"start": 1168.36, "end": 1172.4, "text": "in terms of the probability of error"}
+{"start": 1172.4, "end": 1177.48, "text": "going down to 1 divided by 2 raised to k."}
+{"start": 1177.48, "end": 1182.019, "text": "And what I have here is a k n square."}
+{"start": 1182.019, "end": 1183.31, "text": "So that's what's cool about it."}
+{"start": 1183.31, "end": 1185.6, "text": "And obviously, k n square is 2 order n square"}
+{"start": 1185.6, "end": 1189.81, "text": "in a polynomial time, and but the probably correct aspect"}
+{"start": 1189.81, "end": 1191.95, "text": "of it gets better and better."}
+{"start": 1191.95, "end": 1193.365, "text": "OK."}
+{"start": 1193.365, "end": 1194.24, "text": "Any questions so far?"}
+{"start": 1198.38, "end": 1198.88, "text": "All right."}
+{"start": 1198.88, "end": 1199.38, "text": "Good."}
+{"start": 1202.27, "end": 1204.91, "text": "So what we're going to do is this algorithm actually"}
+{"start": 1204.91, "end": 1211.89, "text": "works for arbitrary matrices-- the structure at least."}
+{"start": 1214.63, "end": 1218.75, "text": "We're going to assume that the matrix entries are Boolean."}
+{"start": 1218.75, "end": 1223.05, "text": "They're going to work in the finite field mod 2."}
+{"start": 1223.05, "end": 1225.29, "text": "And it's just is an easier proof."}
+{"start": 1225.29, "end": 1226.6, "text": "It's easier to see."}
+{"start": 1226.6, "end": 1229.33, "text": "So the complexities are all the same."}
+{"start": 1229.33, "end": 1230.85, "text": "You're still multiplying numbers."}
+{"start": 1230.85, "end": 1232.13, "text": "They happen to be small."}
+{"start": 1232.13, "end": 1234.51, "text": "And multiplication cost you one operation."}
+{"start": 1234.51, "end": 1236.84, "text": "And you need to do n cubed multiplies to actually get"}
+{"start": 1236.84, "end": 1242.76, "text": "the C matrix, and you have to verify it order n square time."}
+{"start": 1242.76, "end": 1244.85, "text": "And so the number of multiplies, again,"}
+{"start": 1244.85, "end": 1247.94, "text": "that you want to use in your verification algorithm"}
+{"start": 1247.94, "end": 1249.752, "text": "has to be order n square."}
+{"start": 1249.752, "end": 1250.96, "text": "We're ignoring the additions."}
+{"start": 1254.11, "end": 1260.23, "text": "So that's what we'd like out of our matrix product checker,"}
+{"start": 1260.23, "end": 1262.09, "text": "and the algorithm we're going to look at"}
+{"start": 1262.09, "end": 1270.47, "text": "is called Freivald's algorithm, cute little algorithm, that"}
+{"start": 1270.47, "end": 1272.93, "text": "does the following."}
+{"start": 1272.93, "end": 1275.3, "text": "So the algorithm itself is very straightforward,"}
+{"start": 1275.3, "end": 1277.8, "text": "in couple of lines, a minute or so to describe,"}
+{"start": 1277.8, "end": 1283.18, "text": "and the interesting aspect of it is the analysis-- the fact"}
+{"start": 1283.18, "end": 1286.25, "text": "that you can show this."}
+{"start": 1286.25, "end": 1287.474, "text": "That's the cool part."}
+{"start": 1287.474, "end": 1288.89, "text": "If you couldn't show that, there's"}
+{"start": 1288.89, "end": 1292.06, "text": "nothing cool about this algorithm."}
+{"start": 1292.06, "end": 1298.99, "text": "So we're going to choose a random binary vector."}
+{"start": 1298.99, "end": 1301.0, "text": "So there you go."}
+{"start": 1301.0, "end": 1303.48, "text": "Here's your randomness."}
+{"start": 1303.48, "end": 1305.75, "text": "And this binary vector, every time you run it,"}
+{"start": 1305.75, "end": 1308.34, "text": "as the k increases here, the random binary vector"}
+{"start": 1308.34, "end": 1311.38, "text": "is different from one to another."}
+{"start": 1311.38, "end": 1312.19, "text": "That's important."}
+{"start": 1312.19, "end": 1314.15, "text": "You can't run the same thing again"}
+{"start": 1314.15, "end": 1318.69, "text": "and then expect a different result. That's called insanity."}
+{"start": 1318.69, "end": 1326.73, "text": "But you are going to assume that given"}
+{"start": 1326.73, "end": 1331.1, "text": "that we are working in the binary space"}
+{"start": 1331.1, "end": 1338.0, "text": "and this is a binary vector, you're"}
+{"start": 1338.0, "end": 1343.99, "text": "going to assume that r i equals 1 is half independently for i"}
+{"start": 1343.99, "end": 1346.73, "text": "equals 1 through n."}
+{"start": 1346.73, "end": 1351.3, "text": "And the algorithm essentially is this--"}
+{"start": 1351.3, "end": 1354.9, "text": "we're going to do a bunch of matrix vector multiplies."}
+{"start": 1357.66, "end": 1363.43, "text": "An n by n matrix multiplied by an n by n matrix"}
+{"start": 1363.43, "end": 1366.87, "text": "gives you an n by n matrix, and that's your n cubed."}
+{"start": 1366.87, "end": 1369.32, "text": "So these are all-- I think I said this,"}
+{"start": 1369.32, "end": 1371.11, "text": "but I should've written this down--"}
+{"start": 1371.11, "end": 1375.73, "text": "these are all square matrices that are n by n."}
+{"start": 1375.73, "end": 1378.7, "text": "And that's where you get your n cube."}
+{"start": 1378.7, "end": 1381.9, "text": "A matrix vector would be something"}
+{"start": 1381.9, "end": 1385.803, "text": "where you have-- typically we'd have a column vector here."}
+{"start": 1385.803, "end": 1388.16, "text": "You're going to get something like that,"}
+{"start": 1388.16, "end": 1391.29, "text": "and you have n square multiplications here."}
+{"start": 1393.81, "end": 1396.58, "text": "You're going to grab one of these"}
+{"start": 1396.58, "end": 1399.95, "text": "and then multiply it by that and get an entry here."}
+{"start": 1399.95, "end": 1403.76, "text": "And that obviously is n multiplications,"}
+{"start": 1403.76, "end": 1407.28, "text": "but you only have n elements to produce here in this vector."}
+{"start": 1407.28, "end": 1409.29, "text": "So you only got n square."}
+{"start": 1409.29, "end": 1411.16, "text": "That make sense?"}
+{"start": 1411.16, "end": 1415.51, "text": "And so what we're going to do is, we're going to take this r,"}
+{"start": 1415.51, "end": 1419.85, "text": "and we're going to compute A times B r."}
+{"start": 1419.85, "end": 1422.154, "text": "And so the brackets are important because it"}
+{"start": 1422.154, "end": 1423.82, "text": "says that you're going to compute what's"}
+{"start": 1423.82, "end": 1426.82, "text": "inside the brackets first."}
+{"start": 1426.82, "end": 1428.82, "text": "Otherwise, it would be a problem because you'd"}
+{"start": 1428.82, "end": 1432.44, "text": "be multiplying A times B. And obviously, that's order n cube."}
+{"start": 1432.44, "end": 1432.94, "text": "Right?"}
+{"start": 1432.94, "end": 1434.67, "text": "You don't want that."}
+{"start": 1434.67, "end": 1438.71, "text": "So A times Br equals Cr."}
+{"start": 1438.71, "end": 1439.5, "text": "OK."}
+{"start": 1439.5, "end": 1442.56, "text": "So r, remember, is a column vector."}
+{"start": 1442.56, "end": 1444.72, "text": "And C is an n by n matrix as our A"}
+{"start": 1444.72, "end": 1449.635, "text": "and B. We're going to output yes."}
+{"start": 1456.67, "end": 1461.52, "text": "Else-- if these two are not equal,"}
+{"start": 1461.52, "end": 1465.04, "text": "you're going to output no."}
+{"start": 1465.04, "end": 1466.86, "text": "OK?"}
+{"start": 1466.86, "end": 1467.886, "text": "And so that's it."}
+{"start": 1467.886, "end": 1473.11, "text": "That's one run of the algorithm, generator random r"}
+{"start": 1473.11, "end": 1477.06, "text": "and do the multiplication as you see here."}
+{"start": 1477.06, "end": 1482.39, "text": "So let's be clear about complexity,"}
+{"start": 1482.39, "end": 1488.04, "text": "and let's make sure we understand the simpler"}
+{"start": 1488.04, "end": 1490.17, "text": "aspects of the algorithm before we"}
+{"start": 1490.17, "end": 1493.07, "text": "get into the analysis associated with bounding"}
+{"start": 1493.07, "end": 1497.259, "text": "the false positive probability."}
+{"start": 1497.259, "end": 1498.8, "text": "The hard part is going to be bounding"}
+{"start": 1498.8, "end": 1500.185, "text": "the false positive probability."}
+{"start": 1502.81, "end": 1508.07, "text": "But the easy part is first, the complexity."}
+{"start": 1508.07, "end": 1515.85, "text": "So how many matrix vector products am I doing here?"}
+{"start": 1515.85, "end": 1518.16, "text": "How many matrix vector products am I"}
+{"start": 1518.16, "end": 1523.01, "text": "doing here in this check on one iteration of algorithm?"}
+{"start": 1523.01, "end": 1523.51, "text": "Yeah."}
+{"start": 1523.51, "end": 1524.48, "text": "AUDIENCE: Three."}
+{"start": 1524.48, "end": 1525.48, "text": "SRINIVAS DEVADAS: Three."}
+{"start": 1525.48, "end": 1526.49, "text": "All right."}
+{"start": 1526.49, "end": 1526.99, "text": "All right."}
+{"start": 1526.99, "end": 1529.21, "text": "You need to stand up."}
+{"start": 1529.21, "end": 1529.89, "text": "This is fun."}
+{"start": 1529.89, "end": 1535.07, "text": "This is the hardest throw I've had to make in 6046."}
+{"start": 1535.07, "end": 1536.25, "text": "I got to put this down."}
+{"start": 1536.25, "end": 1539.03, "text": "Warm up a little bit."}
+{"start": 1539.03, "end": 1542.01, "text": "It's kind of cold."}
+{"start": 1542.01, "end": 1542.81, "text": "Whoa."}
+{"start": 1542.81, "end": 1543.67, "text": "Terrible!"}
+{"start": 1543.67, "end": 1544.91, "text": "All right."}
+{"start": 1544.91, "end": 1547.54, "text": "The person who gets up and gets that owns it,"}
+{"start": 1547.54, "end": 1549.081, "text": "and we're going to do this again."}
+{"start": 1549.081, "end": 1549.58, "text": "All right."}
+{"start": 1549.58, "end": 1550.83, "text": "Let's see how long this takes."}
+{"start": 1550.83, "end": 1552.288, "text": "AUDIENCE: Is this part of my trial?"}
+{"start": 1552.52, "end": 1553.54, "text": "SRINIVAS DEVADAS: Yes."}
+{"start": 1553.54, "end": 1555.2, "text": "Well, the first one failed."}
+{"start": 1555.2, "end": 1556.715, "text": "False whatever, right?"}
+{"start": 1559.475, "end": 1560.86, "text": "[LAUGHTER]"}
+{"start": 1560.86, "end": 1561.94, "text": "I got a few more."}
+{"start": 1561.94, "end": 1562.852, "text": "[LAUGHS]"}
+{"start": 1563.721, "end": 1564.22, "text": "All right."}
+{"start": 1564.22, "end": 1565.16, "text": "Let me see."}
+{"start": 1565.16, "end": 1567.44, "text": "I think I need to go here."}
+{"start": 1567.44, "end": 1568.03, "text": "This is good."}
+{"start": 1568.03, "end": 1572.45, "text": "And I need to be-- all right."}
+{"start": 1572.45, "end": 1573.03, "text": "Number three."}
+{"start": 1573.03, "end": 1573.53, "text": "Thank you."}
+{"start": 1573.53, "end": 1574.321, "text": "Thank you."}
+{"start": 1574.321, "end": 1575.674, "text": "[CLAPPING]"}
+{"start": 1578.38, "end": 1581.07, "text": "So it was three."}
+{"start": 1581.07, "end": 1581.57, "text": "Three."}
+{"start": 1581.57, "end": 1583.671, "text": "Perfect."}
+{"start": 1583.671, "end": 1585.92, "text": "Three matrix vector products because I got to do this."}
+{"start": 1585.92, "end": 1587.68, "text": "That's the matrix vector product."}
+{"start": 1587.68, "end": 1589.98, "text": "Remember I'm getting a column vector out of this, which"}
+{"start": 1589.98, "end": 1593.74, "text": "is important, and then I'm going to multiply"}
+{"start": 1593.74, "end": 1595.8, "text": "this matrix with a column vector, matrix vector"}
+{"start": 1595.8, "end": 1597.15, "text": "product number two."}
+{"start": 1597.15, "end": 1600.05, "text": "And then there's a matrix vector product over here."}
+{"start": 1600.05, "end": 1601.97, "text": "So then at that point-- do you remember"}
+{"start": 1601.97, "end": 1604.79, "text": "I have a vector and a vector."}
+{"start": 1604.79, "end": 1607.31, "text": "And checking the equivalence of two vectors"}
+{"start": 1607.31, "end": 1609.52, "text": "is simply checking the equivalence of each element"}
+{"start": 1609.52, "end": 1611.97, "text": "in the vector 1 by one."}
+{"start": 1611.97, "end": 1613.63, "text": "So first one, same as the first one."}
+{"start": 1613.63, "end": 1615.28, "text": "Second one, same as the second one."}
+{"start": 1615.28, "end": 1617.41, "text": "Et cetera."}
+{"start": 1617.41, "end": 1622.08, "text": "And so this is order n square, but three"}
+{"start": 1622.08, "end": 1624.32, "text": "is something that is worth thinking about simply"}
+{"start": 1624.32, "end": 1625.82, "text": "because every once in a while, we're"}
+{"start": 1625.82, "end": 1627.37, "text": "interested in constant factors."}
+{"start": 1627.37, "end": 1630.96, "text": "And the other thing that's interesting about this--"}
+{"start": 1630.96, "end": 1634.81, "text": "make sure I write this-- let me write this over"}
+{"start": 1634.81, "end": 1648.09, "text": "here-- that you are going to-- if A B equals C,"}
+{"start": 1648.09, "end": 1654.08, "text": "then there's no issue associated with error here."}
+{"start": 1654.08, "end": 1657.52, "text": "So there's no notion of a false negative"}
+{"start": 1657.52, "end": 1662.3, "text": "because if AB equals C, then you know, thanks"}
+{"start": 1662.3, "end": 1669.19, "text": "to the associativity of matrix multiplication--"}
+{"start": 1669.19, "end": 1677.5, "text": "be it whether they're n by n matrices or columns--"}
+{"start": 1677.5, "end": 1679.95, "text": "you have this relationship here."}
+{"start": 1679.95, "end": 1681.62, "text": "And I hope you can read it at the back."}
+{"start": 1681.62, "end": 1685.03, "text": "Essentially what I have here is if AB equals C."}
+{"start": 1685.03, "end": 1689.4, "text": "So if in fact, the matrix multiply happened correctly,"}
+{"start": 1689.4, "end": 1695.44, "text": "I'm in a situation where it is clear that A Br equals this,"}
+{"start": 1695.44, "end": 1698.2, "text": "thanks to this associativity of matrix multiply."}
+{"start": 1698.2, "end": 1702.24, "text": "And that of course, is exactly the same as Cr."}
+{"start": 1702.24, "end": 1705.65, "text": "So that should convince you, thanks to associativity"}
+{"start": 1705.65, "end": 1709.87, "text": "of matrix multiply that you don't have any false negatives"}
+{"start": 1709.87, "end": 1711.48, "text": "in this algorithm."}
+{"start": 1711.48, "end": 1713.68, "text": "Make sense?"}
+{"start": 1713.68, "end": 1714.73, "text": "So we're all good."}
+{"start": 1714.73, "end": 1719.656, "text": "All we have to do, given what we have with respect to Frievald"}
+{"start": 1719.656, "end": 1721.28, "text": "is to do this part here, which is going"}
+{"start": 1721.28, "end": 1723.19, "text": "to take a little bit of doing."}
+{"start": 1723.19, "end": 1726.59, "text": "And the challenge always with simple algorithm"}
+{"start": 1726.59, "end": 1729.68, "text": "is you don't quite know why they work."}
+{"start": 1729.68, "end": 1731.965, "text": "And then of course, you have sophisticated algorithms,"}
+{"start": 1731.965, "end": 1733.59, "text": "and you don't quite know why they work."}
+{"start": 1740.58, "end": 1742.02, "text": "So this will take a few minutes."}
+{"start": 1742.02, "end": 1745.77, "text": "It's not super complicated, and there's a little insight,"}
+{"start": 1745.77, "end": 1747.8, "text": "as always, with these things that"}
+{"start": 1747.8, "end": 1749.85, "text": "are not immediately obvious."}
+{"start": 1749.85, "end": 1755.75, "text": "But we'll have to look at the number of r's."}
+{"start": 1755.75, "end": 1759.14, "text": "So you have an r vector that you've generated randomly,"}
+{"start": 1759.14, "end": 1761.17, "text": "and it may be a bad vector."}
+{"start": 1761.17, "end": 1768.07, "text": "It may be a vector that doesn't show you that the product"}
+{"start": 1768.07, "end": 1770.49, "text": "matrix has an incorrect entry."}
+{"start": 1770.49, "end": 1773.76, "text": "Remember there's n square entries in this matrix."}
+{"start": 1773.76, "end": 1777.28, "text": "Exactly one of them may be wrong, and you need to find it."}
+{"start": 1777.28, "end": 1778.739, "text": "Right?"}
+{"start": 1778.739, "end": 1781.03, "text": "So there may be a lot of entries which are all correct,"}
+{"start": 1781.03, "end": 1783.72, "text": "but you've got to find that one entry that's incorrect."}
+{"start": 1783.72, "end": 1785.8, "text": "And so you could miss it."}
+{"start": 1785.8, "end": 1789.0, "text": "A given r vector might miss it, and of course,"}
+{"start": 1789.0, "end": 1790.98, "text": "if you keep generating the r's, you'd"}
+{"start": 1790.98, "end": 1796.2, "text": "like to find it and declare that the matrices weren't multiplied"}
+{"start": 1796.2, "end": 1800.33, "text": "correctly and that probability is what we have to compute."}
+{"start": 1800.33, "end": 1805.37, "text": "So we want to get this result where we are analyzing"}
+{"start": 1805.37, "end": 1808.24, "text": "the correctness in the case."}
+{"start": 1808.24, "end": 1810.4, "text": "You've already analyzed the correctness"}
+{"start": 1810.4, "end": 1816.509, "text": "in the case where AB equals C, but now we"}
+{"start": 1816.509, "end": 1818.3, "text": "have to analyze the correctness in the case"}
+{"start": 1818.3, "end": 1820.79, "text": "where AB is not equal to C. Right?"}
+{"start": 1821.89, "end": 1831.69, "text": "And so the claim is that if AB is not equal to C,"}
+{"start": 1831.69, "end": 1839.61, "text": "then the probability of ABr not equal to Cr"}
+{"start": 1839.61, "end": 1842.14, "text": "is greater than or equal to half."}
+{"start": 1842.14, "end": 1843.652, "text": "So this is greater than or equal to."}
+{"start": 1843.652, "end": 1845.86, "text": "Over there, I'm just talking about the false negative"}
+{"start": 1845.86, "end": 1849.02, "text": "probability where I'm actually getting an incorrect yes when"}
+{"start": 1849.02, "end": 1854.89, "text": "you have the matrices being multiplied wrongly,"}
+{"start": 1854.89, "end": 1855.83, "text": "incorrectly."}
+{"start": 1855.83, "end": 1858.77, "text": "And so that's why I get-- this is what I want."}
+{"start": 1858.77, "end": 1865.34, "text": "I want there to be a greater than one half probability for r"}
+{"start": 1865.34, "end": 1871.81, "text": "to have discovered that, for r to have discovered that."}
+{"start": 1871.81, "end": 1874.49, "text": "OK?"}
+{"start": 1874.49, "end": 1877.22, "text": "I'll stop for questions in a second,"}
+{"start": 1877.22, "end": 1880.68, "text": "but let me do a little bit more."}
+{"start": 1880.68, "end": 1883.059, "text": "I'm going to compute the difference matrix,"}
+{"start": 1883.059, "end": 1885.1, "text": "and I'm not computing this because obviously this"}
+{"start": 1885.1, "end": 1886.6, "text": "would take a while to compute."}
+{"start": 1886.6, "end": 1888.61, "text": "It's just for the purpose of analysis."}
+{"start": 1888.61, "end": 1891.84, "text": "I'm going to look at the difference matrix D equals AB"}
+{"start": 1891.84, "end": 1894.57, "text": "minus C because you want D to be 0."}
+{"start": 1894.57, "end": 1896.55, "text": "And that we're going to do some analysis that"}
+{"start": 1896.55, "end": 1898.51, "text": "says-- we are going to try and find"}
+{"start": 1898.51, "end": 1901.37, "text": "these non-zero entries in D because, clearly,"}
+{"start": 1901.37, "end": 1904.67, "text": "the non-zero entries in D tell you"}
+{"start": 1904.67, "end": 1907.65, "text": "if there's non-zero entry in D, you got a problem here."}
+{"start": 1907.65, "end": 1910.49, "text": "The matrices weren't multiplied properly."}
+{"start": 1910.49, "end": 1912.015, "text": "So that's why we have D here."}
+{"start": 1912.015, "end": 1914.14, "text": "Don't think of it as we're actually computing that."}
+{"start": 1916.96, "end": 1925.48, "text": "So what we'd like is to, as I said,"}
+{"start": 1925.48, "end": 1928.46, "text": "discover these entries where our hypothesis now"}
+{"start": 1928.46, "end": 1930.62, "text": "is that D is not equal to 0 because that's"}
+{"start": 1930.62, "end": 1932.5, "text": "the case we're considering."}
+{"start": 1932.5, "end": 1936.07, "text": "We know that D is not equal to 0 if the matrices were multiplied"}
+{"start": 1936.07, "end": 1937.63, "text": "incorrectly."}
+{"start": 1937.63, "end": 1939.58, "text": "And when I say D is not equal to 0,"}
+{"start": 1939.58, "end": 1943.24, "text": "it means that there are n square entries in D, and one of them"}
+{"start": 1943.24, "end": 1944.85, "text": "is not 0."}
+{"start": 1944.85, "end": 1946.55, "text": "They all have to be identically 0."}
+{"start": 1946.55, "end": 1947.7, "text": "That's all it means."}
+{"start": 1947.7, "end": 1951.29, "text": "D not equal to 0 means one entry at least is not 0."}
+{"start": 1954.19, "end": 1963.32, "text": "So now what we need to do is we need to show that there are"}
+{"start": 1963.32, "end": 1970.71, "text": "many r-- it's a binary vector of length n,"}
+{"start": 1970.71, "end": 1973.7, "text": "and you can obviously think about two ways to n"}
+{"start": 1973.7, "end": 1976.06, "text": "possibilities with respect to r."}
+{"start": 1976.06, "end": 1977.81, "text": "And what we really want to show is"}
+{"start": 1977.81, "end": 1980.86, "text": "that there's a large fraction-- more than half"}
+{"start": 1980.86, "end": 1988.41, "text": "of the r's are going to actually discover that the matrices were"}
+{"start": 1988.41, "end": 1990.01, "text": "multiplied incorrectly."}
+{"start": 1990.01, "end": 1990.67, "text": "OK."}
+{"start": 1990.67, "end": 1995.39, "text": "So we want to show that there are many r's such"}
+{"start": 1995.39, "end": 1996.96, "text": "that Dr is not equal to 0."}
+{"start": 2002.23, "end": 2004.52, "text": "And because if Dr is not equal to 0,"}
+{"start": 2004.52, "end": 2006.36, "text": "then you're obviously going to discover"}
+{"start": 2006.36, "end": 2010.35, "text": "that ABr is not equal to Cr."}
+{"start": 2010.35, "end": 2012.29, "text": "So if ABr is not equal to Cr, that's"}
+{"start": 2012.29, "end": 2015.44, "text": "identical to saying the Dr is not equal to 0."}
+{"start": 2015.44, "end": 2018.11, "text": "That make sense?"}
+{"start": 2018.11, "end": 2024.83, "text": "So specifically, if you look at the claim"}
+{"start": 2024.83, "end": 2027.42, "text": "and writing it in terms of Dr, you"}
+{"start": 2027.42, "end": 2033.74, "text": "want to say that the probability of Dr not equal to 0"}
+{"start": 2033.74, "end": 2038.56, "text": "is greater than or equal to half for a randomly chosen r."}
+{"start": 2050.44, "end": 2051.385, "text": "And so that's it."}
+{"start": 2051.385, "end": 2054.55, "text": "That's the setup that we have to show."}
+{"start": 2054.55, "end": 2056.9, "text": "We have to do a counting argument corresponding"}
+{"start": 2056.9, "end": 2061.06, "text": "to these r vectors that are being generated randomly."}
+{"start": 2061.06, "end": 2061.82, "text": "So let's do that."}
+{"start": 2074.67, "end": 2077.19, "text": "So the general argument we're going to make here"}
+{"start": 2077.19, "end": 2081.53, "text": "is simply that we're going to-- roughly speaking--"}
+{"start": 2081.53, "end": 2085.51, "text": "if you're going to look at a bad r-- what's a bad r?"}
+{"start": 2085.51, "end": 2090.02, "text": "And bad r is something that doesn't discover"}
+{"start": 2090.02, "end": 2092.94, "text": "the incorrect multiplication."}
+{"start": 2092.94, "end": 2094.63, "text": "That's what a bad r is."}
+{"start": 2094.63, "end": 2102.16, "text": "So you're D is not equal to 0, but Dr equals 0."}
+{"start": 2102.16, "end": 2102.95, "text": "OK."}
+{"start": 2102.95, "end": 2105.56, "text": "That's a bad r, right?"}
+{"start": 2105.56, "end": 2108.37, "text": "It's quite possible that that would be the case."}
+{"start": 2108.37, "end": 2113.41, "text": "And so you want to try and figure out"}
+{"start": 2113.41, "end": 2115.19, "text": "how many of these bad r are there"}
+{"start": 2115.19, "end": 2116.68, "text": "because those are the ones that are"}
+{"start": 2116.68, "end": 2122.55, "text": "causing the false negatives."}
+{"start": 2122.55, "end": 2123.68, "text": "Right?"}
+{"start": 2123.68, "end": 2130.92, "text": "So that counting argument is the crux of the proof of the claim."}
+{"start": 2130.92, "end": 2132.74, "text": "So let's look at that."}
+{"start": 2132.74, "end": 2135.39, "text": "And what we're going to do is, we're going to pick a bad r,"}
+{"start": 2135.39, "end": 2137.13, "text": "and we're going to say I there are"}
+{"start": 2137.13, "end": 2141.2, "text": "these good r's that are associated with this bad r."}
+{"start": 2141.2, "end": 2144.499, "text": "And for every bad r, there's a good r."}
+{"start": 2144.499, "end": 2146.54, "text": "And a good r is something that actually discovers"}
+{"start": 2146.54, "end": 2148.72, "text": "the incorrect multiply."}
+{"start": 2148.72, "end": 2152.63, "text": "And given that for every bad r there's a good r,"}
+{"start": 2152.63, "end": 2155.81, "text": "half of the arts are good r."}
+{"start": 2155.81, "end": 2156.64, "text": "That's it."}
+{"start": 2156.64, "end": 2157.89, "text": "So I'll write it down."}
+{"start": 2157.89, "end": 2160.18, "text": "That's the essence of the argument."}
+{"start": 2160.18, "end": 2164.48, "text": "And I'm go a little more slowly so hopefully you'll get that."}
+{"start": 2164.48, "end": 2168.44, "text": "So let's look at the case where Dr equals 0 case because that's"}
+{"start": 2168.44, "end": 2170.29, "text": "the interesting case."}
+{"start": 2170.29, "end": 2172.55, "text": "That's the case where the r is bad"}
+{"start": 2172.55, "end": 2174.87, "text": "even though we had an incorrect multiply,"}
+{"start": 2174.87, "end": 2182.499, "text": "and you get this-- I should have said you get a false positive."}
+{"start": 2182.499, "end": 2183.04, "text": "So I'm sorry."}
+{"start": 2183.04, "end": 2185.88, "text": "I think just before, I said false negative,"}
+{"start": 2185.88, "end": 2187.99, "text": "but I meant false positive."}
+{"start": 2187.99, "end": 2191.63, "text": "So you have a false positive in this case,"}
+{"start": 2191.63, "end": 2198.1, "text": "and D equals AB minus C not equal to 0"}
+{"start": 2198.1, "end": 2201.96, "text": "implies there exists an i and j such"}
+{"start": 2201.96, "end": 2205.78, "text": "that Dij is not equal to 0."}
+{"start": 2205.78, "end": 2207.37, "text": "OK?"}
+{"start": 2207.37, "end": 2210.25, "text": "And there's just one entry at least-- if you"}
+{"start": 2210.25, "end": 2211.94, "text": "say the matrix is not equal to 0,"}
+{"start": 2211.94, "end": 2214.59, "text": "there's got to be an entry that's not equal to 0."}
+{"start": 2214.59, "end": 2216.73, "text": "So let's take a look at that entry,"}
+{"start": 2216.73, "end": 2218.67, "text": "and let's just draw it out."}
+{"start": 2218.67, "end": 2221.25, "text": "That's my D matrix."}
+{"start": 2221.25, "end": 2227.22, "text": "And there's going to be an i and a j."}
+{"start": 2227.22, "end": 2231.43, "text": "So that's my ith row and my jth column."}
+{"start": 2231.43, "end": 2232.22, "text": "And there you go."}
+{"start": 2232.22, "end": 2238.61, "text": "I have an entry here which is Dij, and I'm just picking that."}
+{"start": 2238.61, "end": 2240.77, "text": "I don't care what i and j are, but there's"}
+{"start": 2240.77, "end": 2243.46, "text": "got to be an entry that's not equal to 0."}
+{"start": 2243.46, "end": 2249.32, "text": "Now I'm going to create a vector, v. So"}
+{"start": 2249.32, "end": 2251.27, "text": "this vector is not r."}
+{"start": 2251.27, "end": 2256.1, "text": "It's a vector v that is chosen deterministically given"}
+{"start": 2256.1, "end": 2265.43, "text": "the Dij where it's got 0's everywhere except it at vj."}
+{"start": 2265.43, "end": 2270.42, "text": "So if this the jth entry column-wise,"}
+{"start": 2270.42, "end": 2272.5, "text": "everywhere else you got 0."}
+{"start": 2275.59, "end": 2278.05, "text": "And you just got the one associated"}
+{"start": 2278.05, "end": 2284.27, "text": "with the-- going downward-- the jth entry."}
+{"start": 2284.27, "end": 2284.77, "text": "OK?"}
+{"start": 2284.77, "end": 2286.73, "text": "So it's a one one-hot vector, if you will."}
+{"start": 2286.73, "end": 2288.55, "text": "It's got one, one."}
+{"start": 2288.55, "end": 2291.567, "text": "So now, if you multiply these two things out,"}
+{"start": 2291.567, "end": 2293.4, "text": "you know that you're going to get something,"}
+{"start": 2293.4, "end": 2297.52, "text": "and we're going to can call this Dv."}
+{"start": 2297.52, "end": 2298.9, "text": "So you take D and you multiply it"}
+{"start": 2298.9, "end": 2304.16, "text": "by v-- matrix multiplied by a vector."}
+{"start": 2304.16, "end": 2307.39, "text": "You're guaranteed, given that all of these are 0,"}
+{"start": 2307.39, "end": 2310.02, "text": "when I do my this times that plus this"}
+{"start": 2310.02, "end": 2312.71, "text": "times this plus this times this, all of these"}
+{"start": 2312.71, "end": 2313.92, "text": "are going to produce 0."}
+{"start": 2313.92, "end": 2317.41, "text": "This times 1 is going to produce something that's non-zero,"}
+{"start": 2317.41, "end": 2319.81, "text": "and then all of the other ones are going to produce 0."}
+{"start": 2319.81, "end": 2323.54, "text": "So I'm just adding a bunch of 0's to this non-zero multiplied"}
+{"start": 2323.54, "end": 2324.77, "text": "by one."}
+{"start": 2324.77, "end": 2327.42, "text": "So I'm going to get something that's non-zero."}
+{"start": 2327.42, "end": 2328.35, "text": "Right?"}
+{"start": 2328.35, "end": 2330.79, "text": "All make sense?"}
+{"start": 2330.79, "end": 2332.62, "text": "So I'm going to see something here,"}
+{"start": 2332.62, "end": 2337.59, "text": "which is the jth entry that's not equal 0."}
+{"start": 2337.59, "end": 2340.91, "text": "And so that implies that Dv is not equal to 0."}
+{"start": 2340.91, "end": 2346.45, "text": "And in particular, what I'm saying is Dv of j--"}
+{"start": 2346.45, "end": 2350.07, "text": "so if I just look at that entry that is identically"}
+{"start": 2350.07, "end": 2354.1, "text": "Dij, which is not equal to 0."}
+{"start": 2354.1, "end": 2356.83, "text": "Because I'm multiplying it by 1 and I'm adding a bunch of 0's"}
+{"start": 2356.83, "end": 2357.7, "text": "to it."}
+{"start": 2357.7, "end": 2358.88, "text": "That's it."}
+{"start": 2358.88, "end": 2359.7, "text": "OK."}
+{"start": 2359.7, "end": 2360.2, "text": "Yeah."}
+{"start": 2360.2, "end": 2361.21, "text": "A question."}
+{"start": 2361.21, "end": 2364.222, "text": "AUDIENCE: Is it Dv of j or of i?"}
+{"start": 2364.222, "end": 2365.93, "text": "SRINIVAS DEVADAS: So I picked the j here."}
+{"start": 2365.93, "end": 2370.894, "text": "So I think I'm going j, j, right?"}
+{"start": 2370.894, "end": 2371.56, "text": "That make sense?"}
+{"start": 2373.91, "end": 2377.44, "text": "If j was 7 and this is 7 down, then it"}
+{"start": 2377.44, "end": 2381.13, "text": "would be the seventh [INAUDIBLE] because this"}
+{"start": 2381.13, "end": 2383.991, "text": "is going to turn into that."}
+{"start": 2383.991, "end": 2384.49, "text": "OK?"}
+{"start": 2387.112, "end": 2390.61, "text": "Now, either way, if I picked it in the middle,"}
+{"start": 2390.61, "end": 2391.979, "text": "it doesn't really matter."}
+{"start": 2391.979, "end": 2393.77, "text": "The point is there's going to be one entry."}
+{"start": 2393.77, "end": 2394.478, "text": "So hang in there."}
+{"start": 2394.478, "end": 2396.472, "text": "There's going to be one entry that's nonzero"}
+{"start": 2396.472, "end": 2397.68, "text": "if you didn't quite get that."}
+{"start": 2398.75, "end": 2400.61, "text": "So Dij is not 0."}
+{"start": 2400.61, "end": 2403.24, "text": "And this is one more observation we're"}
+{"start": 2403.24, "end": 2407.95, "text": "going to make in order to do the counting of these bad r's"}
+{"start": 2407.95, "end": 2410.1, "text": "because this is a bad r that we're looking"}
+{"start": 2410.1, "end": 2414.52, "text": "at if you say that Dr equals 0."}
+{"start": 2414.52, "end": 2417.79, "text": "You've created a v that has nothing to do with r,"}
+{"start": 2417.79, "end": 2420.47, "text": "but we're going to use the v to go"}
+{"start": 2420.47, "end": 2425.32, "text": "from a bad r, which is our example here, to a good one."}
+{"start": 2425.32, "end": 2427.44, "text": "That's pretty much it."}
+{"start": 2427.44, "end": 2429.112, "text": "That's the last step here."}
+{"start": 2429.112, "end": 2430.57, "text": "So what we're going to do, is we're"}
+{"start": 2430.57, "end": 2445.23, "text": "going to take any r that can be chosen by our algorithm"}
+{"start": 2445.23, "end": 2447.79, "text": "such that Dr equals 0 because that's"}
+{"start": 2447.79, "end": 2450.11, "text": "the case that we're looking at."}
+{"start": 2450.11, "end": 2459.72, "text": "And we're going to compute r prime, which is r plus v."}
+{"start": 2459.72, "end": 2462.06, "text": "And just remember this is mod 2 arithmetic."}
+{"start": 2462.06, "end": 2463.87, "text": "You're only going to get 0's and 1's."}
+{"start": 2463.87, "end": 2466.204, "text": "So if you have 1 plus 1, it gives you 0."}
+{"start": 2466.204, "end": 2468.31, "text": "Obviously 0 plus 0 gives you 0."}
+{"start": 2468.31, "end": 2471.26, "text": "And the other cases are clear."}
+{"start": 2471.26, "end": 2473.4, "text": "And this plus here, remember, is also--"}
+{"start": 2473.4, "end": 2478.1, "text": "the other thing that's important is this is not only mod 2."}
+{"start": 2478.1, "end": 2479.73, "text": "These are all vectors."}
+{"start": 2479.73, "end": 2484.51, "text": "So r is a vector, and you can think of it as a column vector."}
+{"start": 2484.51, "end": 2486.62, "text": "That's how I drew it."}
+{"start": 2486.62, "end": 2489.17, "text": "You're adding up a column vector with a v."}
+{"start": 2489.17, "end": 2491.89, "text": "That's the column vector the way I drew that."}
+{"start": 2491.89, "end": 2495.74, "text": "You could do it with rows if you like, but it's just notation."}
+{"start": 2495.74, "end": 2500.1, "text": "And you're going to compute an r prime here."}
+{"start": 2500.1, "end": 2507.56, "text": "What can you say about Dr prime?"}
+{"start": 2507.56, "end": 2509.65, "text": "Someone?"}
+{"start": 2509.65, "end": 2510.15, "text": "Yeah."}
+{"start": 2510.15, "end": 2510.885, "text": "Go ahead."}
+{"start": 2510.885, "end": 2511.76, "text": "AUDIENCE: It's not 0."}
+{"start": 2511.76, "end": 2513.19, "text": "SRINIVAS DEVADAS: It's not 0."}
+{"start": 2513.19, "end": 2516.09, "text": "And I'll give you a Frisbee, but then you"}
+{"start": 2516.09, "end": 2518.228, "text": "can explain-- can you stand up a little?"}
+{"start": 2518.228, "end": 2521.83, "text": "I don't want to take this lady's head off."}
+{"start": 2521.83, "end": 2524.1, "text": "So can you explain why?"}
+{"start": 2524.1, "end": 2526.6, "text": "AUDIENCE: Because r prime is r plus v"}
+{"start": 2526.6, "end": 2529.682, "text": "and Dr gives you Dr plus DB is not 0."}
+{"start": 2529.682, "end": 2531.14, "text": "SRINIVAS DEVADAS: Absolutely right."}
+{"start": 2531.14, "end": 2532.74, "text": "So essentially what we have is this"}
+{"start": 2532.74, "end": 2546.576, "text": "is simply Dr plus v. 0 plus Dv, not equal to 0."}
+{"start": 2546.576, "end": 2550.73, "text": "Do we like yellow or do we like white?"}
+{"start": 2550.73, "end": 2553.24, "text": "Yellow's fine."}
+{"start": 2553.24, "end": 2554.5, "text": "So that's pretty much it."}
+{"start": 2554.5, "end": 2558.579, "text": "So what's cool about this- is this final step,"}
+{"start": 2558.579, "end": 2561.12, "text": "which I think you've gotten, but I'm just going to say it out"}
+{"start": 2561.12, "end": 2575.56, "text": "loud now, which is that r to r prime is 1 to 1 for any given r"}
+{"start": 2575.56, "end": 2580.72, "text": "such that Dr equals 0, given the situation where capital D is"}
+{"start": 2580.72, "end": 2582.81, "text": "not equal to 0, and there's some Dij--"}
+{"start": 2582.81, "end": 2584.47, "text": "and there could be many Dij's."}
+{"start": 2584.47, "end": 2585.96, "text": "I just need one."}
+{"start": 2585.96, "end": 2589.58, "text": "I've constructed, based on that Dij, this v vector which"}
+{"start": 2589.58, "end": 2593.99, "text": "has the jth entry corresponding to the v vector being a 1"}
+{"start": 2593.99, "end": 2596.14, "text": "with all of the other entries being a 0."}
+{"start": 2596.14, "end": 2601.34, "text": "But I can now create an r to r that is 1 to 1 in the sense"}
+{"start": 2601.34, "end": 2611.29, "text": "that if r prime equals r plus v and that equals"}
+{"start": 2611.29, "end": 2618.33, "text": "r double prime plus v-- so if I ever have a situation where"}
+{"start": 2618.33, "end": 2619.83, "text": "in order to show there's one-to-one,"}
+{"start": 2619.83, "end": 2624.35, "text": "I want to say that it's not too many-to-one or even two-to-one."}
+{"start": 2624.35, "end": 2627.4, "text": "So if I have an r prime that equals r plus v"}
+{"start": 2627.4, "end": 2632.83, "text": "and you tell me that r prime also equals r double prime plus"}
+{"start": 2632.83, "end": 2637.73, "text": "v, I can make the argument that r and r double prime"}
+{"start": 2637.73, "end": 2639.92, "text": "are exactly the same."}
+{"start": 2639.92, "end": 2645.49, "text": "So then r equals r double prime."}
+{"start": 2645.49, "end": 2647.97, "text": "So what am I saying there?"}
+{"start": 2647.97, "end": 2655.77, "text": "I'm just saying that for any given r that has Dr equals 0,"}
+{"start": 2655.77, "end": 2662.22, "text": "I can twiddle the jth element of that r and go from 0 to 1 or 1"}
+{"start": 2662.22, "end": 2663.33, "text": "to 0."}
+{"start": 2663.33, "end": 2667.81, "text": "If you tell me that there's a Dij somewhere in that matrix"}
+{"start": 2667.81, "end": 2671.627, "text": "that is nonzero and I do that little twiddle-- remembers"}
+{"start": 2671.627, "end": 2673.71, "text": "it's all 0's and 1's Boolean matrices-- so if I do"}
+{"start": 2673.71, "end": 2677.28, "text": "one twiddle, it's one-to-one."}
+{"start": 2677.28, "end": 2682.73, "text": "If I do two twiddles and I go 1 to 0, I'm back to 1 again."}
+{"start": 2682.73, "end": 2684.83, "text": "And that's all this says."}
+{"start": 2684.83, "end": 2686.47, "text": "Because you have mod 2."}
+{"start": 2686.47, "end": 2687.91, "text": "That's all that says."}
+{"start": 2687.91, "end": 2691.24, "text": "So one little tweak-- and I'm going"}
+{"start": 2691.24, "end": 2695.0, "text": "to be able to take a bad r and turn it into a good r"}
+{"start": 2695.0, "end": 2699.42, "text": "because the good r, the r prime in this case,"}
+{"start": 2699.42, "end": 2703.12, "text": "had Dr prime not equal to 0."}
+{"start": 2703.12, "end": 2703.78, "text": "And that's it."}
+{"start": 2703.78, "end": 2706.99, "text": "That's my counting argument, and all that remains"}
+{"start": 2706.99, "end": 2711.97, "text": "is to essentially close this by sayiny-- just"}
+{"start": 2711.97, "end": 2717.23, "text": "to write this out to get to the final claim"}
+{"start": 2717.23, "end": 2720.08, "text": "and get the one half-- the one-to-one essentially"}
+{"start": 2720.08, "end": 2721.96, "text": "gives you the one half."}
+{"start": 2721.96, "end": 2724.63, "text": "At least half of these things are going to be good r's."}
+{"start": 2733.11, "end": 2736.81, "text": "If you had I Dr that's not equal to 0--"}
+{"start": 2736.81, "end": 2740.18, "text": "and that's the case that you have here-- then we're"}
+{"start": 2740.18, "end": 2746.05, "text": "going to discover an r prime such"}
+{"start": 2746.05, "end": 2752.01, "text": "that the Dr prime is not equal to 0 and r to r"}
+{"start": 2752.01, "end": 2754.35, "text": "prime is a one-to-one mapping."}
+{"start": 2760.17, "end": 2769.34, "text": "So the number of r prime for which"}
+{"start": 2769.34, "end": 2772.99, "text": "Dr prime is not equal to 0 is greater than"}
+{"start": 2772.99, "end": 2784.57, "text": "or equal to the number of r for which Dr equals zero."}
+{"start": 2784.57, "end": 2790.43, "text": "And so that implies that the probability of Dr"}
+{"start": 2790.43, "end": 2793.19, "text": "not equal to zero-- so if you just choose an r,"}
+{"start": 2793.19, "end": 2797.56, "text": "this is now a randomly chosen r."}
+{"start": 2797.56, "end": 2800.6, "text": "Not that others weren't, but I'm treating it"}
+{"start": 2800.6, "end": 2801.85, "text": "a little bit differently here."}
+{"start": 2801.85, "end": 2806.21, "text": "This was a specific r for which Dr was equal to 0."}
+{"start": 2806.21, "end": 2808.1, "text": "I made an argument that you can always"}
+{"start": 2808.1, "end": 2811.48, "text": "get this r prime one-to-one such that Dr prime is not"}
+{"start": 2811.48, "end": 2812.48, "text": "equal to 0."}
+{"start": 2812.48, "end": 2815.48, "text": "And now going back to what I had initially with respect"}
+{"start": 2815.48, "end": 2820.87, "text": "to the claim here where the r here was a randomly chosen r,"}
+{"start": 2820.87, "end": 2824.53, "text": "I'm saying, thanks to this little argument-- this line up"}
+{"start": 2824.53, "end": 2827.4, "text": "top-- I'm going to be able to say this is greater than"}
+{"start": 2827.4, "end": 2828.87, "text": "or equal to one half."}
+{"start": 2828.87, "end": 2830.78, "text": "OK?"}
+{"start": 2830.78, "end": 2831.507, "text": "Cool."}
+{"start": 2831.507, "end": 2832.09, "text": "Any questions?"}
+{"start": 2832.09, "end": 2832.994, "text": "Yeah."}
+{"start": 2832.994, "end": 2835.958, "text": "AUDIENCE: I think the Dr squared times"}
+{"start": 2835.958, "end": 2837.77, "text": "column equal column on the board."}
+{"start": 2837.77, "end": 2838.728, "text": "SRINIVAS DEVADAS: Yeah."}
+{"start": 2838.728, "end": 2841.322, "text": "AUDIENCE: On the last column, it should be i, not j."}
+{"start": 2841.322, "end": 2842.78, "text": "SRINIVAS DEVADAS: This should be i?"}
+{"start": 2842.78, "end": 2843.363, "text": "AUDIENCE: Yes."}
+{"start": 2846.402, "end": 2848.11, "text": "SRINIVAS DEVADAS: People agree with that?"}
+{"start": 2848.11, "end": 2850.38, "text": "Majority vote."}
+{"start": 2850.38, "end": 2851.14, "text": "All right."}
+{"start": 2851.14, "end": 2852.59, "text": "I'm good."}
+{"start": 2852.59, "end": 2853.844, "text": "Let's make that an i."}
+{"start": 2853.844, "end": 2855.996, "text": "AUDIENCE: The iteration of that as well, Dv sub j."}
+{"start": 2855.996, "end": 2857.12, "text": "SRINIVAS DEVADAS: Oh, yeah."}
+{"start": 2857.12, "end": 2858.65, "text": "Of course."}
+{"start": 2858.65, "end": 2859.15, "text": "Yeah."}
+{"start": 2859.15, "end": 2862.68, "text": "Once you do that, you have to have an i there."}
+{"start": 2862.68, "end": 2864.96, "text": "Good."}
+{"start": 2864.96, "end": 2870.18, "text": "So you're looking at a particular entry--"}
+{"start": 2870.18, "end": 2873.89, "text": "it makes a difference whether you used a column or a row."}
+{"start": 2873.89, "end": 2879.37, "text": "If I'd done-- now that I remember-- if you turn this"}
+{"start": 2879.37, "end": 2883.39, "text": "into a row matrix and this becomes a row matrix,"}
+{"start": 2883.39, "end": 2885.47, "text": "you'll essentially get the Dvj."}
+{"start": 2885.47, "end": 2887.704, "text": "So it depends on which way you look at it, but thanks"}
+{"start": 2887.704, "end": 2888.62, "text": "for pointing that out."}
+{"start": 2891.0, "end": 2895.82, "text": "The specifics of i and j weren't particularly"}
+{"start": 2895.82, "end": 2899.03, "text": "important to the proof itself."}
+{"start": 2899.03, "end": 2903.88, "text": "The key thing is you zoom in on a particular entry that is not"}
+{"start": 2903.88, "end": 2909.53, "text": "equal to 0, and then you tweak that entry corresponding"}
+{"start": 2909.53, "end": 2910.21, "text": "to the r."}
+{"start": 2910.21, "end": 2913.95, "text": "So once you tweak that-- you make that 0 or 1 or 1"}
+{"start": 2913.95, "end": 2918.83, "text": "to 0-- you can get this result."}
+{"start": 2918.83, "end": 2919.33, "text": "I'm sorry."}
+{"start": 2919.33, "end": 2920.621, "text": "I'm pointing to the wrong spot."}
+{"start": 2920.621, "end": 2924.97, "text": "This result-- and then get your claim."}
+{"start": 2924.97, "end": 2925.85, "text": "OK?"}
+{"start": 2925.85, "end": 2929.22, "text": "So summarize-- we have a bound."}
+{"start": 2929.22, "end": 2933.7, "text": "We run it over and over, and we get it to the point"}
+{"start": 2933.7, "end": 2939.09, "text": "where we can have a 0.0001 probability that,"}
+{"start": 2939.09, "end": 2942.98, "text": "if the matrices were multiplied incorrectly,"}
+{"start": 2942.98, "end": 2947.78, "text": "that you wouldn't discover that because you ran it"}
+{"start": 2947.78, "end": 2950.0, "text": "for enough hours independently chosen"}
+{"start": 2950.0, "end": 2953.13, "text": "that that probability becomes as low as possible."}
+{"start": 2953.13, "end": 2954.27, "text": "OK?"}
+{"start": 2954.27, "end": 2958.24, "text": "So that was Monte Carlo."}
+{"start": 2958.24, "end": 2960.79, "text": "Let's do a Las Vegas algorithm."}
+{"start": 2960.79, "end": 2963.03, "text": "And you guys are probably thinking, my goodness."}
+{"start": 2963.03, "end": 2967.0, "text": "Another sorting algorithm after, I don't know,"}
+{"start": 2967.0, "end": 2968.48, "text": "17 different sorting algorithms."}
+{"start": 2970.2, "end": 2974.231, "text": "This all sorting algorithms that you've ever learned so far."}
+{"start": 2974.231, "end": 2974.73, "text": "Right?"}
+{"start": 2974.73, "end": 2978.52, "text": "So merge sort doesn't work, and the reason"}
+{"start": 2978.52, "end": 2981.23, "text": "it doesn't work in practice-- if you're really"}
+{"start": 2981.23, "end": 2988.24, "text": "into performance-- is because of the auxiliary space that"}
+{"start": 2988.24, "end": 2990.07, "text": "merge sort requires."}
+{"start": 2990.07, "end": 2994.8, "text": "So if you recall there's the notion of in-place sorting."}
+{"start": 2994.8, "end": 2997.34, "text": "So let's move onto the next thing"}
+{"start": 2997.34, "end": 3003.039, "text": "here, which is quicksort, which is a new sorting algorithm."}
+{"start": 3003.039, "end": 3005.33, "text": "And I want to motivate it for just a couple of minutes."}
+{"start": 3008.99, "end": 3010.38, "text": "And the primary motivation really"}
+{"start": 3010.38, "end": 3016.62, "text": "is practical performance, not asymptotic complexity."}
+{"start": 3016.62, "end": 3019.92, "text": "So I'll be upfront about that."}
+{"start": 3019.92, "end": 3022.15, "text": "It's all about practical performance"}
+{"start": 3022.15, "end": 3024.59, "text": "corresponding to quicksort."}
+{"start": 3024.59, "end": 3029.36, "text": "And quicksort is a divide and conquer randomized"}
+{"start": 3029.36, "end": 3033.72, "text": "algorithm invented in '62."}
+{"start": 3033.72, "end": 3038.98, "text": "Unlike merge sort, it's got two interesting properties."}
+{"start": 3038.98, "end": 3042.19, "text": "The first is that it's in place, like I just said."}
+{"start": 3042.19, "end": 3044.555, "text": "So no auxiliary space."}
+{"start": 3044.555, "end": 3051.57, "text": "In Mozart, you can try and get around this."}
+{"start": 3051.57, "end": 3053.49, "text": "I should say order n auxiliary space."}
+{"start": 3053.49, "end": 3058.2, "text": "You need a little temporary variable"}
+{"start": 3058.2, "end": 3060.41, "text": "in order to do a swapping."}
+{"start": 3060.41, "end": 3065.17, "text": "But you don't have the order n auxiliary space."}
+{"start": 3065.17, "end": 3067.012, "text": "So you don't have to constantly allocate."}
+{"start": 3067.012, "end": 3068.303, "text": "And remember, n could be large."}
+{"start": 3068.303, "end": 3070.34, "text": "It could be in the billions or trillions."}
+{"start": 3070.34, "end": 3072.98, "text": "So, from that standpoint, quicksort"}
+{"start": 3072.98, "end": 3077.13, "text": "ends up winning simply because of relatively mundane things"}
+{"start": 3077.13, "end": 3082.45, "text": "like memory allocation in your computer."}
+{"start": 3082.45, "end": 3086.43, "text": "And the other interesting thing about quicksort in relation"}
+{"start": 3086.43, "end": 3093.01, "text": "to merge sort is that all the work is in the divide step."}
+{"start": 3099.18, "end": 3102.72, "text": "So in merge sort, remember we just split, and we recurse."}
+{"start": 3102.72, "end": 3106.05, "text": "And what happens when you come back"}
+{"start": 3106.05, "end": 3111.04, "text": "is you have to do the finger emerging"}
+{"start": 3111.04, "end": 3114.8, "text": "algorithm by looking at the two sorted arrays"}
+{"start": 3114.8, "end": 3119.82, "text": "and looking at what the new merger is going to look like."}
+{"start": 3119.82, "end": 3121.83, "text": "So the work is in the merge."}
+{"start": 3121.83, "end": 3124.99, "text": "But in quicksort, the work is going to be in the divide"}
+{"start": 3124.99, "end": 3129.86, "text": "because we're going to have to do a bunch of work associated"}
+{"start": 3129.86, "end": 3135.07, "text": "with figuring out how to keep the partitions balanced--"}
+{"start": 3135.07, "end": 3140.09, "text": "a little bit like we had to do when we did median finding back"}
+{"start": 3140.09, "end": 3142.15, "text": "a couple of weeks ago."}
+{"start": 3142.15, "end": 3144.15, "text": "I'm going to talk about three different variants"}
+{"start": 3144.15, "end": 3146.11, "text": "of quicksort."}
+{"start": 3146.11, "end": 3149.47, "text": "The. variant that we're going to spend the most time on"}
+{"start": 3149.47, "end": 3152.81, "text": "is the Las Vegas quicksort where we'd"}
+{"start": 3152.81, "end": 3155.43, "text": "like to show that it's probably fast"}
+{"start": 3155.43, "end": 3160.59, "text": "and make a statement about the expected runtime."}
+{"start": 3160.59, "end": 3163.59, "text": "But we'll get to that by talking about a couple"}
+{"start": 3163.59, "end": 3167.11, "text": "of other interesting variants, and this'll"}
+{"start": 3167.11, "end": 3173.31, "text": "be elaborated on to some extent in section tomorrow."}
+{"start": 3173.31, "end": 3176.23, "text": "So before we get to variants of course,"}
+{"start": 3176.23, "end": 3178.84, "text": "let's try and set up the structure corresponding"}
+{"start": 3178.84, "end": 3180.5, "text": "to quicksort."}
+{"start": 3180.5, "end": 3189.15, "text": "And as always, we have an n element array A."}
+{"start": 3189.15, "end": 3202.21, "text": "You have divide that corresponds to picking a pivot element, x"}
+{"start": 3202.21, "end": 3210.78, "text": "in A. And then we're going to partition"}
+{"start": 3210.78, "end": 3214.55, "text": "the array into sub-arrays."}
+{"start": 3219.24, "end": 3223.24, "text": "And what we have here-- this little picture"}
+{"start": 3223.24, "end": 3226.08, "text": "should make things clearer."}
+{"start": 3226.08, "end": 3229.33, "text": "And you kind of saw this in the median finding,"}
+{"start": 3229.33, "end": 3230.6, "text": "but here we go again."}
+{"start": 3230.6, "end": 3233.41, "text": "Let's assume all the array elements are unique."}
+{"start": 3233.41, "end": 3238.84, "text": "We have L, E, and G. L is less than."}
+{"start": 3238.84, "end": 3240.56, "text": "G is greater than."}
+{"start": 3240.56, "end": 3243.46, "text": "And so your pivot element is going to break this array up"}
+{"start": 3243.46, "end": 3246.61, "text": "into L and G, where you got all the elements that"}
+{"start": 3246.61, "end": 3248.77, "text": "are less on the left and all the elements that"}
+{"start": 3248.77, "end": 3250.1, "text": "are greater on the right."}
+{"start": 3250.1, "end": 3255.04, "text": "And you're going to recurs on the L and G."}
+{"start": 3255.04, "end": 3270.95, "text": "So recursively sort sub-arrays L and G. Combine is trivial--"}
+{"start": 3270.95, "end": 3273.82, "text": "or merge is trivial-- because you've already broken things"}
+{"start": 3273.82, "end": 3275.33, "text": "up thanks to the pivoting."}
+{"start": 3275.33, "end": 3277.65, "text": "And you just concatenate those arrays."}
+{"start": 3277.65, "end": 3279.9, "text": "And that's why you can do this in place."}
+{"start": 3279.9, "end": 3281.26, "text": "There's no issues."}
+{"start": 3281.26, "end": 3284.89, "text": "You're really recursively sorting sub-arrays."}
+{"start": 3284.89, "end": 3286.92, "text": "You are moving things around a little bit"}
+{"start": 3286.92, "end": 3288.38, "text": "when you do the partition."}
+{"start": 3288.38, "end": 3291.46, "text": "Obviously, the initial array may have all the elements."}
+{"start": 3291.46, "end": 3293.21, "text": "You may pick the pivot such that the pivot"}
+{"start": 3293.21, "end": 3296.08, "text": "is all the way on the right-hand side in the sense"}
+{"start": 3296.08, "end": 3297.76, "text": "that it's a very large element."}
+{"start": 3297.76, "end": 3299.9, "text": "That is not necessarily a good thing."}
+{"start": 3299.9, "end": 3301.25, "text": "I will talk about that."}
+{"start": 3301.25, "end": 3305.29, "text": "But if you pick an interesting pivot or a good pivot,"}
+{"start": 3305.29, "end": 3308.86, "text": "you're going to have to move the elements in the array"}
+{"start": 3308.86, "end": 3311.61, "text": "to the left of the pivot if they're less than the pivot,"}
+{"start": 3311.61, "end": 3313.84, "text": "and you got to move the elements to the right"}
+{"start": 3313.84, "end": 3315.87, "text": "if they're to the right of the pivot."}
+{"start": 3315.87, "end": 3318.47, "text": "Nontrivial piece of code, not super"}
+{"start": 3318.47, "end": 3324.44, "text": "complicated, but you can look at the CLRS page 171"}
+{"start": 3324.44, "end": 3328.74, "text": "to look at in-place partitioning where"}
+{"start": 3328.74, "end": 3333.66, "text": "you don't have to use another order n space to move"}
+{"start": 3333.66, "end": 3337.01, "text": "these elements around such that they look like that picture"}
+{"start": 3337.01, "end": 3340.71, "text": "that I have up there, starting from some random starting"}
+{"start": 3340.71, "end": 3341.7, "text": "point."}
+{"start": 3341.7, "end": 3345.58, "text": "So you want to have the picture that you have here,"}
+{"start": 3345.58, "end": 3350.8, "text": "and you need to go from-- the very same array, it needs to--"}
+{"start": 3350.8, "end": 3355.95, "text": "and x is somewhere here, and you got x plus 1 here and x minus 1"}
+{"start": 3355.95, "end": 3357.3, "text": "here, for example."}
+{"start": 3357.3, "end": 3358.99, "text": "And you need to move those things around"}
+{"start": 3358.99, "end": 3364.34, "text": "so they look like L, E, and G, and that's something"}
+{"start": 3364.34, "end": 3365.65, "text": "that you can do in place."}
+{"start": 3365.65, "end": 3368.6, "text": "And you can look at the code for that in the CLRS."}
+{"start": 3368.6, "end": 3371.076, "text": "I won't cover that here."}
+{"start": 3371.076, "end": 3373.45, "text": "So let's look at a bunch of different variants responding"}
+{"start": 3373.45, "end": 3375.17, "text": "to quicksort."}
+{"start": 3375.17, "end": 3378.03, "text": "And there's some real simple ones."}
+{"start": 3378.03, "end": 3383.88, "text": "Each of these, we can knock off with respect to complexity"}
+{"start": 3383.88, "end": 3388.45, "text": "and runtime fairly easily with the one exception"}
+{"start": 3388.45, "end": 3390.08, "text": "that we'll spend some time on, which"}
+{"start": 3390.08, "end": 3392.44, "text": "is the Las Vegas quicksort."}
+{"start": 3392.44, "end": 3395.95, "text": "But we'll call these different names."}
+{"start": 3395.95, "end": 3398.36, "text": "Let's talk about the basic quicksort,"}
+{"start": 3398.36, "end": 3404.22, "text": "which is also a useful algorithm that people use in practice."}
+{"start": 3404.22, "end": 3410.1, "text": "And amazingly, this algorithm is simply something that says,"}
+{"start": 3410.1, "end": 3415.06, "text": "I'm just going to constantly pivot on either the first entry"}
+{"start": 3415.06, "end": 3415.96, "text": "or the last entry."}
+{"start": 3415.96, "end": 3418.14, "text": "So I'm going to pick my pivot to be A1."}
+{"start": 3418.14, "end": 3421.06, "text": "And when I pick my pivot to be A1,"}
+{"start": 3421.06, "end": 3423.02, "text": "it's a value that I'm talking about here."}
+{"start": 3423.02, "end": 3424.47, "text": "X is a value."}
+{"start": 3424.47, "end": 3426.09, "text": "It's not an index."}
+{"start": 3426.09, "end": 3429.11, "text": "The A1 value-- maybe that's 75."}
+{"start": 3429.11, "end": 3432.11, "text": "Then I'm going to create my L matrix corresponding"}
+{"start": 3432.11, "end": 3435.07, "text": "to this pivot where all the entries are strictly"}
+{"start": 3435.07, "end": 3440.45, "text": "less than 75, and G would be strictly greater than 75."}
+{"start": 3440.45, "end": 3441.67, "text": "And I could do that for A1."}
+{"start": 3441.67, "end": 3442.962, "text": "I could do that for An."}
+{"start": 3442.962, "end": 3444.545, "text": "So remember that the pivot is a value."}
+{"start": 3448.14, "end": 3451.57, "text": "Now, if I look at this, I'm going"}
+{"start": 3451.57, "end": 3459.18, "text": "to do the partition, given x, just like you saw there."}
+{"start": 3459.18, "end": 3462.28, "text": "And this is going to be done in order n time."}
+{"start": 3462.28, "end": 3464.89, "text": "It makes sense that you're going to look at every element,"}
+{"start": 3464.89, "end": 3467.39, "text": "and you're going to move it to an appropriate location"}
+{"start": 3467.39, "end": 3472.02, "text": "to the left of x, which is the e array, or to the right."}
+{"start": 3472.02, "end": 3473.11, "text": "And you'll do that."}
+{"start": 3473.11, "end": 3475.2, "text": "That takes order n time."}
+{"start": 3475.2, "end": 3478.25, "text": "And, as I mentioned, you can look at this"}
+{"start": 3478.25, "end": 3484.28, "text": "to see how this is done in place."}
+{"start": 3484.28, "end": 3490.02, "text": "So let's take a look at the analysis of basic quicksort,"}
+{"start": 3490.02, "end": 3492.68, "text": "and what I'm interested in, of course, is the worst case"}
+{"start": 3492.68, "end": 3494.01, "text": "analysis."}
+{"start": 3494.01, "end": 3496.9, "text": "And I asked this question, I think,"}
+{"start": 3496.9, "end": 3500.91, "text": "before when we were doing median finding,"}
+{"start": 3500.91, "end": 3504.93, "text": "but what is the worst case complexity"}
+{"start": 3504.93, "end": 3510.8, "text": "of the basic quicksort algorithm that chooses the pivot as A1?"}
+{"start": 3510.8, "end": 3512.022, "text": "What is the complexity?"}
+{"start": 3512.022, "end": 3513.87, "text": "[INTERPOSING VOICES]"}
+{"start": 3513.87, "end": 3515.16, "text": "Order n square."}
+{"start": 3515.16, "end": 3516.7, "text": "It's order n square."}
+{"start": 3516.7, "end": 3520.13, "text": "And the reason for that is that you"}
+{"start": 3520.13, "end": 3526.68, "text": "may have an array that is sorted or reverse sorted--"}
+{"start": 3526.68, "end": 3530.67, "text": "depending on whether you're picking A1 or An."}
+{"start": 3530.67, "end": 3533.51, "text": "You can have a worst case situation where"}
+{"start": 3533.51, "end": 3542.71, "text": "one side, L or G, has n minus 1 elements,"}
+{"start": 3542.71, "end": 3546.92, "text": "and the other has 0 elements."}
+{"start": 3546.92, "end": 3550.24, "text": "And so if you look at our recurrence associated"}
+{"start": 3550.24, "end": 3554.01, "text": "with this, you could have Tn, which is T0, plus T n"}
+{"start": 3554.01, "end": 3558.04, "text": "minus 1 plus theta n."}
+{"start": 3558.04, "end": 3560.16, "text": "And why do I have a theta n here?"}
+{"start": 3560.16, "end": 3562.8, "text": "Well, remember that I still have to do this divide"}
+{"start": 3562.8, "end": 3566.61, "text": "step or this partition step in order to compute"}
+{"start": 3566.61, "end": 3568.39, "text": "this up unbalanced array."}
+{"start": 3568.39, "end": 3571.19, "text": "So I do have to look at each of these elements"}
+{"start": 3571.19, "end": 3573.19, "text": "and do the comparison."}
+{"start": 3573.19, "end": 3575.8, "text": "And maybe I don't actually have to move them,"}
+{"start": 3575.8, "end": 3579.14, "text": "but I have to do the comparison with the A1, which"}
+{"start": 3579.14, "end": 3579.79, "text": "is the x pivot."}
+{"start": 3582.38, "end": 3586.01, "text": "And in some cases, if I'm doing the wrong thing reverse sorted,"}
+{"start": 3586.01, "end": 3587.63, "text": "I also have to do the move."}
+{"start": 3587.63, "end": 3590.6, "text": "Either way, I have a theta n complexity associated"}
+{"start": 3590.6, "end": 3593.04, "text": "with the divide step."}
+{"start": 3593.04, "end": 3597.89, "text": "And so if you go off and you look at what happens with this,"}
+{"start": 3597.89, "end": 3602.85, "text": "well, you've got Tn equals Tn minus 1"}
+{"start": 3602.85, "end": 3609.3, "text": "plus theta n, which ends up with theta n square complexity."}
+{"start": 3609.3, "end": 3613.44, "text": "So a hand waved a little bit two weeks ago"}
+{"start": 3613.44, "end": 3615.87, "text": "for a similar analysis, but you can kind of"}
+{"start": 3615.87, "end": 3618.41, "text": "look at it a little more precisely"}
+{"start": 3618.41, "end": 3621.63, "text": "here by writing the actual recurrence out."}
+{"start": 3621.63, "end": 3624.45, "text": "And you see that you get the recurrence Tn equals Tn minus 1"}
+{"start": 3624.45, "end": 3629.52, "text": "plus theta n, which is an n square result,"}
+{"start": 3629.52, "end": 3632.08, "text": "or the solutions is n square."}
+{"start": 3632.08, "end": 3633.01, "text": "OK?"}
+{"start": 3633.01, "end": 3636.1, "text": "So basic quicksort look bad."}
+{"start": 3636.1, "end": 3638.94, "text": "It's got a worst case complexity of theta n square."}
+{"start": 3638.94, "end": 3641.13, "text": "It works well on random inputs and practice."}
+{"start": 3641.13, "end": 3645.06, "text": "And it turns out that it's a fashion of algorithm,"}
+{"start": 3645.06, "end": 3648.0, "text": "partly because it's in place and it's easy to code,"}
+{"start": 3648.0, "end": 3652.23, "text": "that what people do is they take their inputs,"}
+{"start": 3652.23, "end": 3655.7, "text": "and they shuffle them."}
+{"start": 3655.7, "end": 3659.13, "text": "You might get a bad input, and it might take you a long time"}
+{"start": 3659.13, "end": 3659.794, "text": "to run."}
+{"start": 3659.794, "end": 3661.46, "text": "But if you take an input and you shuffle"}
+{"start": 3661.46, "end": 3664.325, "text": "it and you do that in theta n time,"}
+{"start": 3664.325, "end": 3667.0, "text": "you just move things around and randomize the input."}
+{"start": 3667.0, "end": 3668.91, "text": "Then effectively, you have a random input,"}
+{"start": 3668.91, "end": 3672.24, "text": "and this thing works pretty well in practice."}
+{"start": 3672.24, "end": 3673.76, "text": "Now, what is pretty well?"}
+{"start": 3673.76, "end": 3675.58, "text": "Well, we're going to do an analysis that"}
+{"start": 3675.58, "end": 3679.99, "text": "is going to not be exactly the analysis that you'd"}
+{"start": 3679.99, "end": 3684.22, "text": "have to do on basic quicksort on random inputs,"}
+{"start": 3684.22, "end": 3687.4, "text": "but essentially, you can say that basic quicksort"}
+{"start": 3687.4, "end": 3693.06, "text": "on random inputs is going to run in expected theta m log n time."}
+{"start": 3693.06, "end": 3694.04, "text": "OK?"}
+{"start": 3694.04, "end": 3699.67, "text": "It's something that you'll see a little bit of how"}
+{"start": 3699.67, "end": 3703.73, "text": "to do that today and in section, perhaps for median finding"}
+{"start": 3703.73, "end": 3705.14, "text": "in section tomorrow."}
+{"start": 3705.14, "end": 3709.39, "text": "But that's all I wanted to say about basic quicksort."}
+{"start": 3709.39, "end": 3711.2, "text": "It's a practical algorithm."}
+{"start": 3711.2, "end": 3714.32, "text": "It does require a little bit of shuffling up at the beginning,"}
+{"start": 3714.32, "end": 3717.61, "text": "and then you can simply use the pivot A1."}
+{"start": 3717.61, "end": 3719.61, "text": "And because you've done the shuffle,"}
+{"start": 3719.61, "end": 3721.69, "text": "generally you get balance partitions."}
+{"start": 3721.69, "end": 3725.11, "text": "The L and G's look balanced, and you don't end up"}
+{"start": 3725.11, "end": 3726.41, "text": "with theta n square."}
+{"start": 3726.41, "end": 3729.38, "text": "If you have any sort of balance associated with the two"}
+{"start": 3729.38, "end": 3732.66, "text": "partitions L and G, you're going to get a nice divide"}
+{"start": 3732.66, "end": 3735.63, "text": "and conquer, which is going to give you your theta n log n."}
+{"start": 3735.63, "end": 3736.99, "text": "OK?"}
+{"start": 3736.99, "end": 3740.05, "text": "So that's basic quicksort."}
+{"start": 3740.05, "end": 3743.52, "text": "There's another way to do this, and so this"}
+{"start": 3743.52, "end": 3745.06, "text": "is a question for you guys."}
+{"start": 3745.06, "end": 3748.77, "text": "Suppose I wanted to use the quicksort strategy"}
+{"start": 3748.77, "end": 3755.42, "text": "and get a worst case theta n log n through an intelligent pivot"}
+{"start": 3755.42, "end": 3756.86, "text": "selection."}
+{"start": 3756.86, "end": 3761.37, "text": "So I want to do a pivot selection intelligently."}
+{"start": 3767.28, "end": 3771.68, "text": "So how would I get under the structure of quicksort"}
+{"start": 3771.68, "end": 3775.68, "text": "that you see up there on the left there?"}
+{"start": 3775.68, "end": 3780.91, "text": "How would I select a pivot such that I get worse case theta"}
+{"start": 3780.91, "end": 3782.71, "text": "n log n complexity?"}
+{"start": 3786.574, "end": 3788.023, "text": "Go ahead."}
+{"start": 3788.023, "end": 3789.48, "text": "AUDIENCE: Linear median finding."}
+{"start": 3789.48, "end": 3790.7, "text": "SRINIVAS DEVADAS: Linear medium finding."}
+{"start": 3790.7, "end": 3791.245, "text": "Perfect."}
+{"start": 3791.245, "end": 3792.12, "text": "That's exactly right."}
+{"start": 3795.0, "end": 3797.375, "text": "There's a gentleman at the back who'd raised his hand,"}
+{"start": 3797.375, "end": 3798.625, "text": "and I decided I'd chicken out."}
+{"start": 3801.28, "end": 3805.669, "text": "I think one time to the back of the room is enough for a day."}
+{"start": 3805.669, "end": 3806.71, "text": "I'll have a Frisbee left."}
+{"start": 3806.71, "end": 3810.19, "text": "Hopefully you can get one."}
+{"start": 3810.19, "end": 3813.69, "text": "So the intelligence pivots selection algorithm"}
+{"start": 3813.69, "end": 3816.25, "text": "is the median finding algorithm because that's"}
+{"start": 3816.25, "end": 3818.89, "text": "going to guarantee me that I'm going"}
+{"start": 3818.89, "end": 3820.41, "text": "to get balanced partitions."}
+{"start": 3820.41, "end": 3823.08, "text": "If you tell me that A1-- and remember,"}
+{"start": 3823.08, "end": 3825.08, "text": "we're talking medians of values--"}
+{"start": 3825.08, "end": 3826.65, "text": "so don't get confused with indices."}
+{"start": 3826.65, "end": 3828.38, "text": "When I say something is a median,"}
+{"start": 3828.38, "end": 3832.86, "text": "I'm talking about the value, that given its value,"}
+{"start": 3832.86, "end": 3836.27, "text": "there are all these other n over 2 values that are less"}
+{"start": 3836.27, "end": 3839.29, "text": "than it, roughly speaking and n over 2 values that"}
+{"start": 3839.29, "end": 3841.63, "text": "are greater than it."}
+{"start": 3841.63, "end": 3846.74, "text": "And so A1, I have no idea whether it's large or small."}
+{"start": 3846.74, "end": 3848.28, "text": "So I couldn't say much about it."}
+{"start": 3848.28, "end": 3849.82, "text": "But if I want to be worst case and I"}
+{"start": 3849.82, "end": 3854.15, "text": "want to guarantee that I have balanced partitions,"}
+{"start": 3854.15, "end": 3855.57, "text": "I can choose the median."}
+{"start": 3855.57, "end": 3857.5, "text": "And if I choose the median every time,"}
+{"start": 3857.5, "end": 3859.797, "text": "I'm going to get perfectly balanced partitions."}
+{"start": 3859.797, "end": 3862.13, "text": "They're going to half on the left and half on the right."}
+{"start": 3864.63, "end": 3869.18, "text": "And we do know a way of getting balanced partitions."}
+{"start": 3869.18, "end": 3884.47, "text": "We can guarantee that balanced L and G using median selection"}
+{"start": 3884.47, "end": 3886.8, "text": "that runs in theta n time."}
+{"start": 3886.8, "end": 3888.96, "text": "And we showed that a couple of weeks ago."}
+{"start": 3891.57, "end": 3894.33, "text": "Now, that median selection algorithm was nontrivial."}
+{"start": 3894.33, "end": 3895.71, "text": "OK?"}
+{"start": 3895.71, "end": 3898.61, "text": "It had this weird thing where you broke things up"}
+{"start": 3898.61, "end": 3903.75, "text": "into five sub-arrays of size 5, and you"}
+{"start": 3903.75, "end": 3906.37, "text": "found a median of medians et cetera, et cetera."}
+{"start": 3906.37, "end": 3908.69, "text": "But we argued that the whole thing ran in theta n"}
+{"start": 3908.69, "end": 3910.86, "text": "time, which is important."}
+{"start": 3910.86, "end": 3914.55, "text": "And so now, if you look at what happens with quicksort"}
+{"start": 3914.55, "end": 3917.33, "text": "and if I write the recurrence for quicksort,"}
+{"start": 3917.33, "end": 3920.52, "text": "thanks to selecting a median, I effectively"}
+{"start": 3920.52, "end": 3921.85, "text": "have balanced partitions."}
+{"start": 3921.85, "end": 3923.7, "text": "So I have 2T n over 2."}
+{"start": 3923.7, "end": 3933.86, "text": "This is thanks to the median based pivoting."}
+{"start": 3933.86, "end": 3936.15, "text": "That's important."}
+{"start": 3936.15, "end": 3938.04, "text": "Otherwise it won't work."}
+{"start": 3938.04, "end": 3946.46, "text": "And then, just to be very clear here, I got two theta n terms."}
+{"start": 3946.46, "end": 3947.74, "text": "OK?"}
+{"start": 3947.74, "end": 3953.485, "text": "The first theta n term is the recursive median selection."}
+{"start": 3959.44, "end": 3961.91, "text": "And then the second theta n term is of course"}
+{"start": 3961.91, "end": 3962.955, "text": "the divide, or partition."}
+{"start": 3966.86, "end": 3969.97, "text": "But it's important to realize that now I have"}
+{"start": 3969.97, "end": 3972.39, "text": "a lot of work in the divide."}
+{"start": 3972.39, "end": 3972.999, "text": "A lot of work."}
+{"start": 3972.999, "end": 3974.79, "text": "I have to do an intelligent selection using"}
+{"start": 3974.79, "end": 3977.38, "text": "this recursive median finding algorithm."}
+{"start": 3977.38, "end": 3980.76, "text": "And I also have to do the moves comparing and then generate"}
+{"start": 3980.76, "end": 3982.61, "text": "and the G arrays."}
+{"start": 3982.61, "end": 3983.11, "text": "OK?"}
+{"start": 3983.11, "end": 3984.401, "text": "So those are the two theta n's."}
+{"start": 3984.401, "end": 3986.77, "text": "They're obviously theta n, but I wanted to make it clear"}
+{"start": 3986.77, "end": 3988.83, "text": "that there's two things going on here."}
+{"start": 3988.83, "end": 3991.82, "text": "And we all know that that is theta n log n worst case."}
+{"start": 3991.82, "end": 3992.54, "text": "All right?"}
+{"start": 3992.54, "end": 3997.06, "text": "So there is a way of using the quicksort structure template"}
+{"start": 3997.06, "end": 4000.64, "text": "and getting a theta n log n worst case algorithm, which"}
+{"start": 4000.64, "end": 4005.31, "text": "doesn't work in practice because it's just too complicated."}
+{"start": 4005.31, "end": 4010.4, "text": "What's going on here is at every level of recursion,"}
+{"start": 4010.4, "end": 4015.63, "text": "you're calling another recursive algorithm to find the median."}
+{"start": 4015.63, "end": 4018.17, "text": "So if you go code this up, it loses"}
+{"start": 4018.17, "end": 4020.17, "text": "to merge sort in practice."}
+{"start": 4020.17, "end": 4022.45, "text": "You can do all of this in place, but because"}
+{"start": 4022.45, "end": 4026.75, "text": "of all these recursive calls, it doesn't work well in practice."}
+{"start": 4026.75, "end": 4027.75, "text": "But it's good to know."}
+{"start": 4027.75, "end": 4030.56, "text": "And so this is a good example I think,"}
+{"start": 4030.56, "end": 4033.01, "text": "which we don't do a lot of in 046,"}
+{"start": 4033.01, "end": 4037.15, "text": "but you get a sense of the difference between asymptotic"}
+{"start": 4037.15, "end": 4039.64, "text": "complexity and performance."}
+{"start": 4039.64, "end": 4044.59, "text": "So while the median finding algorithm has better asymptotic"}
+{"start": 4044.59, "end": 4048.36, "text": "complexity worst case, it really loses in practice"}
+{"start": 4048.36, "end": 4051.39, "text": "to the basic quicksort, which essentially"}
+{"start": 4051.39, "end": 4053.72, "text": "is a bit of a hack, where you take an input"}
+{"start": 4053.72, "end": 4056.5, "text": "and you randomize the input and you"}
+{"start": 4056.5, "end": 4059.83, "text": "run it with A1 as the pivot or An at the pivot."}
+{"start": 4064.25, "end": 4067.83, "text": "Is there a different way that you can actually"}
+{"start": 4067.83, "end": 4071.22, "text": "get to a Las Vegas algorithm?"}
+{"start": 4071.22, "end": 4073.29, "text": "And it turns out randomized quicksort"}
+{"start": 4073.29, "end": 4077.59, "text": "is something that you can build and use,"}
+{"start": 4077.59, "end": 4079.71, "text": "which is a bit different from basic quicksort"}
+{"start": 4079.71, "end": 4082.744, "text": "and certainly different from median finding."}
+{"start": 4082.744, "end": 4084.91, "text": "But it kind of has a little bit in common with them,"}
+{"start": 4084.91, "end": 4088.96, "text": "and it's our example of a Vegas algorithm."}
+{"start": 4088.96, "end": 4091.51, "text": "So what happens at randomized quicksort?"}
+{"start": 4091.51, "end": 4098.22, "text": "An x is chosen at random from the array, A."}
+{"start": 4098.22, "end": 4101.359, "text": "So you're not choosing A1 or An."}
+{"start": 4101.359, "end": 4105.29, "text": "You might just flip-- well, effectively an n-sided"}
+{"start": 4105.29, "end": 4109.08, "text": "die-- and pick a particular index,"}
+{"start": 4109.08, "end": 4111.56, "text": "and then go grab the pivot corresponding"}
+{"start": 4111.56, "end": 4115.0, "text": "to the value at that index."}
+{"start": 4115.0, "end": 4117.1, "text": "You're not going to randomize over values."}
+{"start": 4117.1, "end": 4118.99, "text": "You don't know what these values are,"}
+{"start": 4118.99, "end": 4122.38, "text": "but you can pick a random index and then"}
+{"start": 4122.38, "end": 4125.899, "text": "grab the pivot based on the value at that index."}
+{"start": 4125.899, "end": 4128.92, "text": "And so at each recursion, a random choice is made."}
+{"start": 4128.92, "end": 4131.524, "text": "And the expected time-- so now we're"}
+{"start": 4131.524, "end": 4132.649, "text": "saying something different."}
+{"start": 4132.649, "end": 4136.74, "text": "We're making a stronger theoretical statement"}
+{"start": 4136.74, "end": 4143.51, "text": "that the expected time, when you do this, for all inputs"}
+{"start": 4143.51, "end": 4147.229, "text": "arrays A is order n log n."}
+{"start": 4147.229, "end": 4149.99, "text": "And so now, this is not worst case time."}
+{"start": 4149.99, "end": 4151.649, "text": "It's expected time."}
+{"start": 4151.649, "end": 4154.64, "text": "So this is going to be our analysis"}
+{"start": 4154.64, "end": 4159.43, "text": "in the last few minutes here to analyze"}
+{"start": 4159.43, "end": 4164.08, "text": "not randomized quicksort, but a slight variant"}
+{"start": 4164.08, "end": 4167.21, "text": "of randomized quicksort that is going to show you"}
+{"start": 4167.21, "end": 4171.399, "text": "that you can run randomize quicksort and this variant"}
+{"start": 4171.399, "end": 4173.64, "text": "in order n log n time."}
+{"start": 4173.64, "end": 4177.42, "text": "So not quite sure what's going to happen in section tomorrow,"}
+{"start": 4177.42, "end": 4181.58, "text": "but the full analysis is in the book."}
+{"start": 4181.58, "end": 4184.399, "text": "You should read it."}
+{"start": 4184.399, "end": 4187.52, "text": "As you can see, it's a couple of pages"}
+{"start": 4187.52, "end": 4190.609, "text": "that includes the description of a quicksort"}
+{"start": 4190.609, "end": 4192.34, "text": "that I have already."}
+{"start": 4192.34, "end": 4197.564, "text": "But what we're going to do here is analyze a variant quicksort,"}
+{"start": 4197.564, "end": 4199.23, "text": "which is a little bit easier to analyze,"}
+{"start": 4199.23, "end": 4202.41, "text": "and it gives you the sense of why"}
+{"start": 4202.41, "end": 4204.9, "text": "in fact the randomized quicksort is"}
+{"start": 4204.9, "end": 4206.48, "text": "going to run in expected time."}
+{"start": 4206.48, "end": 4209.79, "text": "And this analysis is easy to do it in a few minutes."}
+{"start": 4209.79, "end": 4212.29, "text": "So we'll do that."}
+{"start": 4212.29, "end": 4215.9, "text": "And tomorrow, you'll see either a median finding analysis"}
+{"start": 4215.9, "end": 4221.07, "text": "that's similar to that analysis in CLRS or precisely"}
+{"start": 4221.07, "end": 4226.08, "text": "that analysis, depending on what your TAs want to do."}
+{"start": 4226.08, "end": 4227.86, "text": "So this particular variant, we're"}
+{"start": 4227.86, "end": 4231.74, "text": "going to call paranoid quicksort."}
+{"start": 4231.74, "end": 4236.12, "text": "And so this quicksort is paranoid in the sense"}
+{"start": 4236.12, "end": 4242.66, "text": "that it's going to be afraid of getting unbalanced partitions,"}
+{"start": 4242.66, "end": 4246.35, "text": "and it's going to keep trying to get balanced partitions."}
+{"start": 4246.35, "end": 4249.69, "text": "So it's going to try to get a balanced partition."}
+{"start": 4249.69, "end": 4251.6, "text": "It's going to check, and then if it fails,"}
+{"start": 4251.6, "end": 4252.99, "text": "it's going to try again."}
+{"start": 4252.99, "end": 4256.0, "text": "And so at the end of it, there's obviously"}
+{"start": 4256.0, "end": 4260.47, "text": "an expectation associated with the number of tries"}
+{"start": 4260.47, "end": 4262.99, "text": "that you need in order to get a balanced partition."}
+{"start": 4262.99, "end": 4265.79, "text": "But it just sort of flips the problem on its head and says,"}
+{"start": 4265.79, "end": 4267.54, "text": "you know what?"}
+{"start": 4267.54, "end": 4269.89, "text": "I'm just going to guarantee a balanced partition"}
+{"start": 4269.89, "end": 4272.15, "text": "from a probabilistic standpoint and it"}
+{"start": 4272.15, "end": 4274.87, "text": "might take me a little bit longer to get there."}
+{"start": 4274.87, "end": 4277.75, "text": "But that's what Las Vegas algorithms are all about."}
+{"start": 4277.75, "end": 4279.62, "text": "They're probably fast."}
+{"start": 4279.62, "end": 4282.35, "text": "And once I get a balanced partition, I'm in good shape"}
+{"start": 4282.35, "end": 4286.16, "text": "because I can go do my recursion, and I get my divide"}
+{"start": 4286.16, "end": 4288.53, "text": "and conquer working properly."}
+{"start": 4288.53, "end": 4290.47, "text": "So what is paranoid quicksort?"}
+{"start": 4290.47, "end": 4292.3, "text": "Absolutely straightforward."}
+{"start": 4292.3, "end": 4295.41, "text": "You could probably guess given my description."}
+{"start": 4295.41, "end": 4305.94, "text": "Let's just choose a pivot to be a random element"}
+{"start": 4305.94, "end": 4318.05, "text": "of A. Perform the partition, and then values will repeat."}
+{"start": 4318.05, "end": 4324.55, "text": "So we're going to go off, and we say until the resulting"}
+{"start": 4324.55, "end": 4331.77, "text": "partition is such that the cardinality of L"}
+{"start": 4331.77, "end": 4338.415, "text": "less than or equal to 3/4 of cardinality of A."}
+{"start": 4338.415, "end": 4342.72, "text": "And the cardinality of G is less than or equal to 3/4"}
+{"start": 4342.72, "end": 4344.57, "text": "the cardinality of A."}
+{"start": 4344.57, "end": 4348.13, "text": "So I'm allowing you a certain amount of imbalance,"}
+{"start": 4348.13, "end": 4349.6, "text": "but not a lot."}
+{"start": 4349.6, "end": 4351.04, "text": "Right?"}
+{"start": 4351.04, "end": 4351.97, "text": "And that's it."}
+{"start": 4351.97, "end": 4357.6, "text": "That's paranoid quicksort."}
+{"start": 4357.6, "end": 4361.04, "text": "You obviously are doing that in each level of the recursion."}
+{"start": 4361.04, "end": 4363.085, "text": "And at each level of the recursion,"}
+{"start": 4363.085, "end": 4368.36, "text": "your L and G are going to be, at most, a factor of three apart."}
+{"start": 4368.36, "end": 4370.62, "text": "So you might get 1/4 and 3/4."}
+{"start": 4370.62, "end": 4373.35, "text": "If you're lucky, you'll get 1/2 and 1/2."}
+{"start": 4373.35, "end": 4376.02, "text": "But the worst case, given that you're"}
+{"start": 4376.02, "end": 4380.08, "text": "going to be exiting out of this loop, is 1/4 and 3/4."}
+{"start": 4380.08, "end": 4381.27, "text": "OK?"}
+{"start": 4381.27, "end": 4384.98, "text": "So, as always, you have a simple algorithm,"}
+{"start": 4384.98, "end": 4390.72, "text": "and it's not completely clear how"}
+{"start": 4390.72, "end": 4394.63, "text": "you're going to get to expected n log n time."}
+{"start": 4394.63, "end": 4398.0, "text": "But it's not difficult."}
+{"start": 4398.0, "end": 4400.9, "text": "Basically, what we had to do is we have to try and figure out"}
+{"start": 4400.9, "end": 4402.44, "text": "what the probability of a good call"}
+{"start": 4402.44, "end": 4407.16, "text": "is, over here, a good pivot choice,"}
+{"start": 4407.16, "end": 4411.6, "text": "and what the probability of a bad pivot choice is."}
+{"start": 4411.6, "end": 4416.99, "text": "And we have to obviously-- given the potential imbalance,"}
+{"start": 4416.99, "end": 4419.57, "text": "we have to write the recurrence associated with that,"}
+{"start": 4419.57, "end": 4424.4, "text": "but let's take a look at the pivots here."}
+{"start": 4424.4, "end": 4431.11, "text": "And what can we say about the size as of L and G"}
+{"start": 4431.11, "end": 4433.65, "text": "if you just did a random pivot?"}
+{"start": 4433.65, "end": 4443.32, "text": "Well, a bad call is when you get something in L or G"}
+{"start": 4443.32, "end": 4446.01, "text": "that is less than 1/4."}
+{"start": 4446.01, "end": 4454.5, "text": "And a good call is when you get somewhere between 1/2-- well,"}
+{"start": 4454.5, "end": 4458.58, "text": "roughly, if you look at the choice of the pivot."}
+{"start": 4458.58, "end": 4461.32, "text": "So what I have up here, is the choice of the pivot."}
+{"start": 4461.32, "end": 4466.29, "text": "If my pivot is out here, I have a very small L,"}
+{"start": 4466.29, "end": 4468.38, "text": "and all of the thing on the right"}
+{"start": 4468.38, "end": 4472.52, "text": "is G. If the pivot is here, I have a relatively small L"}
+{"start": 4472.52, "end": 4476.1, "text": "and a large G. The pivot is over here, I'm good."}
+{"start": 4476.1, "end": 4479.53, "text": "I got 1/4 and 3/4."}
+{"start": 4479.53, "end": 4481.97, "text": "If the pivot is over here, I got 1/2 and 1/2"}
+{"start": 4481.97, "end": 4483.29, "text": "and so on and so forth."}
+{"start": 4483.29, "end": 4486.79, "text": "And so this part is bad, this part is bad,"}
+{"start": 4486.79, "end": 4488.47, "text": "and the middle part is good."}
+{"start": 4488.47, "end": 4491.57, "text": "So that's all that this picture shows."}
+{"start": 4491.57, "end": 4499.52, "text": "So a call is good with what probability?"}
+{"start": 4499.52, "end": 4503.764, "text": "Given that picture, a call is good with what probability?"}
+{"start": 4503.764, "end": 4505.18, "text": "It's greater than or equal to 1/2."}
+{"start": 4510.35, "end": 4518.48, "text": "And so what you can now write simply is if Tn is"}
+{"start": 4518.48, "end": 4524.98, "text": "the time required to sort the array, essentially you can say"}
+{"start": 4524.98, "end": 4535.01, "text": "Tn is T of n divided by 4 plus T of 3n divided by 4"}
+{"start": 4535.01, "end": 4542.8, "text": "plus expected number of iterations"}
+{"start": 4542.8, "end": 4548.769, "text": "in terms of getting a good partition times C times n."}
+{"start": 4548.769, "end": 4550.31, "text": "And there is a reason why I'm putting"}
+{"start": 4550.31, "end": 4552.24, "text": "C in here as opposed to theta."}
+{"start": 4552.24, "end": 4553.94, "text": "That will become clear in just a second."}
+{"start": 4553.94, "end": 4555.565, "text": "Because I can't really apply the master"}
+{"start": 4555.565, "end": 4558.38, "text": "theorem to this given what I have with respect"}
+{"start": 4558.38, "end": 4561.612, "text": "to Tn over 4 and 3n over 4."}
+{"start": 4561.612, "end": 4563.57, "text": "So what I have here is, I'm looking at the case"}
+{"start": 4563.57, "end": 4568.55, "text": "where I could get an imbalanced partition,"}
+{"start": 4568.55, "end": 4570.69, "text": "but the imbalance is bounded."}
+{"start": 4570.69, "end": 4574.15, "text": "So I'd have n over 4 on one side and 3n over 4"}
+{"start": 4574.15, "end": 4575.05, "text": "on the other side."}
+{"start": 4575.05, "end": 4578.24, "text": "But I'm not going to have n over 5 and 4n over 5"}
+{"start": 4578.24, "end": 4580.19, "text": "or what have you."}
+{"start": 4580.19, "end": 4582.43, "text": "And so that's the two recursive calls."}
+{"start": 4582.43, "end": 4585.17, "text": "So that's hopefully easy to see."}
+{"start": 4585.17, "end": 4589.77, "text": "The part that is new here is simply the complexity"}
+{"start": 4589.77, "end": 4594.13, "text": "of this code that you see here, which is obviously"}
+{"start": 4594.13, "end": 4595.71, "text": "the randomized algorithm."}
+{"start": 4595.71, "end": 4597.84, "text": "That's exactly where the randomness comes in"}
+{"start": 4597.84, "end": 4601.53, "text": "because you're picking a random pivot, and you're checking it."}
+{"start": 4601.53, "end": 4605.09, "text": "And so this is going to run a certain number of times."}
+{"start": 4605.09, "end": 4607.56, "text": "And we can figure out what the expectation"}
+{"start": 4607.56, "end": 4609.43, "text": "is in just a minute."}
+{"start": 4609.43, "end": 4613.24, "text": "But I have C times n because this is constant time"}
+{"start": 4613.24, "end": 4614.66, "text": "to choose a random number."}
+{"start": 4614.66, "end": 4617.21, "text": "We'll assume that performing the partition"}
+{"start": 4617.21, "end": 4622.02, "text": "is C times n or theta n, and that's why I have this"}
+{"start": 4622.02, "end": 4622.84, "text": "up there."}
+{"start": 4622.84, "end": 4626.05, "text": "So this, we're going to call this Cn."}
+{"start": 4626.05, "end": 4629.35, "text": "And so expected number of iterations"}
+{"start": 4629.35, "end": 4631.04, "text": "given what I have-- what can I say"}
+{"start": 4631.04, "end": 4632.96, "text": "about the expected number of iterations"}
+{"start": 4632.96, "end": 4636.98, "text": "using simple probability rules?"}
+{"start": 4636.98, "end": 4638.5, "text": "What is that?"}
+{"start": 4638.5, "end": 4639.86, "text": "2, right?"}
+{"start": 4639.86, "end": 4641.24, "text": "1 over p."}
+{"start": 4641.24, "end": 4642.88, "text": "All of them are independent."}
+{"start": 4642.88, "end": 4645.06, "text": "So this is 2."}
+{"start": 4645.06, "end": 4652.33, "text": "So what I have here is something that I think you might have"}
+{"start": 4652.33, "end": 4656.64, "text": "seen this before, but it's worth drawing the tree out and seeing"}
+{"start": 4656.64, "end": 4663.21, "text": "it one more time in case it didn't fully registered"}
+{"start": 4663.21, "end": 4667.57, "text": "the first time or you didn't actually see it in 006"}
+{"start": 4667.57, "end": 4669.48, "text": "or recitation."}
+{"start": 4669.48, "end": 4673.63, "text": "But what I now have is T of n."}
+{"start": 4673.63, "end": 4677.03, "text": "I want to solve T of n equals T of n over 4"}
+{"start": 4677.03, "end": 4684.02, "text": "plus T of 3 n over 4 plus 2 times Cn."}
+{"start": 4684.02, "end": 4687.28, "text": "And, again, like I said, I didn't put theta n in here"}
+{"start": 4687.28, "end": 4690.84, "text": "because, as you'll see, when I draw this tree out--"}
+{"start": 4690.84, "end": 4695.76, "text": "because it's not a massive theorem invocation-- it's worth"}
+{"start": 4695.76, "end": 4698.2, "text": "looking at it from a constant factor standpoint"}
+{"start": 4698.2, "end": 4702.58, "text": "to really get the sense of how all of this works out."}
+{"start": 4702.58, "end": 4704.78, "text": "And so if I draw that tree of execution"}
+{"start": 4704.78, "end": 4707.4, "text": "and I start counting, basically what I have"}
+{"start": 4707.4, "end": 4709.34, "text": "is 2Cn up at the top."}
+{"start": 4709.34, "end": 4712.57, "text": "I have 1 over 4 times 2Cn over here."}
+{"start": 4712.57, "end": 4716.34, "text": "I have 3 over 4 times 2Cn over here."}
+{"start": 4716.34, "end": 4722.39, "text": "And then this 1 over 4 might go 1 over 16 times 2Cn over here."}
+{"start": 4722.39, "end": 4726.91, "text": "And this might go 3 over 16 times 2Cn over here."}
+{"start": 4726.91, "end": 4733.65, "text": "And this would go, I guess it would be 3 over 16 times 2Cn."}
+{"start": 4733.65, "end": 4738.84, "text": "And then 9 over 16 times 2Cn et cetera."}
+{"start": 4738.84, "end": 4742.26, "text": "So this is an unbalanced tree because you"}
+{"start": 4742.26, "end": 4746.06, "text": "have an unbalanced partition up on top,"}
+{"start": 4746.06, "end": 4752.37, "text": "and now you want to count up all the work that this tree does."}
+{"start": 4752.37, "end": 4754.62, "text": "If you collect up all of the operations,"}
+{"start": 4754.62, "end": 4756.7, "text": "then that's going to tell you what T of n"}
+{"start": 4756.7, "end": 4758.43, "text": "is because that's all the work that you"}
+{"start": 4758.43, "end": 4763.21, "text": "have to do in order to finish up the top level of recursion."}
+{"start": 4763.21, "end": 4766.85, "text": "And what you can say is, if you look at this side here are"}
+{"start": 4766.85, "end": 4768.82, "text": "all the way to the right-hand side,"}
+{"start": 4768.82, "end": 4777.95, "text": "you're going to have log to the base 4 over 3 times 2Cn levels."}
+{"start": 4777.95, "end": 4781.82, "text": "So that's just simply every time you're multiplying by 3 over 4,"}
+{"start": 4781.82, "end": 4787.67, "text": "when you get down to the number 1, and that's log of 4 over 3."}
+{"start": 4787.67, "end": 4789.69, "text": "And then over here, it's a little bit easier"}
+{"start": 4789.69, "end": 4791.96, "text": "to think about because it's a power of 2."}
+{"start": 4791.96, "end": 4798.53, "text": "You're going to have log of 4 to the base 4 times 2Cn levels."}
+{"start": 4798.53, "end": 4801.06, "text": "And really, it doesn't really matter honestly"}
+{"start": 4801.06, "end": 4802.85, "text": "when we go to asymptotics."}
+{"start": 4802.85, "end": 4804.83, "text": "But is worth seeing, I think, just"}
+{"start": 4804.83, "end": 4809.4, "text": "to get a sense of why it all works out, regardless"}
+{"start": 4809.4, "end": 4813.96, "text": "of whether it's n over 4 or a different constant here"}
+{"start": 4813.96, "end": 4815.86, "text": "or whether it's balanced or unbalanced."}
+{"start": 4815.86, "end": 4818.13, "text": "The tree looks a little bit different."}
+{"start": 4818.13, "end": 4819.24, "text": "It's sort of weird."}
+{"start": 4819.24, "end": 4824.55, "text": "It's got fewer levels here and more levels there."}
+{"start": 4824.55, "end": 4826.46, "text": "So it's sort of tilted this way."}
+{"start": 4826.46, "end": 4833.87, "text": "But eventually, you get down to theta 1 constants down below."}
+{"start": 4833.87, "end": 4838.65, "text": "And basically what you can see-- if you just add it up--"}
+{"start": 4838.65, "end": 4842.12, "text": "is 1 over 4 plus 3 over 4 is 1."}
+{"start": 4842.12, "end": 4842.93, "text": "1 over 16."}
+{"start": 4842.93, "end": 4843.58, "text": "3 over 16."}
+{"start": 4843.58, "end": 4848.1, "text": "Obviously, those all end up being 1."}
+{"start": 4848.1, "end": 4857.19, "text": "So you have 2Cn work at each level."}
+{"start": 4857.19, "end": 4861.51, "text": "And if you just go ahead and be pessimistic about it,"}
+{"start": 4861.51, "end": 4869.745, "text": "there's a maximum of log 4 over 3 times 2Cn levels."}
+{"start": 4872.43, "end": 4875.76, "text": "And that's pretty much it."}
+{"start": 4875.76, "end": 4878.39, "text": "Obviously, now you can start ignoring the constants."}
+{"start": 4878.39, "end": 4879.78, "text": "You just keep the log here."}
+{"start": 4879.78, "end": 4881.32, "text": "You don't care what the base is."}
+{"start": 4881.32, "end": 4882.23, "text": "You got an n here."}
+{"start": 4882.23, "end": 4883.13, "text": "So drop the 2C."}
+{"start": 4883.13, "end": 4884.46, "text": "Drop the 4 over 3."}
+{"start": 4884.46, "end": 4885.56, "text": "Drop the 2C."}
+{"start": 4885.56, "end": 4887.26, "text": "And you get your n log n."}
+{"start": 4887.26, "end": 4888.07, "text": "OK?"}
+{"start": 4888.07, "end": 4890.65, "text": "So that's pretty much it."}
+{"start": 4890.65, "end": 4894.09, "text": "I'll stick around here for questions."}
+{"start": 4894.09, "end": 4898.21, "text": "But you got an example of a Monte Carlo algorithm."}
+{"start": 4898.21, "end": 4900.4, "text": "You got an example of a Las Vegas algorithm."}
+{"start": 4900.4, "end": 4903.02, "text": "And tomorrow in section, you'll see a slightly more involved"}
+{"start": 4903.02, "end": 4906.5, "text": "analysis for something that looks a lot closer"}
+{"start": 4906.5, "end": 4908.47, "text": "to the randomized quicksort."}
+{"start": 4908.47, "end": 4911.216, "text": "So see you next time."}

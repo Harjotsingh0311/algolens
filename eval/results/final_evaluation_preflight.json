@@ -1,0 +1,13 @@
+{
+  "status": "blocked_final_evaluation",
+  "diagnostic_only": true,
+  "answer_generation_permitted": false,
+  "blockers": [
+    "Expected 80 gold questions; found 30.",
+    "At least one question still has an unreviewed gold label.",
+    "A leakage-safe split of exactly 50 dev and 30 test questions is required.",
+    "No canonical passages are approved for answer generation.",
+    "26 gold passage IDs do not match the approved corpus."
+  ],
+  "note": "The final evaluation command is intentionally blocked until the gold labels, split, and approved corpus satisfy the required gates."
+}

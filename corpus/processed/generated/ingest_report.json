@@ -1,0 +1,39 @@
+{
+  "status": "ingestion_validation_passed",
+  "source_verification": {
+    "checked": [
+      {
+        "source_id": "L06_TYPED_NOTES",
+        "path": "corpus/raw/L06_TYPED_NOTES.pdf",
+        "status": "hash_verified",
+        "sha256": "fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55"
+      },
+      {
+        "source_id": "L06_YOUTUBE_CAPTIONS",
+        "path": "corpus/raw/L06_CAPTIONS.en-qlPKC2UN_YU.vtt",
+        "status": "hash_verified",
+        "sha256": "3e6ce969b47c94fdfa7108eff91b2ec0029e5151b0b9f9a75b74f3df31beeed1"
+      }
+    ],
+    "errors": [],
+    "unhashed_sources": [],
+    "pending_sources": [
+      "L06_VIDEO",
+      "L06_TRANSCRIPT",
+      "L06_HANDWRITTEN_NOTES"
+    ]
+  },
+  "generated_transcript": "corpus/processed/generated/transcript_from_captions.jsonl",
+  "generated_transcript_cue_count": 1458,
+  "generated_transcript_unit_count": 1458,
+  "generated_pdf_markdown": "corpus/experiments/cli_ingest/L06_TYPED_NOTES.md",
+  "generated_pdf_unit_count": 76,
+  "existing_canonical_transcript_unit_count": 1458,
+  "canonical_reviewed_chunks_modified": false,
+  "review_approval_flags_modified": false,
+  "limitations": [
+    "Derived PDF extraction is not automatically approved evidence.",
+    "Transcript captions remain unverified against the original video.",
+    "This command does not promote any chunk into the answer-eligible corpus."
+  ]
+}

@@ -27,3 +27,14 @@ corpus/manifest.repair.tmp
 
 # Local dependency-environment snapshots
 before_cuda_install.txt
+# Local secrets and environment files
+# Python environments and caches
+venv/
+# Model downloads and local caches
+.cache/
+.huggingface/
+models/
+# Build artifacts
+build/
+dist/
+*.egg-info/
