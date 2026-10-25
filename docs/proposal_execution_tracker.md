@@ -29,7 +29,7 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 221 tests passed; Ruff lint and format checks passed; Mypy passed for 26 source files. The checkpoint was committed and pushed to GitHub as `fa1756d`; local branch tracked `origin/main`. | Verified 2026-10-26 |
+| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 229 tests passed; Ruff lint and format checks passed; Mypy passed for 26 source files. The checkpoint was committed and pushed to GitHub as `fa1756d`; local branch tracked `origin/main`. | Verified 2026-10-26 |
 | Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented and tested as a reusable component |
 | Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
 | Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; 8 focused tests passed for flow, metadata preservation and eligibility controls. | Reusable component implemented; application endpoint/UI wiring pending |
@@ -118,3 +118,6 @@ The captions are auto-generated and are not independently verified against the v
 - **Storage policy:** the default is an OS temporary-directory SQLite file, bounded to 256 entries with a seven-day TTL. `ALGOLENS_CACHE_PATH` can override the path. Cache-write or cache-read errors fail open to a fresh provider request.
 - **Tests:** added coverage for identical-request reuse, model/corpus namespace changes, evidence/partial-mode invalidation, failure behavior, approval enforcement, invalid citations, and expiration.
 - **Limitations:** the cache is a performance optimization, not approval state. The canonical corpus remains retrieval-disabled and the production index/final evaluation remain blocked until their separate acceptance gates are satisfied.
+
+
+- **Verified follow-up CI:** commit `179d8fc` passed GitHub Actions on 2026-10-25: Ruff lint passed, 57 files formatted, mypy found no issues in 27 source files, and `pytest` reported **229 passed**.
