@@ -14,3 +14,5 @@ tests/unit/test_rerank.py text eol=lf
 .gitattributes text eol=lf
 src/algolens/retrieval/hybrid.py text eol=lf
 tests/unit/test_hybrid.py text eol=lf
+src/algolens/retrieval/pipeline.py text eol=lf
+tests/unit/test_pipeline.py text eol=lf
