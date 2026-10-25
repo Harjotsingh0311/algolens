@@ -1,6 +1,6 @@
 # AlgoLens - Proposal Execution Tracker
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 Project: MIT 6.046J Lecture 6 citation-first RAG tutor
 Purpose: Track proposal requirements beside implementation evidence.
 
@@ -11,10 +11,10 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Turn 0 | Repository, concept, manifest, developer tooling, CI and deployment eligibility | Project scaffold, manifest, tests and developer tooling exist. | Mostly complete | Verify current Hugging Face/ZeroGPU eligibility. |
 | Turn 1 | Fetch and parse notes/transcript; validate locators | Typed-notes PDF is hash-pinned; captions are parsed into timestamped JSONL; extraction comparisons exist. | In progress | Finish source audit and caption-alignment review. |
 | Turn 2 | Baseline, 30-question gold set and evaluation harness | BM25, dense and RRF evaluation reports exist; 30-question gold set is draft-labelled. | Implemented, provisional | Human-review labels; finalize dev/test split and final reports. |
-| Turn 3 | Teach-unit chunks, hybrid retrieval, RRF, reranking, context headers and ablations | Reviewed-source chunks for pages 5-6; BM25/dense hybrid RRF; cross-encoder component; RetrievalPipeline connects retrieval and reranking, covered by unit tests. | In progress | Validate with the actual model, wire into the application query path, and run ablations. |
+| Turn 3 | Teach-unit chunks, hybrid retrieval, RRF, reranking, context headers and ablations | BM25/dense retrieval, RRF, reranking, chunk metadata, CLI indexing, and Gradio runtime composition exist. Production indexing remains blocked because no canonical child passage has all three approval signals. | In progress | Complete source review and a separate retrieval-eligibility decision; then test on approved evidence and run systematic retrieval/reranking ablations. |
 | Turn 4 | Answerability gate, abstention and risk-coverage evaluation | Gate, metrics and diagnostic runner implemented. All production decisions currently abstain because available evidence is ineligible. Gold labels remain unreviewed. | In progress | Human-review labels, define a leakage-safe dev/test split, calibrate on development data and evaluate once on held-out test data. |
-| Turn 5 | Generation contract, grounded citations, claim verification, model adapter and cache | Structured contracts, answer service, OpenAI-compatible provider adapter, NLI grounding verifier and runtime composition implemented. Safe-abstention and component tests pass; live-provider success path, calibrated thresholds and caching remain unvalidated or incomplete. | In progress | Validate live provider integration, calibrate verification thresholds against reviewed development examples, and implement caching. |
-| Turn 6 | Gradio UI, live deployment, probes and operational documentation | Developer documentation and tests exist; application UI and deployment remain outstanding. | Pending | Build UI, deploy, add health probes and validate a live demo. |
+| Turn 5 | Generation contract, grounded citations, claim verification, model adapter and cache | Structured contracts, answer service, OpenAI-compatible provider, NLI grounding verifier, and a grounded-answer wrapper exist. A synthetic positive-path integration test passes; real-provider success, threshold calibration, and caching are not yet validated. | In progress | Validate the provider with safe test configuration, review NLI decisions against human-labelled claims, calibrate on development data, and implement caching. |
+| Turn 6 | Gradio UI, live deployment, probes and operational documentation | Gradio UI and UI tests now exist. Live deployment, health probes, and end-to-end production validation remain outstanding because the approved corpus is empty for answer generation. | In progress | Complete local corpus and runtime acceptance gates first; then add health probes, deploy, and validate the live demo. |
 | Turn 7 | Two-voice pairing, Algorithm Lab, handwritten notes, Tier 2 and final 80-question evaluation | Stretch scope is documented; these features are not complete. | Not started | Begin after must-have features and final evaluation are sound. |
 
 ## Task ledger
@@ -29,7 +29,7 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 206 tests passed; Ruff lint passed; 94 files already formatted; Mypy passed for 25 source files; uv lock check resolved 146 packages; git diff --check passed. | Verified 2026-10-25 |
+| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 221 tests passed; Ruff lint and format checks passed; Mypy passed for 26 source files. The checkpoint was committed and pushed to GitHub as `fa1756d`; local branch tracked `origin/main`. | Verified 2026-10-26 |
 | Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented and tested as a reusable component |
 | Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
 | Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; 8 focused tests passed for flow, metadata preservation and eligibility controls. | Reusable component implemented; application endpoint/UI wiring pending |
@@ -43,11 +43,11 @@ The captions are auto-generated and are not independently verified against the v
 
 ## Immediate next gates
 
-1. Keep all changes uncommitted until the project is complete; continue reviewing the working-tree diff.
+1. Use small Git checkpoints, inspect diffs before pushing, and keep credentials out of Git history.
 2. Keep candidate pages 3-4 and all other unreviewed evidence ineligible until source review and approval are explicitly completed.
-3. Exercise the runtime with approved test fixtures and injected fake components to validate the successful answer path without a live model call.
+3. A synthetic positive-path integration test with an explicitly approved fixture and fake verifier passes; validate the real approved-corpus path only after retrieval eligibility is separately approved.
 4. Validate provider integration, review the NLI verifier against human-labelled claims, calibrate only on development data, and implement caching.
-5. Build the Gradio UI, configuration flow, deployment probes and operational documentation after backend validation.
+5. The Gradio UI and configuration path are implemented; add deployment probes and operational documentation after the backend and corpus acceptance gates pass.
 6. Complete the human-reviewed gold set, held-out evaluation, final quality gate and proposal acceptance checklist.
 
 ## Latest runtime retrieval validation (2026-10-25)
@@ -67,7 +67,7 @@ The captions are auto-generated and are not independently verified against the v
 - **Validation:** stored-file Unicode audit, required-equation checks, parent/child links, and answer-eligibility checks passed. Review report synchronized with saved JSONL word counts.
 - **Design note:** the third child is 70 words, below the nominal 120-200-word target. Its separate heading is retained as a source-boundary exception pending review.
 - **Approval status:** candidate transcription and chunk review remain pending; all records remain retrieval-ineligible.
-- **Corpus status:** canonical reviewed chunks and experimental extraction files were not modified. Candidate artifacts are not yet committed.
+- **Corpus status:** canonical reviewed chunks and experimental extraction files were not modified. Candidate artifacts are version-controlled; project-owner approval remains pending and retrieval stays disabled.
 
 ## Turn 4 - Answerability gate and diagnostic evaluation
 
@@ -98,3 +98,13 @@ The captions are auto-generated and are not independently verified against the v
 - **Validation:** the complete automated quality gate passed with 209 tests; Ruff lint and format checks passed; Mypy passed for 25 source files; `uv lock --check` resolved 146 packages; `git diff --check` passed.
 - **Remaining gaps:** the current runtime tests exercise safe abstention when retrieval returns no evidence. The positive answer path is integration-tested with synthetic approved evidence and fake provider/verifier components; live provider and real NLI verification remain unvalidated. Live provider behavior, NLI threshold calibration, caching, UI, deployment and final human-reviewed evaluation remain outstanding.
 - **Evaluation caution:** the existing 30-question set is still draft-labelled. Provisional answerability and NLI scores must not be reported as calibrated production performance.
+
+
+## GitHub checkpoint and CLI/UI completion (2026-10-26)
+
+- **Checkpoint:** commit `fa1756d` pushed to `origin/main`; the working-tree status was clean after push.
+- **CLI:** `status`, `ingest`, `index`, and `eval` are implemented. Source integrity passed for the pinned notes PDF and caption VTT. Ingestion writes derived files separately and does not change canonical chunk approval fields.
+- **UI:** the Gradio app has Ask, Evidence, Trace, Evaluation, and About views. If zero child chunks have all three explicit eligibility signals, it shows safe mode and does not initialize generation.
+- **Current gate results:** production index reports 0 eligible chunks and is blocked as intended. Final evaluation reports 30 draft questions, no finalized 50/30 split, no approved answer corpus, and gold IDs that do not match the approved corpus.
+- **Review boundary:** pages 3–4 candidate content was compared with the official MIT PDF and the equations/partition bounds appear source-consistent. This independent source check does not substitute for project-owner approval. The existing pages 5–6 transcription remains approved but retrieval-disabled.
+- **Next work:** finish source and owner review, decide retrieval eligibility separately, validate the real approved-evidence path, then complete the 80-question gold set and held-out evaluation. Deployment remains deferred.

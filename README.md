@@ -1,6 +1,6 @@
 ---
 title: AlgoLens
-emoji: ??
+emoji: 🔎
 colorFrom: indigo
 colorTo: blue
 sdk: gradio
@@ -13,40 +13,62 @@ pinned: false
 
 **A citation-first RAG tutor for MIT 6.046J Lecture 6.**
 
-AlgoLens is being built to answer questions about Randomized Quicksort using
-approved course material, trace answers to source passages, and abstain when
-the available evidence is insufficient.
+AlgoLens is designed to answer questions about Randomized Quicksort using approved
+course material, trace claims to source passages, and abstain when the evidence
+does not support a reliable answer.
 
-## Current status — 25 October 2026
+## Current status — 26 October 2026
 
 ### Implemented
 
-- Python 3.12 development environment and reproducible dependency lockfile.
-- Validated source manifest with source IDs, URLs, licences, and SHA-256 metadata.
-- SHA-256 verification and safe temporary-file download logic.
-- VTT caption auditing and timestamped JSONL transcript conversion.
-- Page-aware PDF-to-Markdown extraction with unit tests.
-- Pytest, Ruff, mypy, documentation, and GitHub Actions CI foundation.
+- Source manifest with source IDs, URLs, licences, source hashes, and integrity checks.
+- Caption/VTT parsing into timestamped JSONL; page-aware PDF extraction and extraction experiments.
+- Chunking, provenance/citation metadata, reviewed-candidate parsing, and eligibility checks.
+- BM25 and dense retrieval, reciprocal-rank fusion (RRF), and cross-encoder reranking.
+- Answerability/abstention logic, structured answer contracts, an OpenAI-compatible provider,
+  and a claim-grounding verification wrapper.
+- A Gradio UI with Ask, Evidence, Trace, Evaluation, and About views.
+- CLI commands for `status`, `ingest`, `index`, and `eval`.
+- Pytest, Ruff, mypy, and GitHub Actions CI configuration.
 
-### Source data verified locally
+### Current source and corpus state
 
-- YouTube caption track: 1,458 cues converted to `corpus/processed/transcript.jsonl`.
-- Captions SHA-256: `3e6ce969b47c94fdfa7108eff91b2ec0029e5151b0b9f9a75b74f3df31beeed1`.
-- Typed notes PDF SHA-256: `fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55`.
-- Both raw source files remain in the git-ignored `corpus/raw/` directory.
+The pinned typed-notes PDF and English caption VTT passed SHA-256 verification in
+the latest local ingestion run. The 1,458 caption cues are converted into a
+timestamped transcript. The original raw PDF and VTT stay in the git-ignored
+`corpus/raw/` directory; generated extraction artifacts are kept separately.
 
-Hashes identify exact files, not their factual accuracy. Caption spot-checking and
-review of the extracted mathematical content remain necessary.
+The printed pages 5–6 transcription has project-owner approval, and its two
+parent/child chunks are integrated into the canonical reviewed-chunk files.
+**They remain retrieval-disabled** until a separate retrieval-eligibility decision
+is made. A page 3–4 Quicksort candidate summary and three child chunks are
+version-controlled, but project-owner review is still pending.
 
-### Not yet implemented or completed
+### Production readiness: intentionally blocked
 
-- Actual extraction and manual formula review of the downloaded notes PDF.
-- Final transcript/source alignment and teach-unit chunking.
-- Dense embeddings, BM25 retrieval, RRF, and cross-encoder reranking.
-- Abstention calibration, cited generation, and independent claim verification.
-- Gradio application, evaluation runs, ablations, and live deployment.
+At the current checkpoint, **zero canonical child passages meet all production
+eligibility signals**. The app should start in safe mode and must not generate
+answers from pending or retrieval-disabled content. The CLI production index
+command is expected to block until the corpus is explicitly approved.
 
-No retrieval metrics, answer-quality scores, or live demo URL are claimed yet.
+The final evaluation is also blocked: there are 30 draft questions rather than
+the required 80, labels still need human review, the 50-dev/30-test split is not
+finalized, and some gold passage IDs do not match an approved corpus. Existing
+retrieval reports are exploratory diagnostics—not final benchmark results.
+
+### Next acceptance gates
+
+1. Complete owner review of source-grounded candidate passages without relaxing
+   the eligibility checks to make the app answer.
+2. Make a separate, explicit retrieval-eligibility decision and test the real
+   approved-corpus path.
+3. Review all gold labels, establish the 50-development/30-test split, and add
+   the remaining questions before final evaluation.
+4. Validate provider integration, review claim verification on human-labelled
+   examples, calibrate thresholds only on development data, and evaluate once
+   on held-out test questions.
+5. Finish ablations, operational/health probes, and live deployment only after
+   the local acceptance gates pass.
 
 ## Local development
 
@@ -60,7 +82,21 @@ uv run mypy src
 uv run pytest -q
 ```
 
+Useful CLI commands:
+
+```powershell
+uv run python -m algolens.cli status
+uv run python -m algolens.cli ingest
+uv run python -m algolens.cli index
+uv run python -m algolens.cli eval
+uv run python -m algolens.cli eval --diagnostic --retriever bm25
+```
+
+The production `index` and final `eval` commands intentionally stop when their
+approval and evaluation prerequisites are not satisfied. Diagnostic evaluation
+does not authorize answer generation.
+
 ## Licensing
 
-See `CONTENT-LICENSE.md` and `docs/sources.md` for MIT OpenCourseWare attribution
-and the project's third-party content handling policy.
+See `CONTENT-LICENSE.md` and `docs/sources.md` for MIT OpenCourseWare
+attribution and the project's third-party content-handling policy.
