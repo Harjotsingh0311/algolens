@@ -32,7 +32,8 @@ def test_candidate_gold_v1_is_complete_but_remains_unreviewed() -> None:
     assert all(row["label_status"] == "draft_needs_human_review" for row in questions)
 
     categories = Counter(
-        "unanswerable" if str(row["question_type"]).startswith("unanswerable_")
+        "unanswerable"
+        if str(row["question_type"]).startswith("unanswerable_")
         else str(row["question_type"])
         for row in questions
     )
@@ -48,9 +49,7 @@ def test_candidate_gold_v1_is_complete_but_remains_unreviewed() -> None:
     experiment_ids = {str(row["chunk_id"]) for row in experiment_chunks}
     canonical_ids = {str(row["chunk_id"]) for row in canonical_chunks}
     gold_ids = {
-        str(passage_id)
-        for row in questions
-        for passage_id in row.get("gold_passage_ids", [])
+        str(passage_id) for row in questions for passage_id in row.get("gold_passage_ids", [])
     }
     assert gold_ids <= experiment_ids
     assert not (gold_ids & canonical_ids), (
