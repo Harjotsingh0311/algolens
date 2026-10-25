@@ -10,6 +10,7 @@ import gradio as gr
 import yaml
 
 from algolens.answer_cache import CachedAnswerProvider
+from algolens.fallback_provider import FallbackAnswerProvider
 from algolens.grounded_answering import GroundedAnswerService
 from algolens.providers import OpenAICompatibleProvider
 from algolens.retrieval.bm25 import BM25Index, is_answer_eligible
@@ -138,12 +139,29 @@ def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
         manifest = load_manifest()
         corpus_version = str(manifest.get("version", "unknown"))
 
-        provider = OpenAICompatibleProvider.from_env()
-        model_id = provider.model
+        primary_provider = OpenAICompatibleProvider.from_env()
+        configured_providers = [primary_provider]
+        fallback_warning: str | None = None
+        if os.getenv("ALGOLENS_FALLBACK_PROVIDER", "").strip():
+            try:
+                configured_providers.append(
+                    OpenAICompatibleProvider.from_env(prefix="ALGOLENS_FALLBACK_")
+                )
+            except Exception as exc:
+                # Keep the primary provider usable if optional fallback settings
+                # are malformed; expose only the diagnostic exception type.
+                fallback_warning = type(exc).__name__
+                print(f"AlgoLens fallback configuration failed: {fallback_warning}")
+
+        provider_chain = FallbackAnswerProvider(configured_providers)
+        model_id = primary_provider.model
+        cache_namespace = "provider-chain:" + "->".join(
+            f"{item.base_url}|{item.model}" for item in configured_providers
+        )
         cached_provider = CachedAnswerProvider(
-            provider,
+            provider_chain,
             corpus_version=corpus_version,
-            model_id=model_id,
+            model_id=cache_namespace,
             cache_path=os.getenv("ALGOLENS_CACHE_PATH") or None,
         )
         bm25 = BM25Index(eligible, include_unreviewed=False)
@@ -171,6 +189,10 @@ def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
         )
         status["message"] = "Grounded-answer runtime initialized."
         status["model"] = model_id
+        if len(configured_providers) > 1:
+            status["fallback_models"] = [item.model for item in configured_providers[1:]]
+        if fallback_warning is not None:
+            status["fallback_warning"] = fallback_warning
         return service, status
 
     except Exception as exc:

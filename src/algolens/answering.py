@@ -201,6 +201,27 @@ class AnswerService:
             latency_ms=max(0.0, (time.perf_counter() - started) * 1000.0),
         )
 
+    def _sources_only(
+        self,
+        started: float,
+        sources: Sequence[Hit],
+        topics: Sequence[str] = (),
+    ) -> Answer:
+        """Return approved source evidence without exposing a failed draft."""
+        return Answer(
+            status="sources_only",
+            answer_md=(
+                "A validated answer could not be generated right now. The approved source "
+                "passages below are available for review; no generated explanation is provided."
+            ),
+            claims=[],
+            sources=list(sources),
+            closest_topics=list(topics),
+            corpus_version=self.corpus_version,
+            model=self.model_id,
+            latency_ms=max(0.0, (time.perf_counter() - started) * 1000.0),
+        )
+
     def answer(self, question: str) -> Answer:
         """Answer from approved evidence or return a safe abstention."""
         started = time.perf_counter()
@@ -232,17 +253,30 @@ class AnswerService:
             if not eligible_hits:
                 return self._abstention(started, assessment.closest_topics)
 
-            raw_draft = self.provider.generate(
-                question,
-                eligible_hits,
-                allow_partial=assessment.decision == "partial",
-            )
-            draft = AnswerDraft.model_validate(raw_draft)
+            try:
+                raw_draft = self.provider.generate(
+                    question,
+                    eligible_hits,
+                    allow_partial=assessment.decision == "partial",
+                )
+                draft = AnswerDraft.model_validate(raw_draft)
 
-            source_ids = {hit.passage.id for hit in eligible_hits}
-            cited_ids = {passage_id for claim in draft.claims for passage_id in claim.cites}
-            if not cited_ids.issubset(source_ids):
-                return self._abstention(started, assessment.closest_topics)
+                source_ids = {hit.passage.id for hit in eligible_hits}
+                cited_ids = {passage_id for claim in draft.claims for passage_id in claim.cites}
+                if not cited_ids.issubset(source_ids):
+                    return self._sources_only(
+                        started,
+                        eligible_hits,
+                        assessment.closest_topics,
+                    )
+            except Exception:
+                # Provider outages or malformed responses should release only
+                # approved evidence, never a generated or partially parsed draft.
+                return self._sources_only(
+                    started,
+                    eligible_hits,
+                    assessment.closest_topics,
+                )
 
             return Answer(
                 status=("partial" if assessment.decision == "partial" else "answered"),

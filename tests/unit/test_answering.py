@@ -141,32 +141,34 @@ def test_no_eligible_evidence_abstains_without_calling_provider() -> None:
     assert provider.calls == 0
 
 
-def test_provider_failure_returns_safe_abstention() -> None:
+def test_provider_failure_returns_approved_sources_only() -> None:
     hit = eligible_hit()
     provider = FakeProvider(error=RuntimeError("secret provider detail"))
     service = service_for([hit], provider)
 
     answer = service.answer("Explain randomized Quicksort.")
 
-    assert answer.status == "abstained"
+    assert answer.status == "sources_only"
     assert answer.claims == []
+    assert [hit.passage.id for hit in answer.sources] == ["passage-001"]
     assert "secret provider detail" not in answer.answer_md
     assert provider.calls == 1
 
 
-def test_unknown_citation_id_is_rejected_as_safe_abstention() -> None:
+def test_unknown_citation_id_is_rejected_as_safe_sources_only() -> None:
     hit = eligible_hit()
     provider = FakeProvider(draft_for("missing-passage"))
     service = service_for([hit], provider)
 
     answer = service.answer("Explain randomized Quicksort.")
 
-    assert answer.status == "abstained"
+    assert answer.status == "sources_only"
     assert answer.claims == []
+    assert [hit.passage.id for hit in answer.sources] == ["passage-001"]
     assert "missing-passage" not in answer.answer_md
 
 
-def test_malformed_provider_output_returns_safe_abstention() -> None:
+def test_malformed_provider_output_returns_safe_sources_only() -> None:
     hit = eligible_hit()
     provider = FakeProvider(
         result={
@@ -178,8 +180,9 @@ def test_malformed_provider_output_returns_safe_abstention() -> None:
 
     answer = service.answer("Explain randomized Quicksort.")
 
-    assert answer.status == "abstained"
+    assert answer.status == "sources_only"
     assert answer.claims == []
+    assert [hit.passage.id for hit in answer.sources] == ["passage-001"]
 
 
 def test_partial_gate_decision_is_passed_to_provider() -> None:

@@ -121,3 +121,12 @@ The captions are auto-generated and are not independently verified against the v
 
 
 - **Verified follow-up CI:** commit `179d8fc` passed GitHub Actions on 2026-10-25: Ruff lint passed, 57 files formatted, mypy found no issues in 27 source files, and `pytest` reported **229 passed**.
+
+
+## Provider failover and sources-only degradation (2026-10-26)
+
+- **Provider chain:** `FallbackAnswerProvider` tries the primary provider and an optional independently configured fallback. Each response is schema-validated and its citations must refer to supplied evidence before it is accepted.
+- **Configuration:** set `ALGOLENS_FALLBACK_PROVIDER` to `groq` or `ollama`; optional settings use the `ALGOLENS_FALLBACK_` prefix for model, base URL, API key, and timeout. Invalid optional fallback settings do not prevent a valid primary provider from initializing.
+- **Failure mode:** if all providers fail, or a provider response cannot be validated, the answer service returns `sources_only` with eligible passages and no generated claims. Retrieval errors/no eligible passages still use the existing safe abstention path.
+- **Tests:** primary outage → secondary success; invalid primary citations → secondary success; all-provider failure → sanitized error; sources-only output keeps approved evidence and no generated answer.
+- **Remaining:** live API/rate-limit behavior is not yet exercised; current provider chain tests are deterministic offline tests. Add provider-level metrics without logging prompts, keys, or raw exception text.

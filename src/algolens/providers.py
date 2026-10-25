@@ -52,37 +52,60 @@ class OpenAICompatibleProvider:
         self.timeout_seconds = float(timeout_seconds)
 
     @classmethod
-    def from_env(cls) -> OpenAICompatibleProvider:
-        """Build a provider from environment variables without exposing secrets."""
+    def from_env(cls, *, prefix: str = "ALGOLENS_") -> OpenAICompatibleProvider:
+        """Build a provider from environment variables without exposing secrets.
+
+        The default prefix preserves the original ALGOLENS_/LLM_PROVIDER
+        configuration. Set prefix to "ALGOLENS_FALLBACK_" to configure an
+        optional secondary provider independently.
+        """
+        if not prefix.endswith("_") or not prefix.replace("_", "").isalnum():
+            raise ValueError("Environment prefix must be alphanumeric and end with an underscore.")
+
         env_path = Path(__file__).resolve().parents[2] / ".env"
         load_dotenv(dotenv_path=env_path, override=False)
-        provider_name = (
-            os.getenv("ALGOLENS_PROVIDER", os.getenv("LLM_PROVIDER", "ollama")).strip().lower()
-        )
+
+        if prefix == "ALGOLENS_":
+            provider_name = os.getenv(
+                f"{prefix}PROVIDER",
+                os.getenv("LLM_PROVIDER", "ollama"),
+            ).strip().lower()
+        else:
+            provider_name = os.getenv(f"{prefix}PROVIDER", "").strip().lower()
+            if not provider_name:
+                raise ValueError(f"{prefix}PROVIDER is required for a configured fallback.")
 
         if provider_name == "ollama":
-            default_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+            default_base_url = (
+                os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+                if prefix == "ALGOLENS_"
+                else "http://localhost:11434/v1"
+            )
             default_model = "llama3.2"
         elif provider_name == "groq":
             default_base_url = "https://api.groq.com/openai/v1"
             default_model = "openai/gpt-oss-120b"
         else:
-            raise ValueError("Unsupported ALGOLENS_PROVIDER; choose 'ollama' or 'groq'")
+            raise ValueError(f"Unsupported {prefix}PROVIDER; choose 'ollama' or 'groq'.")
 
-        base_url = os.getenv("ALGOLENS_BASE_URL", default_base_url)
-        model = os.getenv("ALGOLENS_MODEL", default_model)
+        base_url = os.getenv(f"{prefix}BASE_URL", default_base_url)
+        model = os.getenv(f"{prefix}MODEL", default_model)
 
-        api_key = os.getenv("ALGOLENS_API_KEY")
+        api_key = os.getenv(f"{prefix}API_KEY")
         if provider_name == "groq":
-            api_key = api_key or os.getenv("GROQ_API_KEY")
+            api_key = api_key or os.getenv(f"{prefix}GROQ_API_KEY")
+            if prefix == "ALGOLENS_":
+                api_key = api_key or os.getenv("GROQ_API_KEY")
             if not api_key or not api_key.strip():
-                raise ValueError("GROQ_API_KEY (or ALGOLENS_API_KEY) is required for Groq")
+                if prefix == "ALGOLENS_":
+                    raise ValueError("GROQ_API_KEY (or ALGOLENS_API_KEY) is required for Groq")
+                raise ValueError(f"{prefix}GROQ_API_KEY (or {prefix}API_KEY) is required for Groq")
 
-        timeout_text = os.getenv("ALGOLENS_TIMEOUT_SECONDS", "30")
+        timeout_text = os.getenv(f"{prefix}TIMEOUT_SECONDS", "30")
         try:
             timeout_seconds = float(timeout_text)
         except ValueError as exc:
-            raise ValueError("ALGOLENS_TIMEOUT_SECONDS must be a positive number") from exc
+            raise ValueError(f"{prefix}TIMEOUT_SECONDS must be a positive number") from exc
 
         return cls(
             base_url=base_url,
