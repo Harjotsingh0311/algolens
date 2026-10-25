@@ -1,0 +1,37 @@
+{
+  "candidate_markdown_sha256": "2dd13009f2e752a028beb2bdf0e226a6e7539bccc519854ea33c99a488c2c487",
+  "candidate_path": "corpus/processed/reviewed_candidates/expectations_printed_pages_5_6.md",
+  "checks": {
+    "answer_eligibility_exclusion": "passed",
+    "candidate_metadata_hashes": "passed",
+    "manifest_source_hash": "passed",
+    "page_citations": "passed",
+    "parent_child_reconstruction": "passed",
+    "review_notes_excluded": "passed",
+    "unique_chunk_ids": "passed"
+  },
+  "child_count": 2,
+  "limitations": [
+    "Transcription is limited to printed pages 5-6.",
+    "The approved transcription does not validate the complete PDF extraction.",
+    "Chunks are not eligible for answer generation.",
+    "No retrieval or answer-generation configuration was changed."
+  ],
+  "outputs": {
+    "children": "corpus/processed/reviewed_chunks/children.jsonl",
+    "parents": "corpus/processed/reviewed_chunks/parents.jsonl"
+  },
+  "parent_count": 2,
+  "printed_pages": [
+    5,
+    6
+  ],
+  "project_owner_approval": "approved",
+  "retrieval_eligible": false,
+  "review_status": "approved_retrieval_disabled",
+  "schema_version": 1,
+  "source_id": "L06_TYPED_NOTES",
+  "source_path": "corpus/raw/L06_TYPED_NOTES.pdf",
+  "source_sha256_verified": "fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55",
+  "status": "reviewed_transcription_chunks_pending_retrieval_approval"
+}

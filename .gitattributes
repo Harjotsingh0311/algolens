@@ -1,0 +1,11 @@
+# Preserve byte-level SHA-256 reproducibility for reviewed-source artifacts.
+corpus/processed/reviewed_candidates/expectations_printed_pages_5_6.md text eol=lf
+corpus/processed/reviewed_candidates/expectations_printed_pages_5_6.review.json text eol=lf
+corpus/processed/reviewed_chunks/children.jsonl text eol=lf
+corpus/processed/reviewed_chunks/parents.jsonl text eol=lf
+corpus/processed/reviewed_chunks/report.json text eol=lf
+docs/proposal_execution_tracker.md text eol=lf
+src/algolens/ingest/reviewed_candidate.py text eol=lf
+tests/unit/test_reviewed_candidate.py text eol=lf
+tests/unit/test_reviewed_candidate_chunks.py text eol=lf
+tests/unit/test_reviewed_candidate_metadata.py text eol=lf

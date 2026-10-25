@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "artifact_id": "L06_TYPED_NOTES_EXPECTATIONS_P5_P6_CANDIDATE",
+  "source_id": "L06_TYPED_NOTES",
+  "source_type": "typed_notes_pdf",
+  "source_url": "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/cb55cb123a557eed0738a1187a452c24_MIT6_046JS15_lec06.pdf",
+  "source_sha256": "fac37c9721e67c2f5723536ae412bd200ae7580675bd0f53b21f2878af39bc55",
+  "printed_pages": [
+    5,
+    6
+  ],
+  "citation": {
+    "kind": "pdf_page",
+    "page_start": 5,
+    "page_end": 6,
+    "display": "pp. 5-6"
+  },
+  "status": "reviewed_transcription_retrieval_disabled",
+  "retrieval_eligible": false,
+  "project_owner_approval": "approved",
+  "based_on_visual_source_review": true,
+  "replaces_original_extraction": false,
+  "candidate_markdown_path": "corpus/processed/reviewed_candidates/expectations_printed_pages_5_6.md",
+  "candidate_markdown_sha256": "2dd13009f2e752a028beb2bdf0e226a6e7539bccc519854ea33c99a488c2c487",
+  "claims": [
+    "good_pivot_probability_greater_than_one_half",
+    "expected_pivot_attempts_at_most_two",
+    "expected_recurrence_T_n_le_T_n_over_4_plus_T_3n_over_4_plus_2cn",
+    "logarithmic_recursion_tree_height",
+    "linear_work_per_level",
+    "expected_theta_n_log_n_running_time"
+  ],
+  "review_note": "Prepared from the pinned official PDF. Keep out of the answer-eligible corpus until the project owner reviews and approves this transcription.",
+  "review_notes": "Reviewed against the supplied original PDF, printed pages 5-6, and approved for integration. Retrieval remains disabled."
+}
