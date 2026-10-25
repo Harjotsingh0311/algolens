@@ -5,7 +5,10 @@ from typing import Any
 import numpy as np
 import pytest
 
-from algolens.retrieval.rerank import CrossEncoderReranker
+from algolens.retrieval.rerank import (
+    DEFAULT_CROSS_ENCODER_MODEL,
+    CrossEncoderReranker,
+)
 
 
 def make_candidate(
@@ -221,3 +224,7 @@ def test_reranker_applies_top_k_after_ranking() -> None:
     )
 
     assert [item["chunk_id"] for item in results] == ["b", "c"]
+
+
+def test_default_checkpoint_uses_published_minilm_l6_id() -> None:
+    assert DEFAULT_CROSS_ENCODER_MODEL == "cross-encoder/ms-marco-MiniLM-L6-v2"

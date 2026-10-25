@@ -6,7 +6,7 @@ from typing import Any
 
 from algolens.retrieval.bm25 import is_answer_eligible
 
-DEFAULT_CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+DEFAULT_CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L6-v2"
 
 
 class CrossEncoderReranker:

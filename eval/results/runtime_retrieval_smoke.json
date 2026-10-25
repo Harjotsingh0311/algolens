@@ -1,0 +1,130 @@
+{
+  "all_input_chunks_ineligible": true,
+  "answer_generation_permitted": false,
+  "candidate_k": 20,
+  "checks": {
+    "answer_eligibility_gate": "passed",
+    "answer_generation": "not_run",
+    "citation_preservation": "passed",
+    "cross_encoder_executed": true,
+    "finite_scores": "passed",
+    "hybrid_retrieval_executed": true,
+    "source_metadata_preservation": "passed"
+  },
+  "chunk_count": 32,
+  "corpus_path": "corpus/experiments/chunking/children.jsonl",
+  "corpus_sha256": "3e08079e6eca9f60a5c14e8b4a00d35607209c4aec2d7d292401a10d21d2ad1a",
+  "cross_encoder_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+  "dense_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "diagnostic_only": true,
+  "limitations": [
+    "Single diagnostic query; not a benchmark.",
+    "Experimental source chunks are unreviewed.",
+    "No answer was generated or evaluated.",
+    "Scores are ranking scores, not probabilities.",
+    "Cold and warm timing cover different initialization costs."
+  ],
+  "query": "How does randomized Quicksort achieve expected Theta(n log n) running time, and what recurrence explains the bound?",
+  "requested_device": "cuda",
+  "resolved_cross_encoder_device": "cuda:0",
+  "resolved_dense_device": "cuda:0",
+  "results": [
+    {
+      "chunk_id": "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+      "citation": {
+        "display": "01:08:42.380–01:09:57.564",
+        "end_seconds": 4197.564,
+        "kind": "video_timestamp",
+        "page_end": null,
+        "page_start": null,
+        "pages": [],
+        "start_seconds": 4122.38
+      },
+      "cross_encoder_rerank_score": 3.734785556793213,
+      "eligible_for_answer": false,
+      "hybrid_rrf_score": 0.03252247488101534,
+      "rank": 1,
+      "review_status": "pending_spot_check"
+    },
+    {
+      "chunk_id": "L06_TYPED_NOTES-parent-0001-child-0002",
+      "citation": {
+        "display": "p. 4",
+        "end_seconds": null,
+        "kind": "pdf_page",
+        "page_end": 4,
+        "page_start": 4,
+        "pages": [
+          4
+        ],
+        "start_seconds": null
+      },
+      "cross_encoder_rerank_score": 1.751405954360962,
+      "eligible_for_answer": false,
+      "hybrid_rrf_score": 0.032266458495966696,
+      "rank": 2,
+      "review_status": "unreviewed_extraction"
+    },
+    {
+      "chunk_id": "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+      "citation": {
+        "display": "01:09:57.564–01:11:00.470",
+        "end_seconds": 4260.47,
+        "kind": "video_timestamp",
+        "page_end": null,
+        "page_start": null,
+        "pages": [],
+        "start_seconds": 4197.564
+      },
+      "cross_encoder_rerank_score": 1.616795539855957,
+      "eligible_for_answer": false,
+      "hybrid_rrf_score": 0.029236022193768675,
+      "rank": 3,
+      "review_status": "pending_spot_check"
+    },
+    {
+      "chunk_id": "L06_YOUTUBE_CAPTIONS-parent-0005-child-0002",
+      "citation": {
+        "display": "01:05:14.550–01:06:31.820",
+        "end_seconds": 3991.82,
+        "kind": "video_timestamp",
+        "page_end": null,
+        "page_start": null,
+        "pages": [],
+        "start_seconds": 3914.55
+      },
+      "cross_encoder_rerank_score": 0.9642224311828613,
+      "eligible_for_answer": false,
+      "hybrid_rrf_score": 0.029857397504456328,
+      "rank": 4,
+      "review_status": "pending_spot_check"
+    },
+    {
+      "chunk_id": "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+      "citation": {
+        "display": "01:00:45.060–01:01:45.140",
+        "end_seconds": 3705.14,
+        "kind": "video_timestamp",
+        "page_end": null,
+        "page_start": null,
+        "pages": [],
+        "start_seconds": 3645.06
+      },
+      "cross_encoder_rerank_score": 0.07409311830997467,
+      "eligible_for_answer": false,
+      "hybrid_rrf_score": 0.031754032258064516,
+      "rank": 5,
+      "review_status": "pending_spot_check"
+    }
+  ],
+  "retrieval_eligible": false,
+  "schema_version": 1,
+  "status": "diagnostic_runtime_retrieval_smoke_test",
+  "timings_seconds": {
+    "bm25_index_build": 0.004979400022421032,
+    "dense_index_build_including_model_and_embeddings": 37.12436670000898,
+    "first_query_including_lazy_cross_encoder_load": 52.59803649998503,
+    "second_warm_query": 0.11432479997165501
+  },
+  "top_k": 5
+}

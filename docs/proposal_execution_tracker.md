@@ -29,9 +29,9 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 99 tests passed; Ruff, Mypy, formatting and UV lock checks passed in this run | Verified 2026-10-25 |
+| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 100 tests passed; Ruff, Mypy, formatting and UV lock checks passed in this run | Verified 2026-10-25 |
 | Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented and tested as a reusable component |
-| Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 10 fake-encoder tests passed. | Component implemented; model-backed evaluation pending |
+| Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
 | Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; 8 focused tests passed for flow, metadata preservation and eligibility controls. | Reusable component implemented; application endpoint/UI wiring pending |
 | Abstention, grounded generation, UI and deployment | Not fully implemented | Pending |
 
@@ -49,3 +49,12 @@ The captions are auto-generated and are not independently verified against the v
 4. Implement abstention, grounded generation, citation verification and caching.
 5. Build the UI and deployment probes.
 6. Complete the final human-reviewed evaluation and proposal acceptance checklist.
+
+## Latest runtime retrieval validation (2026-10-25)
+
+- **Automated quality gate:** 100 tests passed; Ruff lint passed; Ruff format check passed (71 files formatted); Mypy passed for 16 source files; `uv lock --check` passed.
+- **Real-model smoke test:** passed using `sentence-transformers/all-MiniLM-L6-v2` and `cross-encoder/ms-marco-MiniLM-L6-v2`, both resolved to CUDA.
+- **Diagnostic corpus:** 32 experimental child chunks; 5 results returned. Citation/provenance fields were preserved, and all results remained ineligible for answer generation.
+- **Timing observations:** BM25 index build ~0.005 s; dense index build including model and embeddings ~37.124 s; first query including lazy cross-encoder loading ~52.598 s; second warm query ~0.114 s. These are smoke-test observations, not benchmark results.
+- **Evidence boundary:** experimental chunks remain unreviewed and must not be used as answer evidence. The smoke test does not demonstrate answer quality or a retrieval improvement.
+- **Remaining work:** review and approve source-grounded chunks, validate the gold set, run systematic retrieval/reranking evaluation and ablations, then integrate retrieval with answerability gating, citation verification, and the application interface.

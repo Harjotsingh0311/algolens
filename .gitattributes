@@ -16,3 +16,5 @@ src/algolens/retrieval/hybrid.py text eol=lf
 tests/unit/test_hybrid.py text eol=lf
 src/algolens/retrieval/pipeline.py text eol=lf
 tests/unit/test_pipeline.py text eol=lf
+tools/validate_runtime_retrieval.py text eol=lf
+eval/results/runtime_retrieval_smoke.json text eol=lf
