@@ -7,7 +7,10 @@ from pathlib import Path
 from typing import Any
 
 import gradio as gr
+import uvicorn
 import yaml
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 from algolens.answer_cache import CachedAnswerProvider
 from algolens.fallback_provider import FallbackAnswerProvider
@@ -1031,23 +1034,102 @@ def create_app() -> gr.Blocks:
     return demo
 
 
+def readiness_payload() -> dict[str, Any]:
+    """Report whether the app can safely generate grounded answers.
+
+    Liveness is checked separately by /healthz. A running UI can be healthy
+    while answer generation remains intentionally disabled in safe mode.
+    """
+    corpus = corpus_readiness()
+    candidate_count = int(corpus.get("candidate_passages", 0))
+    eligible_count = int(corpus.get("eligible_passages", 0))
+    corpus_message = str(corpus.get("message", ""))
+
+    if corpus_message.startswith("Corpus readiness could not be checked."):
+        return {
+            "status": "error",
+            "ready": False,
+            "answer_generation_enabled": False,
+            "candidate_passages": candidate_count,
+            "eligible_passages": eligible_count,
+            "message": "The canonical corpus could not be checked.",
+        }
+
+    if eligible_count == 0:
+        return {
+            "status": "safe_mode",
+            "ready": False,
+            "answer_generation_enabled": False,
+            "candidate_passages": candidate_count,
+            "eligible_passages": 0,
+            "message": (
+                "The app is live, but no canonical passage has all required "
+                "approval signals. Answer generation remains locked."
+            ),
+        }
+
+    service, runtime_status = get_runtime()
+    if service is None:
+        return {
+            "status": "runtime_unavailable",
+            "ready": False,
+            "answer_generation_enabled": False,
+            "candidate_passages": candidate_count,
+            "eligible_passages": eligible_count,
+            "message": (
+                "Approved passages exist, but the grounded-answer runtime "
+                "could not be initialized."
+            ),
+            "runtime_status": str(runtime_status.get("message", "Runtime unavailable.")),
+        }
+
+    return {
+        "status": "ready",
+        "ready": True,
+        "answer_generation_enabled": True,
+        "candidate_passages": int(runtime_status.get("candidate_passages", candidate_count)),
+        "eligible_passages": int(runtime_status.get("eligible_passages", eligible_count)),
+        "message": "The grounded-answer runtime is initialized with approved evidence.",
+    }
+
+
+def create_server_app(blocks: gr.Blocks) -> FastAPI:
+    """Mount the Gradio UI beside explicit liveness and readiness probes."""
+    server = FastAPI(
+        title="AlgoLens",
+        docs_url=None,
+        redoc_url=None,
+        openapi_url=None,
+    )
+
+    @server.get("/healthz", include_in_schema=False)
+    def liveness_probe() -> dict[str, str]:
+        """Return process liveness without depending on corpus/provider state."""
+        return {"status": "ok", "service": "algolens"}
+
+    @server.get("/readyz", include_in_schema=False)
+    def readiness_probe() -> JSONResponse:
+        """Return 200 only when the approved corpus and grounded runtime are ready."""
+        report = readiness_payload()
+        return JSONResponse(
+            status_code=200 if report["ready"] is True else 503,
+            content=report,
+        )
+
+    mount_kwargs: dict[str, Any] = {}
+    if int(gr.__version__.split(".", maxsplit=1)[0]) >= 6:
+        mount_kwargs["theme"] = APP_THEME
+        mount_kwargs["css"] = APP_CSS
+
+    return gr.mount_gradio_app(server, blocks, path="/", **mount_kwargs)
+
+
 demo = create_app()
+server_app = create_server_app(demo)
 
 
 if __name__ == "__main__":
     is_space = bool(os.getenv("SPACE_ID"))
     host = os.getenv("GRADIO_SERVER_NAME", "0.0.0.0" if is_space else "127.0.0.1")
     port = int(os.getenv("PORT", "7860"))
-    launch_kwargs: dict[str, Any] = {
-        "server_name": host,
-        "server_port": port,
-        "share": False,
-        "show_error": False,
-        "inbrowser": not is_space,
-    }
-    gradio_major = int(gr.__version__.split(".", maxsplit=1)[0])
-    if gradio_major >= 6:
-        launch_kwargs["theme"] = APP_THEME
-        launch_kwargs["css"] = APP_CSS
-
-    demo.launch(**launch_kwargs)
+    uvicorn.run(server_app, host=host, port=port, log_level="info")
