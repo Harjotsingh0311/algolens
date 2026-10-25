@@ -64,4 +64,4 @@ T7.1's deterministic provider-chain and sources-only tests are implemented and p
 
 - GET /healthz stays available even when corpus readiness checks fail.
 - GET /readyz returns 503 in safe mode or when runtime initialization fails, and 200 only after approved evidence and runtime initialization are available.
-- These tests verify the probe contract and mounted Gradio root page. They do not replace a post-deployment network smoke test.
+- These tests verify the probe contract and mounted Gradio root page. They do not replace a post-deployment network smoke test. The current test run emits one upstream Starlette/httpx deprecation warning, but all tests pass.

@@ -18,7 +18,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install project
-        run: uv sync --all-groups
+        run: uv sync --all-groups --locked
 
       - name: Lint, format, and type checks
         run: make check

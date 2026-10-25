@@ -74,8 +74,9 @@ Python 3.12 is required.
 
 ```powershell
 uv sync --all-groups
-uv run ruff check src tests
-uv run ruff format --check src tests
+uv lock --check
+uv run ruff check src tests app
+uv run ruff format --check src tests app
 uv run mypy src
 uv run pytest -q
 ```

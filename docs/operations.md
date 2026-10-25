@@ -35,4 +35,4 @@ Do not change approval flags just to make /readyz return 200. Readiness should b
 
 ## Deployment note
 
-Both routes are served by the same FastAPI/Gradio process, using the configured PORT environment variable. These are probes only; no Hugging Face Space has been deployed from this checkpoint.
+Both routes are served by the same FastAPI/Gradio process, using the configured PORT environment variable. CI now installs with the existing lockfile in locked mode and separately verifies lock consistency. These are probes only; no Hugging Face Space has been deployed from this checkpoint.

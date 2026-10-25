@@ -29,7 +29,7 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | Before expanding Ruff scope to app/, checkpoint 98b25bd passed: Ruff lint/format, strict mypy (28 source files), and 245 tests passed. Current Makefile now also lints and formats app/; see latest CI before treating this expanded gate as green. | Verified 2026-10-26 |
+| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | Checkpoint 4ffb790 passed after adding app/ to Ruff scope: Ruff lint passed, 63 files formatted, strict mypy passed for 28 source files, and 245 tests passed (one non-fatal Starlette/httpx deprecation warning). Lockfile consistency is now part of the CI gate. | Verified 2026-10-26 |
 | Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented and tested as a reusable component |
 | Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
 | Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; the mounted Gradio app calls it behind eligibility gates. | Reusable component implemented/tested; production answer path remains blocked until canonical passages are eligible |
@@ -154,4 +154,7 @@ The captions are auto-generated and are not independently verified against the v
 
 - HTTP probes: app/app.py serves /healthz for process liveness and /readyz for approved-corpus/runtime readiness. In current safe mode, liveness returns 200 while answer-generation readiness returns 503 by design.
 - Coverage improvement: Makefile now runs Ruff lint and format checks on app/ as well as src/ and tests/; this prevents server-code changes from bypassing the style gate.
-- Latest known complete result before broader lint: commit 98b25bd passed existing checks and reported 245 tests passed. A new CI run is required after expanding the Ruff scope.
+- Latest known complete result before broader lint: commit 98b25bd passed existing checks and reported 245 tests passed. Latest completed run passed with app/ included; the subsequent lockfile-hardening commit is being checked separately.
+
+
+- Reproducibility gate: CI now runs uv sync --all-groups --locked and uv lock --check so the build fails instead of silently rewriting a stale dependency lock.
