@@ -1077,8 +1077,7 @@ def readiness_payload() -> dict[str, Any]:
             "candidate_passages": candidate_count,
             "eligible_passages": eligible_count,
             "message": (
-                "Approved passages exist, but the grounded-answer runtime "
-                "could not be initialized."
+                "Approved passages exist, but the grounded-answer runtime could not be initialized."
             ),
             "runtime_status": str(runtime_status.get("message", "Runtime unavailable.")),
         }
