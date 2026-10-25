@@ -2839,9 +2839,9 @@ The passages below are transcribed from the current extracted chunk corpus. They
 
 **Key points / expected behavior to verify:**
 
-- Median-based pivoting balances subproblems.
-- The balanced recurrence has two half-sized subproblems and linear work.
-- The intended asymptotic result is O(n log n).
+- Median-based pivoting balances the partitions into two half-sized subproblems.
+- Median selection and partitioning each contribute Θ(n) work.
+- The recurrence solves to Θ(n log n) worst-case time for this median-based Quicksort approach.
 
 **Proposed gold passage IDs:**
 
@@ -2849,7 +2849,7 @@ The passages below are transcribed from the current extracted chunk corpus. They
 - `L06_YOUTUBE_CAPTIONS-parent-0005-child-0003`
 - `L06_TYPED_NOTES-parent-0001-child-0002`
 
-**Existing annotation caveat:** The extracted formula in the PDF chunk is damaged; verify the original page before approving this label.
+**Existing annotation caveat:** Checked against official MIT OCW typed notes, printed page 4: median selection and partitioning each add Θ(n), and the recurrence solves to Θ(n log n) worst-case time. Caption text at 01:05:14.550-01:06:31.820 states the recurrence and two Θ(n) terms. Direct video spot-check is still pending. Retain draft label status.
 
 **Overall question-label decision:**
 
@@ -3199,9 +3199,10 @@ The passages below are transcribed from the current extracted chunk corpus. They
 
 **Key points / expected behavior to verify:**
 
-- The tree has logarithmic height under the stated balance bound.
-- The work per level is linear.
-- The lecture concludes expected O(n log n) time.
+- A good pivot occurs with probability greater than 1/2, so the expected number of pivot attempts is at most 2.
+- The recurrence is bounded by T(n) ≤ T(n/4) + T(3n/4) + 2cn.
+- The recursion tree has O(log n) height and O(n) work per level.
+- The lecture concludes expected Θ(n log n) running time.
 
 **Proposed gold passage IDs:**
 
@@ -3210,7 +3211,7 @@ The passages below are transcribed from the current extracted chunk corpus. They
 - `L06_YOUTUBE_CAPTIONS-parent-0010-child-0001`
 - `L06_TYPED_NOTES-parent-0002-child-0001`
 
-**Existing annotation caveat:** The Expectations PDF extraction is particularly damaged. The caption passages are primary for this draft label; verify the PDF page before approval.
+**Existing annotation caveat:** Checked against official MIT OCW typed notes, printed pages 5-6: good-pivot probability greater than 1/2, expected attempts at most 2, recurrence T(n) ≤ T(n/4) + T(3n/4) + 2cn, and expected runtime Θ(n log n). The extracted formula is damaged; use the original PDF for the equation. Caption text has not yet been checked against the actual video. Retain draft label status.
 
 **Overall question-label decision:**
 
