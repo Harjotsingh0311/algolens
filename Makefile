@@ -4,8 +4,8 @@ install:
 	uv sync --all-groups
 
 check:
-	uv run ruff check src tests
-	uv run ruff format --check src tests
+	uv run ruff check src tests app
+	uv run ruff format --check src tests app
 	uv run mypy src
 
 test:

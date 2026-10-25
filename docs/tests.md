@@ -59,3 +59,9 @@ before its implementation is not sufficient evidence that the test detects the b
   of the saved development baseline.
 
 T7.1's deterministic provider-chain and sources-only tests are implemented and pass in CI; live provider rate-limit behavior still needs a controlled integration test. T7.2's secret-redaction behavior is covered by unit tests but must also be reviewed with deployment logs. T8.1 still requires reviewed labels and a frozen development baseline.
+
+## HTTP liveness and readiness probes
+
+- GET /healthz stays available even when corpus readiness checks fail.
+- GET /readyz returns 503 in safe mode or when runtime initialization fails, and 200 only after approved evidence and runtime initialization are available.
+- These tests verify the probe contract and mounted Gradio root page. They do not replace a post-deployment network smoke test.
