@@ -11,7 +11,7 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Turn 0 | Repository, concept, manifest, developer tooling, CI and deployment eligibility | Project scaffold, manifest, tests and developer tooling exist. | Mostly complete | Verify current Hugging Face/ZeroGPU eligibility. |
 | Turn 1 | Fetch and parse notes/transcript; validate locators | Typed-notes PDF is hash-pinned; captions are parsed into timestamped JSONL; extraction comparisons exist. | In progress | Finish source audit and caption-alignment review. |
 | Turn 2 | Baseline, 30-question gold set and evaluation harness | BM25, dense and RRF evaluation reports exist; 30-question gold set is draft-labelled. | Implemented, provisional | Human-review labels; finalize dev/test split and final reports. |
-| Turn 3 | Teach-unit chunks, hybrid retrieval, RRF, reranking, context headers and ablations | Experimental chunks and retrieval baselines exist. Reviewed pages 5-6 are separately chunked with citations. | In progress | Implement runtime hybrid retrieval and cross-encoder reranking; run ablations. |
+| Turn 3 | Teach-unit chunks, hybrid retrieval, RRF, reranking, context headers and ablations | Experimental chunks and retrieval baselines exist; reviewed pages 5-6 have separate provenance-preserving chunks; HybridIndex fuses BM25/dense rankings with RRF; CrossEncoderReranker is implemented and unit tested. | In progress | Connect reranking to the runtime query flow, then run ablations and compare retrieval quality. |
 | Turn 4 | Answerability gate, abstention and risk-coverage evaluation | Retrieval eligibility allowlist exists; full abstention system is not complete. | Pending | Implement and evaluate risk-coverage, false refusals and wrong-answer risk. |
 | Turn 5 | Generation contract, grounded citations, claim verification, model adapter and cache | Some contracts and documentation exist; complete grounded generation pipeline is not implemented. | Pending | Implement answer generation, citation verification and Groq/Ollama adapter/cache. |
 | Turn 6 | Gradio UI, live deployment, probes and operational documentation | Developer documentation and tests exist; application UI and deployment remain outstanding. | Pending | Build UI, deploy, add health probes and validate a live demo. |
@@ -29,8 +29,9 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Full project quality gate | 73 tests passed; Ruff lint and formatting passed; Mypy passed for 13 source files; UV lock and Git whitespace checks passed | Passed |
-| Runtime hybrid retrieval and reranking | Not yet integrated into the application runtime | Pending |
+| Final project quality gate | Full test suite, lint, formatting, type, lockfile and whitespace checks | 91 tests passed after the reranker addition; Ruff lint and formatting checked; Mypy, UV lock and Git whitespace checks recorded from this run | Verified 2026-10-25 |
+| Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented as a reusable component; application query-flow integration remains |
+| Cross-encoder reranking | Separate CrossEncoderReranker component; lazy optional model loading, finite-score checks, citation preservation and eligibility gate; 10 focused tests passed. | Implemented as a component; runtime query-flow integration remains |
 | Abstention, grounded generation, UI and deployment | Not fully implemented | Pending |
 
 ## Evaluation interpretation
