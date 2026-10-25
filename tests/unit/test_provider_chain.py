@@ -141,7 +141,6 @@ def test_provider_chain_rejects_empty_evidence_before_calling_provider() -> None
     assert provider.calls == 0
 
 
-
 def test_provider_chain_rejects_unapproved_evidence_without_calling_provider() -> None:
     provider = StubProvider()
     chain = FallbackAnswerProvider([provider])
