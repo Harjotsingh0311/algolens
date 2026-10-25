@@ -224,7 +224,7 @@ def test_expired_entry_is_regenerated(tmp_path: Path) -> None:
     with sqlite3.connect(path) as connection:
         connection.execute(
             "UPDATE answer_cache SET created_at = ?",
-            (time.time() - 10_000,),
+            (time.time() - cache.ttl_seconds - 10,),
         )
 
     cache.generate("Question?", [make_hit()], allow_partial=False)
