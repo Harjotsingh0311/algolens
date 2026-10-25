@@ -8,6 +8,7 @@ import time
 from collections.abc import Sequence
 from contextlib import closing
 from pathlib import Path
+
 from pydantic import ValidationError
 
 from algolens.answering import AnswerDraft, AnswerProvider
