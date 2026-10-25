@@ -82,7 +82,11 @@ uv run mypy src
 uv run pytest -q
 ```
 
-Set `ALGOLENS_CACHE_PATH` to a writable SQLite file path to change the answer-cache location. The default cache lives in the operating system temporary directory; it is bounded to 256 entries with a seven-day TTL. Cache keys are SHA-256 hashes over the question, evidence, model/corpus namespace, and partial-answer mode; API keys and raw questions are not persisted. Cache hits still pass through the normal answer and claim-verification checks.\n\nUseful CLI commands:
+Set `ALGOLENS_CACHE_PATH` to a writable SQLite file path to change the answer-cache location. The default cache lives in the operating system temporary directory; it is bounded to 256 entries with a seven-day TTL. Cache keys are SHA-256 hashes over the question, evidence, model/corpus namespace, and partial-answer mode; API keys and raw questions are not persisted. Cache hits still pass through the normal answer and claim-verification checks.
+
+Optional provider failover can be enabled with `ALGOLENS_FALLBACK_PROVIDER=groq` or `ollama`, with optional `ALGOLENS_FALLBACK_MODEL`, `ALGOLENS_FALLBACK_BASE_URL`, and `ALGOLENS_FALLBACK_API_KEY` settings. The fallback is attempted only after the primary provider fails or returns invalid citations. If every provider fails, AlgoLens returns approved source passages only; it does not release the failed draft.
+
+Useful CLI commands:
 
 ```powershell
 uv run python -m algolens.cli status

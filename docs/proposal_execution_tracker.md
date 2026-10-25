@@ -29,7 +29,7 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Expectations transcription review | Printed pages 5-6 checked against the supplied PDF | Approved for integration |
 | Reviewed-candidate parser and metadata validation | Parser and hash/approval safety checks | Tested |
 | Reviewed-source chunk artifact | Two parent and two child chunks; page-specific citations | Validated; retrieval disabled |
-| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 229 tests passed; Ruff lint and format checks passed; Mypy passed for 26 source files. The checkpoint was committed and pushed to GitHub as `fa1756d`; local branch tracked `origin/main`. | Verified 2026-10-26 |
+| Final project quality gate | Full tests, lint, formatting, type, lockfile and whitespace checks | 234 tests passed; Ruff lint and format checks passed; Mypy passed for 26 source files. The checkpoint was committed and pushed to GitHub as `fa1756d`; local branch tracked `origin/main`. | Verified 2026-10-26 |
 | Runtime hybrid retrieval | HybridIndex fuses BM25 and dense rankings with RRF; 8 focused tests passed. | Implemented and tested as a reusable component |
 | Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
 | Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; 8 focused tests passed for flow, metadata preservation and eligibility controls. | Reusable component implemented; application endpoint/UI wiring pending |
@@ -130,3 +130,7 @@ The captions are auto-generated and are not independently verified against the v
 - **Failure mode:** if all providers fail, or a provider response cannot be validated, the answer service returns `sources_only` with eligible passages and no generated claims. Retrieval errors/no eligible passages still use the existing safe abstention path.
 - **Tests:** primary outage → secondary success; invalid primary citations → secondary success; all-provider failure → sanitized error; sources-only output keeps approved evidence and no generated answer.
 - **Remaining:** live API/rate-limit behavior is not yet exercised; current provider chain tests are deterministic offline tests. Add provider-level metrics without logging prompts, keys, or raw exception text.
+
+
+- **Verified provider failover CI:** commit `550a740` passed GitHub Actions on 2026-10-25: Ruff lint passed, 57 files formatted, mypy found no issues in 28 source files, and `pytest` reported **234 passed**.
+- **Important final gates still open:** the canonical notes passages remain retrieval-disabled; all 30 gold questions remain draft-labelled; the 80-question set and leakage-safe 50/30 split are not ready for final evaluation. The public app stays in safe mode until explicit review and evaluation gates are complete.
