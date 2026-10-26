@@ -90,12 +90,13 @@ def validate_review_decisions(
         if not isinstance(reviewer, str) or not reviewer.strip():
             errors.append(f"{question_id}: reviewer is required.")
         reviewed_at = decision.get("reviewed_at")
-        valid_date = isinstance(reviewed_at, str) and DATE_PATTERN.fullmatch(reviewed_at)
-        if valid_date:
+        valid_date = False
+        if isinstance(reviewed_at, str) and DATE_PATTERN.fullmatch(reviewed_at):
             try:
                 date.fromisoformat(reviewed_at)
+                valid_date = True
             except ValueError:
-                valid_date = False
+                pass
         if not valid_date:
             errors.append(f"{question_id}: reviewed_at must be a valid date in YYYY-MM-DD format.")
         question = decision.get("question")
