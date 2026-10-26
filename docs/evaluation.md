@@ -49,3 +49,8 @@ This command **does not generate scores or calibrate thresholds**. Use the devel
 threshold selection and report final results on the held-out test split separately. Until the gold
 set is genuinely reviewed and the canonical evidence gate is satisfied, no final performance claim
 is justified.
+
+
+## Formula-quality audit
+
+Run `uv run python -m algolens.ingest.formula_quality` to scan the checked-in extracted Markdown for known formula-corruption patterns. Use `--path` to inspect another extraction and `--fail-on-warning` to make known signatures return a non-zero exit code. This detector is conservative and is not a general mathematical correctness checker. Findings must be compared with the original PDF; the command never approves source passages or changes answer eligibility.
