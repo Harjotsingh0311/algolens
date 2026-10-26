@@ -216,7 +216,9 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
         "passage_ids_unknown_to_both": unknown_ids,
         "per_question": per_question,
         "review_queue_count": len(review_queue),
-        "review_queue_priority_counts": dict(sorted(Counter(item["priority"] for item in review_queue).items())),
+        "review_queue_priority_counts": dict(
+            sorted(Counter(item["priority"] for item in review_queue).items())
+        ),
         "review_queue": review_queue,
         "question_type_review_flag_count": sum(
             bool(item["question_type_review_flags"]) for item in per_question
