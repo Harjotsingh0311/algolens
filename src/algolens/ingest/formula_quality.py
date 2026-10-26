@@ -101,9 +101,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
     )
     project_root = Path(__file__).resolve().parents[3]
-    default_path = (
-        project_root / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
-    )
+    default_path = project_root / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
     parser.add_argument(
         "--path",
         type=Path,
