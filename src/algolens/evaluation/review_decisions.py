@@ -238,7 +238,9 @@ def main() -> int:
                 json.dumps(
                     {
                         "status": "template_blocked",
-                        "errors": [f"Decision file already exists; refusing to overwrite: {decisions_path}"],
+                        "errors": [
+                            f"Decision file already exists; refusing to overwrite: {decisions_path}"
+                        ],
                         "candidate_questions_modified": False,
                     },
                     indent=2,
