@@ -23,24 +23,35 @@ def build_review_queue(per_question: list[dict[str, Any]]) -> list[dict[str, Any
             reasons.append("human_review_pending")
         if not reasons:
             continue
-        priority = "P0" if any(
-            reason in reasons
-            for reason in (
-                "passage_ids_unknown_to_both_corpora",
-                "diagnostic_only_passage_ids",
-                "no_proposed_passage_ids",
+        priority = (
+            "P0"
+            if any(
+                reason in reasons
+                for reason in (
+                    "passage_ids_unknown_to_both_corpora",
+                    "diagnostic_only_passage_ids",
+                    "no_proposed_passage_ids",
+                )
             )
-        ) else "P1"
-        queue.append({
-            "question_id": item.get("question_id"),
-            "split": item.get("split"),
-            "priority": priority,
-            "reasons": reasons,
-            "gold_passage_ids": gold_ids,
-            "canonical_passage_ids": item.get("ids_in_canonical_corpus", []),
-            "diagnostic_only_passage_ids": diagnostic,
-            "unknown_passage_ids": unknown,
-            "question_type_review_flags": item.get("question_type_review_flags", []),
-        })
-    queue.sort(key=lambda item: (0 if item["priority"] == "P0" else 1, str(item["question_id"])))
+            else "P1"
+        )
+        queue.append(
+            {
+                "question_id": item.get("question_id"),
+                "split": item.get("split"),
+                "priority": priority,
+                "reasons": reasons,
+                "gold_passage_ids": gold_ids,
+                "canonical_passage_ids": item.get("ids_in_canonical_corpus", []),
+                "diagnostic_only_passage_ids": diagnostic,
+                "unknown_passage_ids": unknown,
+                "question_type_review_flags": item.get("question_type_review_flags", []),
+            }
+        )
+    queue.sort(
+        key=lambda item: (
+            0 if item["priority"] == "P0" else 1,
+            str(item["question_id"]),
+        )
+    )
     return queue
