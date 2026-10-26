@@ -1,4 +1,4 @@
-.PHONY: install check test ingest index eval app release
+.PHONY: install check test ingest review-check index eval app release
 
 install:
 	uv sync --all-groups
@@ -14,6 +14,9 @@ test:
 
 ingest:
 	uv run python -m algolens.cli ingest
+
+review-check:
+	uv run python -m algolens.cli review-check
 
 index:
 	uv run python -m algolens.cli index
