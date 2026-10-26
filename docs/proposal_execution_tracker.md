@@ -198,3 +198,6 @@ The captions are auto-generated and are not independently verified against the v
 - PR #15 merged: validator enforces the proposal's question-type distribution and 65 answerable / 15 unanswerable split.
 - These tools only prepare and validate records. They do not mark current candidates reviewed or change canonical passage eligibility.
 - Current hard blocker remains human source review plus explicit canonical eligibility decisions. The template is ready to fill, but the reviewed gold set must remain absent until those decisions are real.
+
+
+- Latest verified main CI after PR #15: https://github.com/Harjotsingh0311/algolens/actions/runs/40279619375 — **269 tests passed**, Ruff lint/format passed, strict mypy passed for 32 source files, one non-fatal Starlette/httpx warning.
