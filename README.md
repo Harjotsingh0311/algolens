@@ -289,7 +289,7 @@ uv run mypy src
 uv run pytest -q
 ```
 
-The latest verified main-branch CI checkpoint (26 October 2026) passed **264 tests**, Ruff lint/format checks, and strict mypy across 31 source files. CI reported one non-fatal Starlette/httpx deprecation warning. These are code-quality results, not proof of production readiness or answer quality.
+The latest verified main-branch CI checkpoint (26 October 2026) passed **269 tests**, Ruff lint/format checks, and strict mypy across 32 source files. CI reported one non-fatal Starlette/httpx deprecation warning. These are code-quality results, not proof of production readiness or answer quality.
 
 ## Licensing and attribution
 

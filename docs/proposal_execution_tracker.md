@@ -189,3 +189,15 @@ The captions are auto-generated and are not independently verified against the v
 - Latest verified main CI after these changes: https://github.com/Harjotsingh0311/algolens/actions/runs/40278220509 — Ruff lint/format passed, strict mypy passed for 31 source files, and **264 tests passed** (one non-fatal Starlette/httpx deprecation warning).
 - The Algorithm Lab now exists both as a seeded CLI experiment and a Gradio tab. It is separate from the RAG corpus and cannot approve evidence.
 - Remaining non-code gate: the project owner must explicitly review source-grounded questions/passages and decide retrieval eligibility. No tool, passing test, or heuristic flag can substitute for that decision.
+
+
+## Structured human-review workflow (2026-10-26)
+
+- PR #12 merged: structured review-decision validator requires source checks, reviewer/date, answerability/evidence consistency, 50/30 split, and production-eligible canonical evidence.
+- PR #13 merged: `--write-template` creates a blank decision file with pending decisions and source_checked=false; proposed diagnostic IDs are kept separate from final passage IDs.
+- PR #15 merged: validator enforces the proposal's question-type distribution and 65 answerable / 15 unanswerable split.
+- These tools only prepare and validate records. They do not mark current candidates reviewed or change canonical passage eligibility.
+- Current hard blocker remains human source review plus explicit canonical eligibility decisions. The template is ready to fill, but the reviewed gold set must remain absent until those decisions are real.
+
+
+- Latest verified main CI after PR #15: https://github.com/Harjotsingh0311/algolens/actions/runs/40279619375 — **269 tests passed**, Ruff lint/format passed, strict mypy passed for 32 source files, one non-fatal Starlette/httpx warning.
