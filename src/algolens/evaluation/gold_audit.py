@@ -108,11 +108,13 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
         answerable = row.get("answerable")
         if answerable is True and not gold_ids:
             structural_errors.append(
-                f"{row.get('question_id', '<missing-id>')}: answerable question has no gold passage IDs."
+                f"{row.get('question_id', '<missing-id>')}: "
+                "answerable question has no gold passage IDs."
             )
         if answerable is False and gold_ids:
             structural_errors.append(
-                f"{row.get('question_id', '<missing-id>')}: unanswerable question must not have gold passage IDs."
+                f"{row.get('question_id', '<missing-id>')}: "
+                "unanswerable question must not have gold passage IDs."
             )
         if isinstance(raw_ids, list):
             valid_raw_ids = [
