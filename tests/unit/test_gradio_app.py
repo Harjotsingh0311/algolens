@@ -83,7 +83,6 @@ def test_oversized_question_is_rejected_without_runtime(monkeypatch: Any) -> Non
     assert result[4]["reason"] == "question_too_long"
 
 
-
 def test_algorithm_lab_ui_returns_reproducible_metrics_and_trace() -> None:
     metrics, trace, summary = run_algorithm_lab_ui(12, 3, 42)
 
