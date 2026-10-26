@@ -94,7 +94,6 @@ def test_review_decisions_reject_duplicate_ids_and_non_approval_decisions() -> N
     assert any("GQ002: decision must be 'approve'" in error for error in errors)
 
 
-
 def test_review_template_is_unapproved_and_keeps_proposed_ids_separate() -> None:
     template = build_review_template(
         [
