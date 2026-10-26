@@ -59,7 +59,7 @@ def run_answerability_evaluation(
         if question_id not in gold_by_id:
             raise ValueError(f"Score row references unknown gold question ID: {question_id}")
         score = row.get("score")
-        if score is not None and (isinstance(score, bool) or not isinstance(score, (int, float)):
+        if score is not None and (isinstance(score, bool) or not isinstance(score, (int, float))):
             raise ValueError(f"{question_id}: score must be numeric or null.")
         scores_by_id[question_id] = score
 
