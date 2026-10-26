@@ -52,16 +52,25 @@ def build_review_packet(root: Path) -> str:
         "# Gold-question human review packet",
         "",
         "> Review aid only. This file does not approve questions, labels, passages, or retrieval eligibility.",
-        "> Treat diagnostic chunk text as a proposed evidence lead, not as approved canonical evidence.",
+        (
+            "> Treat diagnostic chunk text as a proposed evidence lead, "
+            "not as approved canonical evidence."
+        ),
         "",
         "## Reviewer instructions",
         "",
         "- Check the original lecture source for every question and each key point.",
         "- Confirm whether the question is answerable from the approved lecture corpus.",
         "- For answerable questions, record only passage IDs that directly support the answer.",
-        "- For unanswerable questions, confirm the reason and keep gold passage IDs empty when appropriate.",
+        (
+            "- For unanswerable questions, confirm the reason and keep gold "
+            "passage IDs empty when appropriate."
+        ),
         "- Do not change corpus approval flags through this packet.",
-        "- Record the reviewer and decision in the review record before any separate approval workflow.",
+        (
+            "- Record the reviewer and decision in the review record before "
+            "any separate approval workflow."
+        ),
         "",
         f"Candidate question count: **{len(questions)}**",
         "",
@@ -126,7 +135,11 @@ def build_review_packet(root: Path) -> str:
                     text = _safe_text(chunk.get("text")) or _safe_text(
                         chunk.get("retrieval_text")
                     )
-                    lines.extend(["> " + part for part in text.splitlines()] if text else ["> No text found."])
+                    lines.extend(
+                        ["> " + part for part in text.splitlines()]
+                        if text
+                        else ["> No text found."]
+                    )
                 lines.append("")
 
         annotation_notes = _safe_text(question.get("annotation_notes")).strip()
