@@ -35,7 +35,7 @@ def test_parse_cues_decodes_common_html_entities() -> None:
         "A &amp; B &lt; C &gt; D &nbsp; E\n"
     )
     assert parse_cues(raw) == [
-        CaptionCue("00:00:01.000", "00:00:02.000", "A & B < C > D   E")
+        CaptionCue("00:00:01.000", "00:00:02.000", "A & B < C > D E")
     ]
 
 
