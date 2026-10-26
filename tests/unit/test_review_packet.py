@@ -50,6 +50,7 @@ def test_review_packet_shows_diagnostic_warning_and_does_not_mutate_inputs(
     assert "The pivot divides elements into partition regions." in packet
     assert "Final evaluation authorized: **No**" in packet
     assert "Ready for a separate approval review" in packet
+    assert "Automated wording/type flags (advisory): None triggered" in packet
     assert (
         json.loads(
             (tmp_path / "eval/gold/questions_v1_candidate.jsonl").read_text(encoding="utf-8")
