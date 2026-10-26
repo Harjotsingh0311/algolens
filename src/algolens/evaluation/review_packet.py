@@ -207,7 +207,7 @@ def main() -> int:
         parser.exit(
             2,
             f"Review packet not written: {output} already exists. "
-            "Choose another --output path or pass --force after inspecting the file.\\n",
+            "Choose another --output path or pass --force after inspecting the file.\n",
         )
     packet = build_review_packet(root)
     output.parent.mkdir(parents=True, exist_ok=True)
