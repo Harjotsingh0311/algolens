@@ -38,6 +38,30 @@ def is_production_eligible(chunk: dict[str, Any]) -> bool:
     )
 
 
+def build_review_template(candidate: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Create blank decision records; proposed labels are context, not approval."""
+    template: list[dict[str, Any]] = []
+    for row in candidate:
+        template.append(
+            {
+                "question_id": row.get("question_id", ""),
+                "decision": "pending",
+                "source_checked": False,
+                "reviewer": "",
+                "reviewed_at": "",
+                "question": row.get("question", ""),
+                "question_type": row.get("question_type", ""),
+                "difficulty": row.get("difficulty", ""),
+                "answerable": row.get("answerable"),
+                "key_points": row.get("key_points", []),
+                "gold_passage_ids": [],
+                "proposed_gold_passage_ids": row.get("gold_passage_ids", []),
+                "notes": "",
+            }
+        )
+    return template
+
+
 def validate_review_decisions(
     candidate: list[dict[str, Any]],
     decisions: list[dict[str, Any]],
@@ -197,12 +221,55 @@ def main() -> int:
         default=Path("eval/gold/questions_v1_reviewed.jsonl"),
         help="Output JSONL path, absolute or relative to the project root.",
     )
+    parser.add_argument(
+        "--write-template",
+        action="store_true",
+        help="Write a blank human-decision template to --decisions and exit.",
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     decisions_path = args.decisions if args.decisions.is_absolute() else root / args.decisions
     output_path = args.output if args.output.is_absolute() else root / args.output
 
     candidate = read_jsonl(root / "eval" / "gold" / "questions_v1_candidate.jsonl")
+    if args.write_template:
+        if decisions_path.exists():
+            print(
+                json.dumps(
+                    {
+                        "status": "template_blocked",
+                        "errors": [f"Decision file already exists; refusing to overwrite: {decisions_path}"],
+                        "candidate_questions_modified": False,
+                    },
+                    indent=2,
+                )
+            )
+            return 2
+        decisions_path.parent.mkdir(parents=True, exist_ok=True)
+        template = build_review_template(candidate)
+        decisions_path.write_text(
+            "".join(json.dumps(row, ensure_ascii=False) + "\\n" for row in template),
+            encoding="utf-8",
+        )
+        print(
+            json.dumps(
+                {
+                    "status": "review_template_written",
+                    "decision_count": len(template),
+                    "path": (
+                        decisions_path.relative_to(root).as_posix()
+                        if decisions_path.is_relative_to(root)
+                        else str(decisions_path)
+                    ),
+                    "source_checked": False,
+                    "decisions_approved": False,
+                    "candidate_questions_modified": False,
+                },
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return 0
     decisions = read_jsonl(decisions_path)
     canonical = read_jsonl(root / "corpus" / "processed" / "reviewed_chunks" / "children.jsonl")
     reviewed, errors = validate_review_decisions(candidate, decisions, canonical)
