@@ -91,3 +91,12 @@ The gold-candidate audit JSON now includes `review_queue`, `review_queue_count`,
 Generate the audit as usual with `uv run python -m algolens.evaluation.gold_audit`. This queue
 does not modify the candidate JSONL, approve passages, mark a question reviewed, or permit final
 evaluation. A reviewer must still check original lecture sources and record explicit decisions.
+
+
+The JSON audit report is also protected from accidental overwrite. To preserve an existing report,
+choose a new path with `--output`; use `--force` only after inspecting the current artifact:
+
+```powershell
+uv run python -m algolens.evaluation.gold_audit --output eval/results/gold_candidate_audit_round2.json
+uv run python -m algolens.evaluation.gold_audit --force
+```
