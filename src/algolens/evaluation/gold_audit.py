@@ -105,6 +105,23 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
             if isinstance(raw_ids, list)
             else []
         )
+        answerable = row.get("answerable")
+        if answerable is True and not gold_ids:
+            structural_errors.append(
+                f"{row.get('question_id', '<missing-id>')}: answerable question has no gold passage IDs."
+            )
+        if answerable is False and gold_ids:
+            structural_errors.append(
+                f"{row.get('question_id', '<missing-id>')}: unanswerable question must not have gold passage IDs."
+            )
+        if isinstance(raw_ids, list):
+            valid_raw_ids = [
+                item for item in raw_ids if isinstance(item, str) and item.strip()
+            ]
+            if len(valid_raw_ids) != len(set(valid_raw_ids)):
+                structural_errors.append(
+                    f"{row.get('question_id', '<missing-id>')}: duplicate gold passage IDs."
+                )
         referenced_ids.update(gold_ids)
         per_question.append(
             {
