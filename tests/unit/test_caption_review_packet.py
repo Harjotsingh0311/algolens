@@ -19,8 +19,19 @@ def test_parse_cues_preserves_timestamps_and_cleans_markup() -> None:
     )
 
     assert parse_cues(raw) == [
-        CaptionCue("00:00:01.000", "00:00:02.000", "Hello welcome"),
+        CaptionCue("00:00:01.000", "00:00:02.000", "Hello & welcome"),
         CaptionCue("00:00:03.000", "00:00:04.000", "Second cue"),
+    ]
+
+
+def test_parse_cues_decodes_common_html_entities() -> None:
+    raw = (
+        "WEBVTT\\n\\n"
+        "00:00:01.000 --> 00:00:02.000\\n"
+        "A &amp; B &lt; C &gt; D &nbsp; E\\n"
+    )
+    assert parse_cues(raw) == [
+        CaptionCue("00:00:01.000", "00:00:02.000", "A & B < C > D   E")
     ]
 
 
