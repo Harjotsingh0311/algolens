@@ -49,7 +49,7 @@ AlgoLens is a research prototype that answers lecture questions from explicitly 
 - **Hybrid retrieval:** BM25 lexical retrieval and dense retrieval, combined with reciprocal-rank fusion (RRF), followed by cross-encoder reranking.
 - **Grounded answering:** uses a structured answer contract, an answerability gate, and a separate claim-grounding verification step.
 - **Abstention and safe fallback:** unapproved evidence is excluded; when evidence or provider validation is insufficient, the system abstains or returns approved source passages rather than releasing an unverified draft.
-- **Inspectable UI:** Gradio views for Ask, Evidence, Trace, Evaluation, and About.
+- **Inspectable UI:** Gradio views for Ask, Evidence, Trace, Evaluation, Algorithm Lab, and About.
 - **Operational checks:** CLI readiness/status commands and HTTP `/healthz` and `/readyz` probes.
 - **Automated quality checks:** pytest, Ruff, mypy, locked dependency checks, and GitHub Actions CI.
 
@@ -235,6 +235,20 @@ uv run python -m algolens.algorithm_lab --n 20 --trials 10 --seed 42 --trace
 
 The lab records pivot-partition traces and empirical comparison counts. It is a teaching utility,
 not a source of approved RAG evidence; see [the lab notes](docs/algorithm-lab.md).
+
+## Algorithm Lab
+
+The **Algorithm Lab** tab runs a seeded randomized Quicksort simulation, records each partition,
+and reports empirical comparison counts across repeated shuffled inputs. It is a teaching
+demonstration, not approved lecture evidence and not a replacement for the gold evaluation.
+
+Run the same experiment from the terminal:
+
+```powershell
+uv run python -m algolens.algorithm_lab --n 100 --trials 100 --seed 42
+```
+
+See [docs/algorithm-lab.md](docs/algorithm-lab.md) for the interpretation and trace option.
 
 ## Evaluation status
 

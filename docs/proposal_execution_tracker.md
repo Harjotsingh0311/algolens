@@ -15,7 +15,7 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Turn 4 | Answerability gate, abstention and risk-coverage evaluation | Gate, metrics and diagnostic runner implemented. All production decisions currently abstain because available evidence is ineligible. Gold labels remain unreviewed. | In progress | Human-review labels, define a leakage-safe dev/test split, calibrate on development data and evaluate once on held-out test data. |
 | Turn 5 | Generation contract, grounded citations, claim verification, provider fallback and cache | Structured contracts, answer service, OpenAI-compatible provider adapter, NLI grounding verifier, evidence-bound SQLite cache, optional provider failover, and sources-only failure mode exist. CI verifies safe failure behavior with offline tests; live-provider and calibrated-verification evaluation remain open. | In progress | Exercise controlled provider integration/rate-limit tests, review NLI output against human-labelled claims, and calibrate thresholds only on a reviewed development set. |
 | Turn 6 | Gradio UI, live deployment, probes and operational documentation | Gradio UI is mounted with /healthz and /readyz; offline HTTP tests cover liveness, safe mode, runtime failure, and root-page serving. Runtime remains in safe mode because zero canonical child passages meet production eligibility. | In progress | Validate a genuinely approved fixture, run a real local HTTP smoke test, then deploy after corpus and evaluation gates pass. |
-| Turn 7 | Two-voice pairing, Algorithm Lab, handwritten notes and Tier 2 | Stretch scope is documented and not implemented; the 80-question bank exists only as an unreviewed candidate. | Not started | Finish review, canonical evidence mapping, and the final holdout before optional stretch work. |
+| Turn 7 | Two-voice pairing, Algorithm Lab, handwritten notes and Tier 2 | Seeded randomized Quicksort lab implemented as a CLI and Gradio tab, with comparison counts, partition trace, repeatable trials, and tests. Two-voice pairing, handwritten-note ingestion, and Tier 2 remain open. The 80-question bank is still an unreviewed candidate. | Partially complete | Validate the UI in a live app; finish source review and gold mapping; then decide whether stretch source tiers are in scope. |
 
 ## Task ledger
 
@@ -34,6 +34,8 @@ Purpose: Track proposal requirements beside implementation evidence.
 | Cross-encoder reranking | CrossEncoderReranker is implemented with lazy model loading and eligibility checks; 11 reranker unit tests passed, including checkpoint-ID regression. | Component implemented; single real-model diagnostic smoke query passed; systematic evaluation pending |
 | Runtime query pipeline | RetrievalPipeline connects HybridIndex to CrossEncoderReranker; the mounted Gradio app calls it behind eligibility gates. | Reusable component implemented/tested; production answer path remains blocked until canonical passages are eligible |
 | Abstention and grounded generation | Core services, provider adapter, NLI verifier and runtime composition implemented; positive approved-evidence end-to-end validation and threshold calibration remain. | In progress |
+
+| Randomized Quicksort Algorithm Lab | `src/algolens/algorithm_lab.py`, `docs/algorithm-lab.md`, and Gradio Algorithm Lab tab | Seeded runs, comparison counts, partition traces, finite-trial comparison ratio, bounded interactive inputs; CI tests pass | Implemented; empirical results are not a gold-evaluation result |
 
 ## Evaluation interpretation
 
@@ -169,3 +171,12 @@ The captions are auto-generated and are not independently verified against the v
 - Older red commit badges in GitHub history are failed checks on intermediate commits; the current main checkpoint is green. Those historical run records were left intact rather than rewriting public Git history.
 - Health endpoints are implemented: `/healthz` answers liveness; `/readyz` reports not-ready (503) while approved evidence/runtime is unavailable. See `docs/operations.md`.
 - The 80-question v1 bank remains a candidate only. Human label review, canonical gold-ID mapping, actual retrieval eligibility, and deployment are still outstanding.
+
+
+## Algorithm Lab and gold-audit checkpoint (2026-10-26)
+
+- PR #5 merged as `8bed1c5`: gold-candidate audit now flags answerability/evidence-ID inconsistencies and duplicate passage IDs; regression tests cover the new checks.
+- PR #6 merged as `6312f6b`: added a seeded randomized Quicksort CLI lab with partition traces and empirical comparison-count experiments.
+- PR #7 merged as `533dd1f`: added an interactive Gradio Algorithm Lab tab with bounded inputs, metrics, and a sample partition trace.
+- Validation: each PR's CI check passed; main-branch CI was triggered after PR #7 merged.
+- Remaining production blockers are unchanged: the 80 candidate questions need human review, their 29 unique passage IDs are diagnostic-only rather than canonical, and the two canonical child chunks remain retrieval-disabled. No question or chunk approval was changed by these code improvements.
