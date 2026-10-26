@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -178,7 +179,7 @@ def build_review_packet(root: Path) -> str:
     return "\n".join(lines)
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Build a human-review packet from candidate questions and diagnostic passages."
     )
@@ -198,7 +199,7 @@ def main() -> int:
         action="store_true",
         help="Replace an existing output file. Without this flag, existing files are preserved.",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     root = args.root.resolve()
     output = args.output or root / "eval" / "results" / "gold_review_packet.md"
     if not output.is_absolute():
