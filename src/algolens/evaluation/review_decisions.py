@@ -277,7 +277,7 @@ def main() -> int:
         decisions_path.parent.mkdir(parents=True, exist_ok=True)
         template = build_review_template(candidate)
         decisions_path.write_text(
-            "".join(json.dumps(row, ensure_ascii=False) + "\\n" for row in template),
+            "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in template),
             encoding="utf-8",
         )
         print(
