@@ -79,6 +79,40 @@ def test_gold_audit_flags_duplicate_question_ids(tmp_path: Path) -> None:
     assert any("Duplicate question IDs" in error for error in report["structural_errors"])
 
 
+def test_gold_audit_flags_answerable_question_without_evidence(tmp_path: Path) -> None:
+    create_fixture(tmp_path)
+    candidate = tmp_path / "eval/gold/questions_v1_candidate.jsonl"
+    rows = [json.loads(line) for line in candidate.read_text(encoding="utf-8").splitlines()]
+    rows[0]["gold_passage_ids"] = []
+    write_jsonl(candidate, rows)
+
+    report = audit_gold_candidate(tmp_path)
+
+    assert report["status"] == "gold_candidate_audit_has_errors"
+    assert any(
+        "GQ001: answerable question has no gold passage IDs." in error
+        for error in report["structural_errors"]
+    )
+    assert report["final_evaluation_permitted"] is False
+
+
+def test_gold_audit_flags_unanswerable_question_with_evidence_ids(tmp_path: Path) -> None:
+    create_fixture(tmp_path)
+    candidate = tmp_path / "eval/gold/questions_v1_candidate.jsonl"
+    rows = [json.loads(line) for line in candidate.read_text(encoding="utf-8").splitlines()]
+    rows[0]["answerable"] = False
+    write_jsonl(candidate, rows)
+
+    report = audit_gold_candidate(tmp_path)
+
+    assert report["status"] == "gold_candidate_audit_has_errors"
+    assert any(
+        "GQ001: unanswerable question must not have gold passage IDs." in error
+        for error in report["structural_errors"]
+    )
+    assert report["final_evaluation_permitted"] is False
+
+
 def test_gold_audit_distinguishes_unknown_ids_from_diagnostic_only(tmp_path: Path) -> None:
     create_fixture(tmp_path)
     candidate = tmp_path / "eval/gold/questions_v1_candidate.jsonl"
