@@ -289,9 +289,7 @@ def run_reviewed_candidate_check(root: Path) -> int:
 
     report = {
         "status": (
-            "reviewed_candidate_audit_passed"
-            if not errors
-            else "reviewed_candidate_audit_failed"
+            "reviewed_candidate_audit_passed" if not errors else "reviewed_candidate_audit_failed"
         ),
         "candidate_id": metadata_value.get("artifact_id"),
         "source_id": source_id_value,
@@ -307,9 +305,7 @@ def run_reviewed_candidate_check(root: Path) -> int:
             "retrieval."
         ),
     }
-    report_path = (
-        root / "corpus" / "processed" / "generated" / "reviewed_candidate_audit.json"
-    )
+    report_path = root / "corpus" / "processed" / "generated" / "reviewed_candidate_audit.json"
     write_json_atomic(report_path, report)
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0 if not errors else 2
