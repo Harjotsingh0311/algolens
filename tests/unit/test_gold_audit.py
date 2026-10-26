@@ -168,3 +168,16 @@ def test_gold_audit_cli_preserves_existing_report_by_default(tmp_path: Path, cap
 
     assert output.read_text(encoding="utf-8") == original
     assert "already exists" in capsys.readouterr().err
+
+
+def test_gold_audit_cli_force_replaces_existing_report(tmp_path: Path) -> None:
+    create_fixture(tmp_path)
+    output = tmp_path / "audit-report.json"
+    output.write_text("old report", encoding="utf-8")
+
+    result = main(["--root", str(tmp_path), "--output", str(output), "--force"])
+
+    assert result == 0
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert report["question_count"] == 80
+    assert report["candidate_questions_modified"] is False
