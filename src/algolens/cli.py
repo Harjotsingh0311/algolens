@@ -270,7 +270,10 @@ def run_reviewed_candidate_check(root: Path) -> int:
                     )
             if actual.get("review_status") != "approved_retrieval_disabled":
                 errors.append(f"{level} {chunk_id}: review status must remain retrieval-disabled.")
-            if actual.get("eligible_for_answer") is True or actual.get("retrieval_eligible") is True:
+            if (
+                actual.get("eligible_for_answer") is True
+                or actual.get("retrieval_eligible") is True
+            ):
                 errors.append(f"{level} {chunk_id}: candidate must not be answer-eligible.")
         checks.append(
             {
