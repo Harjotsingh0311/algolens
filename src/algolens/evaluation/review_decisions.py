@@ -322,10 +322,16 @@ def main() -> int:
         return 2
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(
-        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in reviewed),
-        encoding="utf-8",
-    )
+    temporary_path = output_path.with_suffix(output_path.suffix + ".tmp")
+    try:
+        temporary_path.write_text(
+            "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in reviewed),
+            encoding="utf-8",
+        )
+        temporary_path.replace(output_path)
+    finally:
+        if temporary_path.exists():
+            temporary_path.unlink()
     report["output_written"] = True
     report["output_path"] = (
         output_path.relative_to(root).as_posix()
