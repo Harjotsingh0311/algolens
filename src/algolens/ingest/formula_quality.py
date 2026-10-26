@@ -100,9 +100,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "Warnings require human review; this tool never edits the source."
         )
     )
-    default_path = (
-        Path.cwd() / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
-    )
+    default_path = Path.cwd() / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
     parser.add_argument(
         "--path",
         type=Path,
