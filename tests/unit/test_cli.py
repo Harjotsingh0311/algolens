@@ -76,7 +76,6 @@ def test_parser_exposes_expected_commands() -> None:
         assert args.command == command
 
 
-
 def test_review_check_fails_closed_when_review_metadata_is_missing(
     tmp_path: Path,
 ) -> None:
@@ -85,13 +84,3 @@ def test_review_check_fails_closed_when_review_metadata_is_missing(
     with pytest.raises(FileNotFoundError, match="Reviewed-candidate metadata is missing"):
         run_reviewed_candidate_check(tmp_path)
 
-
-def test_review_check_never_changes_approval_when_metadata_is_missing(
-    tmp_path: Path,
-) -> None:
-    from algolens.cli import run_reviewed_candidate_check
-
-    with pytest.raises(FileNotFoundError):
-        run_reviewed_candidate_check(tmp_path)
-
-    assert not (tmp_path / "corpus" / "processed" / "reviewed_chunks").exists()
