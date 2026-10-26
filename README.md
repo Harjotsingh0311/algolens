@@ -198,13 +198,14 @@ Run commands from the repository root:
 |---|---|
 | `uv run python -m algolens.cli status` | Check source integrity, corpus approval, and evaluation readiness |
 | `uv run python -m algolens.cli ingest` | Verify sources and build separate derived extraction artifacts |
+| `uv run python -m algolens.cli review-check` | Verify pages 5–6 review metadata, source/candidate hashes, and canonical chunk consistency without enabling retrieval |
 | `uv run python -m algolens.cli index` | Smoke-test the production index path; blocks if no approved passages exist |
 | `uv run python -m algolens.cli index --diagnostic` | Inspect retrieval on experimental chunks only |
 | `uv run python -m algolens.cli eval` | Check whether final evaluation prerequisites are met |
 | `uv run python -m algolens.cli eval --diagnostic --retriever bm25` | Run exploratory retrieval metrics; does not authorize answer generation |
 | `uv run python app/app.py` | Start the Gradio app |
 
-The CLI writes reports beneath `corpus/processed/generated/`, `index/`, and `eval/results/` as applicable. Ingestion creates separate derived artifacts and does not automatically promote chunks or modify review approvals.
+The CLI writes reports beneath `corpus/processed/generated/`, `index/`, and `eval/results/` as applicable. `review-check` writes `corpus/processed/generated/reviewed_candidate_audit.json`; it is an integrity audit only and does not modify canonical chunks or approval flags. Ingestion also creates separate derived artifacts and does not automatically promote chunks or modify review approvals.
 
 ## Corpus approval and safe mode
 
