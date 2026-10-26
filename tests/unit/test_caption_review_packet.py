@@ -6,6 +6,7 @@ from tools.create_caption_review_packet import (
     CaptionCue,
     build_review_packet,
     parse_cues,
+    main,
 )
 
 
@@ -26,9 +27,9 @@ def test_parse_cues_preserves_timestamps_and_cleans_markup() -> None:
 
 def test_parse_cues_decodes_common_html_entities() -> None:
     raw = (
-        "WEBVTT\\n\\n"
-        "00:00:01.000 --> 00:00:02.000\\n"
-        "A &amp; B &lt; C &gt; D &nbsp; E\\n"
+        "WEBVTT\n\n"
+        "00:00:01.000 --> 00:00:02.000\n"
+        "A &amp; B &lt; C &gt; D &nbsp; E\n"
     )
     assert parse_cues(raw) == [
         CaptionCue("00:00:01.000", "00:00:02.000", "A & B < C > D   E")
@@ -64,3 +65,25 @@ def test_review_packet_rejects_more_samples_than_available() -> None:
     cues = [CaptionCue("00:00:00.000", "00:00:01.000", "Only")]
     with pytest.raises(ValueError, match="only 1 non-empty cues"):
         build_review_packet(cues, count=2)
+
+
+
+def test_cli_refuses_to_overwrite_existing_review_packet(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "captions.vtt"
+    output = tmp_path / "review.md"
+    source.write_text(
+        "WEBVTT\\n\\n00:00:01.000 --> 00:00:02.000\\nHello\\n",
+        encoding="utf-8",
+    )
+    output.write_text("human review notes", encoding="utf-8")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["create_caption_review_packet", "--input", str(source), "--output", str(output)],
+    )
+
+    with pytest.raises(SystemExit, match="refusing to overwrite reviewer work"):
+        main()
+    assert output.read_text(encoding="utf-8") == "human review notes"
