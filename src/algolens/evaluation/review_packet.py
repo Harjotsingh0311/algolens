@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from algolens.evaluation.gold_audit import question_type_review_flags
+
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.is_file():
@@ -92,6 +94,8 @@ def build_review_packet(root: Path) -> str:
                 f"- **Answerable (candidate label):** {answerable}",
                 f"- **Label status:** {_safe_text(question.get('label_status')) or 'missing'}",
                 f"- **Question:** {qtext}",
+                f"- **Automated wording/type flags (advisory):** "
+                f"{'; '.join(question_type_review_flags(question)) or 'None triggered'}",
                 "",
                 "### Candidate key points",
                 "",
