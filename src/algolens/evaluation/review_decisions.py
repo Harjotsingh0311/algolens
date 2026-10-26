@@ -203,9 +203,7 @@ def main() -> int:
 
     candidate = read_jsonl(root / "eval" / "gold" / "questions_v1_candidate.jsonl")
     decisions = read_jsonl(decisions_path)
-    canonical = read_jsonl(
-        root / "corpus" / "processed" / "reviewed_chunks" / "children.jsonl"
-    )
+    canonical = read_jsonl(root / "corpus" / "processed" / "reviewed_chunks" / "children.jsonl")
     reviewed, errors = validate_review_decisions(candidate, decisions, canonical)
     report = {
         "status": "reviewed_gold_ready" if not errors else "reviewed_gold_blocked",
