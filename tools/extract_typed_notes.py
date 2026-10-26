@@ -6,6 +6,7 @@ from pathlib import Path
 import pymupdf
 
 from algolens.ingest.fetch import verify_file_hash
+from algolens.ingest.formula_quality import find_formula_warnings
 from algolens.ingest.manifest import load_manifest
 from algolens.ingest.pdf import extract_pdf_to_markdown
 
@@ -86,12 +87,42 @@ def main() -> None:
     print("\n========== EXTRACTED TEXT PREVIEW ==========")
     print(markdown[:2500])
 
-    if len(page_markers) != page_count:
-        print("\nREVIEW REQUIRED: page marker count differs from PDF page count.")
-    elif not markdown.strip():
-        print("\nREVIEW REQUIRED: extracted Markdown is empty.")
+    formula_warnings = find_formula_warnings(markdown)
+
+    print("\n========== FORMULA QUALITY WARNINGS ==========")
+    if formula_warnings:
+        for warning in formula_warnings:
+            page_label = (
+                f"PDF page {warning.source_page}"
+                if warning.source_page is not None
+                else "PDF page unknown"
+            )
+            print(f"[REVIEW] {page_label}, Markdown line {warning.line_number}: {warning.pattern}")
+            print(f"  Extracted: {warning.text}")
     else:
-        print("\nPage-aware extraction completed. Formula review is still required.")
+        print("No known corruption signatures detected.")
+        print("This does not establish mathematical extraction accuracy.")
+
+    review_reasons = []
+    if len(page_markers) != page_count:
+        review_reasons.append("page marker count differs from PDF page count")
+    if not markdown.strip():
+        review_reasons.append("extracted Markdown is empty")
+    if formula_warnings:
+        review_reasons.append(
+            f"{len(formula_warnings)} known formula corruption signature(s) detected"
+        )
+
+    if review_reasons:
+        print("\nREVIEW REQUIRED:")
+        for reason in review_reasons:
+            print(f"- {reason}")
+    else:
+        print(
+            "\nREVIEW REQUIRED: formula review is still required. "
+            "No known corruption signatures were detected, but this is not proof "
+            "that the extracted mathematics is correct."
+        )
 
 
 if __name__ == "__main__":
