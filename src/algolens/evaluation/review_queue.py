@@ -17,7 +17,7 @@ def build_review_queue(per_question: list[dict[str, Any]]) -> list[dict[str, Any
             reasons.append("passage_ids_unknown_to_both_corpora")
         if diagnostic:
             reasons.append("diagnostic_only_passage_ids")
-        if not gold_ids and not str(item.get("question_type", "")).startswith("unanswerable"):
+        if item.get("answerable") is True and not gold_ids:
             reasons.append("no_proposed_passage_ids")
         if item.get("question_type_review_flags"):
             reasons.append("question_type_wording_flag")
