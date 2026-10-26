@@ -68,3 +68,23 @@ def test_review_queue_does_not_flag_empty_evidence_for_unanswerable_question() -
     )
 
     assert queue == []
+
+
+def test_review_queue_accepts_validator_supported_review_statuses() -> None:
+    for status in ("reviewed", "verified", "approved", "human_reviewed"):
+        queue = build_review_queue(
+            [
+                {
+                    "question_id": "GQ001",
+                    "split": "dev",
+                    "question_type": "definition_recall",
+                    "label_status": status,
+                    "gold_passage_ids": ["canonical-1"],
+                    "ids_in_canonical_corpus": ["canonical-1"],
+                    "ids_in_diagnostic_corpus_only": [],
+                    "ids_unknown_to_both_corpora": [],
+                    "question_type_review_flags": [],
+                }
+            ]
+        )
+        assert queue == []
