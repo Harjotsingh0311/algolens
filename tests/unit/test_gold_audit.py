@@ -21,7 +21,7 @@ def question(question_id: int, *, split: str = "dev") -> dict[str, object]:
         + ["procedure_trace"] * 10
         + ["compare"] * 10
         + ["multi_hop"] * 10
-        + ["unanswerable"] * 15
+        + ["unanswerable_off_topic"] * 15
     )
     return {
         "question_id": f"GQ{question_id:03d}",
@@ -58,6 +58,7 @@ def test_gold_audit_reports_diagnostic_ids_without_promoting_them(tmp_path: Path
     assert report["status"] == "gold_candidate_audit_completed"
     assert report["question_count"] == 80
     assert report["split_counts"] == {"dev": 50, "test": 30}
+    assert report["question_type_counts"]["unanswerable"] == 15
     assert report["passage_ids_present_in_diagnostic_only"] == ["diag-1"]
     assert report["draft_needs_human_review_count"] == 80
     assert report["final_evaluation_permitted"] is False
