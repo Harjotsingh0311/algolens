@@ -132,10 +132,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             if warning.source_page is not None
             else "PDF page unknown"
         )
-        print(
-            f"[REVIEW] {page}, Markdown line {warning.line_number}: "
-            f"{warning.pattern}"
-        )
+        print(f"[REVIEW] {page}, Markdown line {warning.line_number}: {warning.pattern}")
         print(f"  {warning.text}")
 
     if not warnings:
