@@ -1,5 +1,11 @@
+from __future__ import annotations
+
+import argparse
 import re
+import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -84,3 +90,54 @@ def find_formula_warnings(markdown: str) -> list[FormulaWarning]:
                 )
 
     return warnings
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Audit an extracted Markdown file for known formula-corruption patterns."""
+    parser = argparse.ArgumentParser(
+        description=(
+            "Find known mathematical PDF-extraction defects. "
+            "Warnings require human review; this tool never edits the source."
+        )
+    )
+    default_path = Path.cwd() / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
+    parser.add_argument(
+        "--path",
+        type=Path,
+        default=default_path,
+        help="Markdown file to inspect (default: ./corpus/experiments/pdf_extraction/notes.md).",
+    )
+    parser.add_argument(
+        "--fail-on-warning",
+        action="store_true",
+        help="Return exit code 1 if any known corruption pattern is detected.",
+    )
+    args = parser.parse_args(argv)
+
+    try:
+        markdown = args.path.read_text(encoding="utf-8-sig")
+    except OSError as exc:
+        print(f"Formula audit could not read {args.path}: {exc}", file=sys.stderr)
+        return 2
+
+    warnings = find_formula_warnings(markdown)
+    print(f"File: {args.path}")
+    print(f"Warnings found: {len(warnings)}")
+    for warning in warnings:
+        page = (
+            f"PDF page {warning.source_page}"
+            if warning.source_page is not None
+            else "PDF page unknown"
+        )
+        print(f"[REVIEW] {page}, Markdown line {warning.line_number}: {warning.pattern}")
+        print(f"  {warning.text}")
+
+    if not warnings:
+        print("No known corruption signatures detected.")
+    if warnings and args.fail_on_warning:
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
