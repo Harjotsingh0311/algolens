@@ -237,7 +237,10 @@ def run_reviewed_candidate_check(root: Path) -> int:
         expected_rows: list[dict[str, Any]],
         canonical_rows: list[dict[str, Any]],
     ) -> None:
+        canonical_ids = [str(row.get("chunk_id", "")) for row in canonical_rows]
         canonical_by_id = {str(row.get("chunk_id", "")): row for row in canonical_rows}
+        if len(canonical_by_id) != len(canonical_ids):
+            errors.append(f"{level}: canonical corpus contains duplicate chunk IDs.")
         expected_ids = {str(row.get("chunk_id", "")) for row in expected_rows}
         present_ids = expected_ids.intersection(canonical_by_id)
         missing_ids = sorted(expected_ids - present_ids)
@@ -254,6 +257,12 @@ def run_reviewed_candidate_check(root: Path) -> int:
                 "artifact_sha256",
                 "pages",
                 "citation",
+                "level",
+                "text",
+                "retrieval_text",
+                "parent_id",
+                "child_ids",
+                "ordinal",
             ):
                 if actual.get(field) != expected.get(field):
                     errors.append(
