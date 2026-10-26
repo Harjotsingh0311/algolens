@@ -29,14 +29,8 @@ def test_parse_cues_preserves_timestamps_and_cleans_markup() -> None:
 
 
 def test_parse_cues_decodes_common_html_entities() -> None:
-    raw = (
-        "WEBVTT\n\n"
-        "00:00:01.000 --> 00:00:02.000\n"
-        "A &amp; B &lt; C &gt; D &nbsp; E\n"
-    )
-    assert parse_cues(raw) == [
-        CaptionCue("00:00:01.000", "00:00:02.000", "A & B < C > D E")
-    ]
+    raw = "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nA &amp; B &lt; C &gt; D &nbsp; E\n"
+    assert parse_cues(raw) == [CaptionCue("00:00:01.000", "00:00:02.000", "A & B < C > D E")]
 
 
 def test_review_packet_is_reproducible_and_explicitly_pending() -> None:
@@ -68,7 +62,6 @@ def test_review_packet_rejects_more_samples_than_available() -> None:
     cues = [CaptionCue("00:00:00.000", "00:00:01.000", "Only")]
     with pytest.raises(ValueError, match="only 1 non-empty cues"):
         build_review_packet(cues, count=2)
-
 
 
 def test_cli_refuses_to_overwrite_existing_review_packet(
