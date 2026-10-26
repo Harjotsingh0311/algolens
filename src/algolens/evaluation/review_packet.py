@@ -110,6 +110,16 @@ def build_review_packet(root: Path) -> str:
         ),
         "",
     ]
+    lines.extend(["## Priority queue", ""])
+    for item in review_queue:
+        reasons = ", ".join(item["reasons"])
+        lines.append(
+            f"- **{item['priority']} — {item['question_id']}** "
+            f"({item['split']}): {reasons}"
+        )
+    if not review_queue:
+        lines.append("No outstanding queue items were detected by the current heuristics.")
+    lines.append("")
 
     for question in questions:
         qid = _safe_text(question.get("question_id")) or "<missing question_id>"
