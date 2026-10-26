@@ -77,7 +77,7 @@ def test_cli_refuses_to_overwrite_existing_review_packet(
     source = tmp_path / "captions.vtt"
     output = tmp_path / "review.md"
     source.write_text(
-        "WEBVTT\\n\\n00:00:01.000 --> 00:00:02.000\\nHello\\n",
+        "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n",
         encoding="utf-8",
     )
     output.write_text("human review notes", encoding="utf-8")
