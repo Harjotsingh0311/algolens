@@ -52,6 +52,8 @@ def test_review_packet_shows_diagnostic_warning_and_does_not_mutate_inputs(
     assert "Ready for a separate approval review" in packet
     assert "Automated wording/type flags (advisory)" in packet
     assert "Prioritized review queue: **1** questions" in packet
+    assert "## Priority queue" in packet
+    assert "**P0 — GQ001** (dev): diagnostic_only_passage_ids, human_review_pending" in packet
     assert "**Review priority:** P0" in packet
     assert "**Review reasons:** diagnostic_only_passage_ids, human_review_pending" in packet
     assert "None triggered" in packet
