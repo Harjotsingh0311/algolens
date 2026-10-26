@@ -56,3 +56,21 @@ candidate bank, canonical chunks, or approval flags.
 **Current expected behavior:** validation is blocked until real human decisions are recorded and
 the canonical evidence is separately approved for retrieval and answer generation. That failure is
 intentional; do not weaken these checks to produce a reviewed file prematurely.
+
+## Protecting review artifacts
+
+The review-packet generator now refuses to replace an existing output file by default. This protects annotations or reviewer edits made after an earlier packet was generated.
+
+Generate a fresh packet at a new path:
+
+```powershell
+uv run python -m algolens.evaluation.review_packet --output eval/results/gold_review_packet_round2.md
+```
+
+Only pass `--force` after inspecting the existing file and deciding that replacement is intended:
+
+```powershell
+uv run python -m algolens.evaluation.review_packet --force
+```
+
+This safeguard affects only the generated Markdown packet. It does not approve any questions or passages, and it does not change candidate labels, canonical chunks, or eligibility flags.
