@@ -87,6 +87,7 @@ def test_cli_returns_two_for_missing_input(tmp_path: Path, capsys) -> None:
     assert main(["--path", str(missing)]) == 2
     assert "could not read" in capsys.readouterr().err.lower()
 
+
 def test_cli_default_audits_checked_in_extraction(capsys) -> None:
     assert main([]) == 0
     output = capsys.readouterr().out
