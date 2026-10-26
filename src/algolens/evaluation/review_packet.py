@@ -114,8 +114,7 @@ def build_review_packet(root: Path) -> str:
     for item in review_queue:
         reasons = ", ".join(item["reasons"])
         lines.append(
-            f"- **{item['priority']} — {item['question_id']}** "
-            f"({item['split']}): {reasons}"
+            f"- **{item['priority']} — {item['question_id']}** ({item['split']}): {reasons}"
         )
     if not review_queue:
         lines.append("No outstanding queue items were detected by the current heuristics.")
