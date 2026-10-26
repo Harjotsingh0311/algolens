@@ -6,6 +6,7 @@ from app.app import (
     answer_question,
     build_runtime,
     filter_answer_eligible_chunks,
+    run_algorithm_lab_ui,
 )
 
 
@@ -80,3 +81,24 @@ def test_oversized_question_is_rejected_without_runtime(monkeypatch: Any) -> Non
 
     assert "too long" in result[0]
     assert result[4]["reason"] == "question_too_long"
+
+
+
+def test_algorithm_lab_ui_returns_reproducible_metrics_and_trace() -> None:
+    metrics, trace, summary = run_algorithm_lab_ui(12, 3, 42)
+
+    assert metrics["n"] == 12
+    assert metrics["trials"] == 3
+    assert trace["sorted"] == list(range(12))
+    assert trace["comparisons"] == sum(
+        step["comparisons"] for step in trace["partitions"]
+    )
+    assert "finite-trial estimate" in summary
+
+
+def test_algorithm_lab_ui_rejects_excessive_interactive_input() -> None:
+    metrics, trace, summary = run_algorithm_lab_ui(501, 2, 42)
+
+    assert metrics["status"] == "invalid_input"
+    assert trace == {}
+    assert "at most 500" in summary
