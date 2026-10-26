@@ -61,8 +61,7 @@ _T_ ( _n_ ) _? maxn/_ 4 _?i?_ 3 _n/_ 4( _T_ ( _i_ ) + _T_ ( _n ? i_ )) + _E_ (#i
     warnings = find_formula_warnings(markdown)
 
     assert any(
-        warning.source_page == 5 and "recurrence" in warning.pattern.lower()
-        for warning in warnings
+        warning.source_page == 5 and "recurrence" in warning.pattern.lower() for warning in warnings
     )
 
 
