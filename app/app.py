@@ -1047,7 +1047,8 @@ def create_app() -> gr.Blocks:
                     gr.Markdown("### Randomized Quicksort experiment")
                     gr.Markdown(
                         "Run seeded trials, count element-to-pivot comparisons, and inspect "
-                        "the partition trace. This teaching lab does not use or approve RAG evidence.",
+                        "the partition trace. This teaching lab does not use or approve "
+                        "RAG evidence.",
                         elem_classes=["section-help"],
                     )
                     with gr.Row():
