@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
 import re
 from datetime import date
 from pathlib import Path
 from typing import Any
+
+from algolens.evaluation.gold_audit import EXPECTED_TYPE_COUNTS
 
 APPROVED_REVIEW_STATUSES = frozenset({"reviewed", "verified", "approved"})
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -135,6 +138,14 @@ def validate_review_decisions(
         answerable = decision.get("answerable")
         if not isinstance(answerable, bool):
             errors.append(f"{question_id}: reviewed answerable value must be boolean.")
+        elif isinstance(question_type, str):
+            is_unanswerable_type = question_type.startswith("unanswerable_") or (
+                question_type == "unanswerable"
+            )
+            if is_unanswerable_type == answerable:
+                errors.append(
+                    f"{question_id}: answerable label conflicts with question_type."
+                )
         key_points = decision.get("key_points")
         if (
             not isinstance(key_points, list)
@@ -187,6 +198,24 @@ def validate_review_decisions(
             }
         )
 
+    type_counts = Counter(
+        "unanswerable"
+        if str(row.get("question_type", "")).startswith("unanswerable_")
+        else str(row.get("question_type", ""))
+        for row in reviewed_rows
+    )
+    if dict(type_counts) != EXPECTED_TYPE_COUNTS:
+        errors.append(
+            "Reviewed question-type distribution differs from the proposal: "
+            f"found {dict(sorted(type_counts.items()))}."
+        )
+    answerable_count = sum(row.get("answerable") is True for row in reviewed_rows)
+    unanswerable_count = sum(row.get("answerable") is False for row in reviewed_rows)
+    if answerable_count != 65 or unanswerable_count != 15:
+        errors.append(
+            f"Expected 65 answerable and 15 unanswerable questions; found "
+            f"{answerable_count} and {unanswerable_count}."
+        )
     split_counts = {
         split: sum(row.get("split") == split for row in reviewed_rows) for split in ("dev", "test")
     }
