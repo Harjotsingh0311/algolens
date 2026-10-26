@@ -51,7 +51,10 @@ def build_review_packet(root: Path) -> str:
     lines = [
         "# Gold-question human review packet",
         "",
-        "> Review aid only. This file does not approve questions, labels, passages, or retrieval eligibility.",
+        (
+            "> Review aid only. This file does not approve questions, labels, "
+            "passages, or retrieval eligibility."
+        ),
         (
             "> Treat diagnostic chunk text as a proposed evidence lead, "
             "not as approved canonical evidence."
