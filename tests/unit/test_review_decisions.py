@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from algolens.evaluation.review_decisions import validate_review_decisions
+from algolens.evaluation.review_decisions import build_review_template, validate_review_decisions
 
 
 def make_rows() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -92,3 +92,27 @@ def test_review_decisions_reject_duplicate_ids_and_non_approval_decisions() -> N
 
     assert any("GQ001: duplicate gold passage IDs." in error for error in errors)
     assert any("GQ002: decision must be 'approve'" in error for error in errors)
+
+
+
+def test_review_template_is_unapproved_and_keeps_proposed_ids_separate() -> None:
+    template = build_review_template(
+        [
+            {
+                "question_id": "GQ001",
+                "question": "What does the pivot do?",
+                "question_type": "definition_recall",
+                "difficulty": "easy",
+                "answerable": True,
+                "key_points": ["It partitions the array."],
+                "gold_passage_ids": ["diagnostic-1"],
+            }
+        ]
+    )
+
+    assert len(template) == 1
+    assert template[0]["decision"] == "pending"
+    assert template[0]["source_checked"] is False
+    assert template[0]["reviewer"] == ""
+    assert template[0]["gold_passage_ids"] == []
+    assert template[0]["proposed_gold_passage_ids"] == ["diagnostic-1"]
