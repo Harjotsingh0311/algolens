@@ -19,3 +19,33 @@ gate and its own held-out evaluation.
 The corpus contains content that is still unreviewed. These metrics measure
 retrieval against provisional labels and must not be reported as final
 project performance.
+
+
+## Answerability and abstention metrics
+
+The standalone runner evaluates supplied scores against the **separately human-reviewed**
+`eval/gold/questions_v1_reviewed.jsonl` file. It refuses candidate/draft labels and requires
+one unique score row for every gold question ID.
+
+Prepare a score file (one JSON object per line) containing the question ID and the score produced
+by the model or gate being evaluated:
+
+```json
+{"question_id":"GQ001","score":1.42}
+{"question_id":"GQ002","score":null}
+```
+
+Then run:
+
+```powershell
+uv run python -m algolens.evaluation.answerability_runner --scores eval/results/answerability_scores.jsonl --answer-threshold 1.0 --partial-threshold 0.0
+```
+
+A numeric score at or above the answer threshold becomes `answer`; a score between thresholds
+becomes `partial`; lower or missing scores become `abstain`. The report includes coverage, risk,
+false-refusal rate, wrong-answer rate on unanswerable questions, and a risk-coverage curve/AURC.
+
+This command **does not generate scores or calibrate thresholds**. Use the development split for
+threshold selection and report final results on the held-out test split separately. Until the gold
+set is genuinely reviewed and the canonical evidence gate is satisfied, no final performance claim
+is justified.
