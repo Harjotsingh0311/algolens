@@ -104,7 +104,10 @@ def build_review_packet(root: Path) -> str:
         f"Candidate question count: **{len(questions)}**",
         f"Prioritized review queue: **{len(review_queue)}** questions",
         f"Priority counts: **{priority_counts or 'none'}**",
-        "P0 means evidence mapping blocker; P1 means pending human review or advisory wording/type flag.",
+        (
+            "P0 means evidence mapping blocker; P1 means pending human review "
+            "or advisory wording/type flag."
+        ),
         "",
     ]
 
