@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import html
 import random
 import re
 from dataclasses import dataclass
@@ -30,7 +31,7 @@ def parse_cues(raw: str) -> list[CaptionCue]:
         next_position = matches[index + 1].start() if index + 1 < len(matches) else len(raw)
         text = raw[match.end() : next_position]
         text = re.sub(r"<[^>]*>", " ", text)
-        text = re.sub(r"&(?:amp|lt|gt|nbsp);", " ", text)
+        text = html.unescape(text)
         text = re.sub(r"\s+", " ", text).strip()
         if text:
             cues.append(CaptionCue(match.group(1), match.group(2), text))
@@ -106,6 +107,11 @@ def main() -> int:
 
     cues = parse_cues(raw)
     packet = build_review_packet(cues, count=args.count, seed=args.seed)
+    if args.output.exists():
+        raise SystemExit(
+            f"Review packet already exists; refusing to overwrite reviewer work: {args.output}. "
+            "Choose a new --output path to create another packet."
+        )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(packet, encoding="utf-8")
     print(f"Wrote {args.count} pending human-review rows to {args.output}")
