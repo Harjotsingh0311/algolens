@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from algolens.evaluation.gold_audit import audit_gold_candidate
+from algolens.evaluation.gold_audit import audit_gold_candidate, question_type_review_flags
 
 
 def write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
@@ -47,6 +47,30 @@ def create_fixture(root: Path) -> None:
     write_jsonl(
         root / "corpus/experiments/chunking/children.jsonl",
         [{"chunk_id": "diag-1"}, {"chunk_id": "canonical-1"}],
+    )
+
+
+def test_question_type_heuristic_flags_reasoning_wording_as_advisory() -> None:
+    flags = question_type_review_flags(
+        {
+            "question_type": "definition_recall",
+            "question": "Why is Quicksort described as divide and conquer?",
+        }
+    )
+
+    assert flags
+    assert "reasoning/procedure-oriented" in flags[0]
+
+
+def test_question_type_heuristic_does_not_flag_definition_prompt() -> None:
+    assert (
+        question_type_review_flags(
+            {
+                "question_type": "definition_recall",
+                "question": "What role does the pivot play?",
+            }
+        )
+        == []
     )
 
 

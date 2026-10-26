@@ -43,6 +43,31 @@ def ids_from(rows: list[dict[str, Any]]) -> set[str]:
     }
 
 
+def question_type_review_flags(question: dict[str, Any]) -> list[str]:
+    """Return conservative wording/type warnings for a human reviewer.
+
+    These heuristics are advisory only. They do not alter labels or block the
+    structural audit, because question semantics require human judgment.
+    """
+    question_text = question.get("question")
+    question_type = question.get("question_type")
+    if not isinstance(question_text, str) or not isinstance(question_type, str):
+        return ["Question text or question_type is missing; review required."]
+
+    normalized = question_text.strip().casefold()
+    if question_type == "definition_recall" and normalized.startswith(
+        ("why ", "how ", "compare ", "trace ", "outline ", "connect ", "combine ")
+    ):
+        return [
+            "Question wording looks reasoning/procedure-oriented for a definition_recall label."
+        ]
+    if question_type == "why_reasoning" and normalized.startswith(
+        ("compare ", "trace ", "outline ")
+    ):
+        return ["Question wording may fit a compare/procedure type better than why_reasoning."]
+    return []
+
+
 def audit_gold_candidate(root: Path) -> dict[str, Any]:
     candidate_path = root / "eval" / "gold" / "questions_v1_candidate.jsonl"
     canonical_path = root / "corpus" / "processed" / "reviewed_chunks" / "children.jsonl"
@@ -128,6 +153,7 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
                 "question_id": row.get("question_id"),
                 "split": row.get("split"),
                 "label_status": row.get("label_status"),
+                "question_type_review_flags": question_type_review_flags(row),
                 "gold_passage_ids": gold_ids,
                 "ids_in_canonical_corpus": sorted(set(gold_ids) & canonical_ids),
                 "ids_in_diagnostic_corpus_only": sorted(
@@ -184,6 +210,9 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
         "passage_ids_present_in_diagnostic_only": diagnostic_only,
         "passage_ids_unknown_to_both": unknown_ids,
         "per_question": per_question,
+        "question_type_review_flag_count": sum(
+            bool(item["question_type_review_flags"]) for item in per_question
+        ),
         "structural_errors": structural_errors,
         "readiness": "blocked_human_review_and_canonical_mapping",
         "blockers": blockers,
