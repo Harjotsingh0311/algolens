@@ -119,9 +119,7 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
     diagnostic_only = sorted((referenced_ids & diagnostic_ids) - canonical_ids)
     unknown_ids = sorted(referenced_ids - canonical_ids - diagnostic_ids)
     review_status_counts = Counter(str(row.get("label_status", "<missing>")) for row in questions)
-    draft_count = sum(
-        row.get("label_status") == "draft_needs_human_review" for row in questions
-    )
+    draft_count = sum(row.get("label_status") == "draft_needs_human_review" for row in questions)
     reviewed_count = len(questions) - draft_count
 
     blockers = [
