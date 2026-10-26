@@ -90,7 +90,8 @@ def run_answerability_evaluation(
         "limitations": [
             "Scores are externally supplied; this command does not run the answerability model.",
             "Thresholds are user-supplied and are not calibrated here.",
-            "Use a development split for threshold selection and report held-out test metrics separately.",
+            "Use a development split for threshold selection and report held-out test "
+            "metrics separately.",
             "Metrics depend on the correctness of human-reviewed answerability labels.",
         ],
     }
