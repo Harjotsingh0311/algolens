@@ -40,9 +40,7 @@ def build_review_packet(root: Path) -> str:
     diagnostic_by_id = {
         row["chunk_id"]: row for row in diagnostic if isinstance(row.get("chunk_id"), str)
     }
-    canonical_ids = {
-        row["chunk_id"] for row in canonical if isinstance(row.get("chunk_id"), str)
-    }
+    canonical_ids = {row["chunk_id"] for row in canonical if isinstance(row.get("chunk_id"), str)}
 
     lines = [
         "# Gold-question human review packet",
@@ -131,9 +129,7 @@ def build_review_packet(root: Path) -> str:
                         f"**location:** {display or 'citation missing'}"
                     )
                     lines.append("")
-                    text = _safe_text(chunk.get("text")) or _safe_text(
-                        chunk.get("retrieval_text")
-                    )
+                    text = _safe_text(chunk.get("text")) or _safe_text(chunk.get("retrieval_text"))
                     lines.extend(
                         ["> " + part for part in text.splitlines()]
                         if text
