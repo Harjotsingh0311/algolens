@@ -38,11 +38,11 @@ def build_review_packet(root: Path) -> str:
     diagnostic = read_jsonl(diagnostic_path)
     canonical = read_jsonl(canonical_path)
     diagnostic_by_id = {
-        row["chunk_id"]: row
-        for row in diagnostic
-        if isinstance(row.get("chunk_id"), str)
+        row["chunk_id"]: row for row in diagnostic if isinstance(row.get("chunk_id"), str)
     }
-    canonical_ids = {row["chunk_id"] for row in canonical if isinstance(row.get("chunk_id"), str)}
+    canonical_ids = {
+        row["chunk_id"] for row in canonical if isinstance(row.get("chunk_id"), str)
+    }
 
     lines = [
         "# Gold-question human review packet",
@@ -108,8 +108,8 @@ def build_review_packet(root: Path) -> str:
         lines.extend(["", "### Proposed passage references", ""])
         if not gold_ids:
             lines.append(
-                "- No passage IDs supplied. Confirm that this is intentional for an unanswerable "
-                "question; otherwise locate supporting evidence."
+                "- No passage IDs supplied. Confirm that this is intentional for an "
+                "unanswerable question; otherwise locate supporting evidence."
             )
         else:
             for chunk_id in gold_ids:
@@ -131,7 +131,9 @@ def build_review_packet(root: Path) -> str:
                         f"**location:** {display or 'citation missing'}"
                     )
                     lines.append("")
-                    text = _safe_text(chunk.get("text")) or _safe_text(chunk.get("retrieval_text"))
+                    text = _safe_text(chunk.get("text")) or _safe_text(
+                        chunk.get("retrieval_text")
+                    )
                     lines.extend(
                         ["> " + part for part in text.splitlines()]
                         if text
