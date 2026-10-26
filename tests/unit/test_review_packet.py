@@ -101,3 +101,28 @@ def test_review_packet_cli_preserves_existing_output_by_default(tmp_path: Path, 
 
     assert output.read_text(encoding="utf-8") == original
     assert "already exists" in capsys.readouterr().err
+
+
+def test_review_packet_cli_force_replaces_existing_output(tmp_path: Path, capsys) -> None:
+    question = {
+        "question_id": "GQ080",
+        "question": "Is this outside the lecture?",
+        "question_type": "unanswerable_out_of_corpus",
+        "split": "test",
+        "answerable": False,
+        "label_status": "draft_needs_human_review",
+        "key_points": ["The requested topic is not covered by the lecture."],
+        "gold_passage_ids": [],
+    }
+    write_jsonl(tmp_path / "eval/gold/questions_v1_candidate.jsonl", [question])
+    write_jsonl(tmp_path / "corpus/experiments/chunking/children.jsonl", [])
+    write_jsonl(tmp_path / "corpus/processed/reviewed_chunks/children.jsonl", [])
+    output = tmp_path / "existing-review-packet.md"
+    output.write_text("old packet", encoding="utf-8")
+
+    result = main(["--root", str(tmp_path), "--output", str(output), "--force"])
+
+    assert result == 0
+    assert "Gold-question human review packet" in output.read_text(encoding="utf-8")
+    assert "old packet" not in output.read_text(encoding="utf-8")
+    assert "Review packet written" in capsys.readouterr().out
