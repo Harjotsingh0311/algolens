@@ -160,7 +160,6 @@ def verify_source_files(
     }
 
 
-
 def run_reviewed_candidate_check(root: Path) -> int:
     """Audit the approved pages 5-6 candidate against canonical chunks without promoting it."""
     from algolens.ingest.reviewed_candidate import (
@@ -204,6 +203,12 @@ def run_reviewed_candidate_check(root: Path) -> int:
         raise FileNotFoundError(f"Original source file is missing: {source_path}")
 
     actual_source_hash = sha256_file(source_path)
+    manifest_source_hash = source_record.get("sha256")
+    if (
+        not isinstance(manifest_source_hash, str)
+        or manifest_source_hash.casefold() != actual_source_hash.casefold()
+    ):
+        raise ValueError("Original source SHA-256 does not match the source manifest.")
     actual_candidate_hash = sha256_file(candidate_path)
     validate_candidate_metadata(
         metadata_value,
@@ -214,12 +219,13 @@ def run_reviewed_candidate_check(root: Path) -> int:
     expected_parents, expected_children = build_reviewed_candidate_chunks(
         candidate_path.read_text(encoding="utf-8"),
         source_record,
-        source_path=candidate_value.replace("\\\\", "/"),
+        source_path=Path(candidate_value).as_posix(),
         artifact_sha256=actual_candidate_hash,
     )
 
-    canonical_parent_path = root / "corpus" / "processed" / "reviewed_chunks" / "parents.jsonl"
-    canonical_child_path = root / "corpus" / "processed" / "reviewed_chunks" / "children.jsonl"
+    canonical_dir = root / "corpus" / "processed" / "reviewed_chunks"
+    canonical_parent_path = canonical_dir / "parents.jsonl"
+    canonical_child_path = canonical_dir / "children.jsonl"
     canonical_parents = read_jsonl(canonical_parent_path)
     canonical_children = read_jsonl(canonical_child_path)
 
@@ -242,9 +248,17 @@ def run_reviewed_candidate_check(root: Path) -> int:
             actual = canonical_by_id.get(chunk_id)
             if actual is None:
                 continue
-            for field in ("source_id", "source_sha256", "artifact_sha256", "pages", "citation"):
+            for field in (
+                "source_id",
+                "source_sha256",
+                "artifact_sha256",
+                "pages",
+                "citation",
+            ):
                 if actual.get(field) != expected.get(field):
-                    errors.append(f"{level} {chunk_id}: canonical {field} does not match candidate.")
+                    errors.append(
+                        f"{level} {chunk_id}: canonical {field} does not match candidate."
+                    )
             if actual.get("review_status") != "approved_retrieval_disabled":
                 errors.append(f"{level} {chunk_id}: review status must remain retrieval-disabled.")
             if actual.get("eligible_for_answer") is True or actual.get("retrieval_eligible") is True:
@@ -262,7 +276,11 @@ def run_reviewed_candidate_check(root: Path) -> int:
     check_level("children", expected_children, canonical_children)
 
     report = {
-        "status": "reviewed_candidate_audit_passed" if not errors else "reviewed_candidate_audit_failed",
+        "status": (
+            "reviewed_candidate_audit_passed"
+            if not errors
+            else "reviewed_candidate_audit_failed"
+        ),
         "candidate_id": metadata_value.get("artifact_id"),
         "source_id": source_id_value,
         "source_sha256": actual_source_hash,
@@ -273,10 +291,13 @@ def run_reviewed_candidate_check(root: Path) -> int:
         "canonical_chunks_modified": False,
         "approval_flags_modified": False,
         "note": (
-            "This is an integrity audit only. Owner approval for integration does not enable retrieval."
+            "This is an integrity audit only. Owner approval for integration does not enable "
+            "retrieval."
         ),
     }
-    report_path = root / "corpus" / "processed" / "generated" / "reviewed_candidate_audit.json"
+    report_path = (
+        root / "corpus" / "processed" / "generated" / "reviewed_candidate_audit.json"
+    )
     write_json_atomic(report_path, report)
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0 if not errors else 2
@@ -709,7 +730,10 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser("ingest", help="Verify sources and build separate derived artifacts.")
     commands.add_parser(
         "review-check",
-        help="Audit the approved pages 5-6 transcription against canonical chunks without enabling retrieval.",
+        help=(
+            "Audit the approved pages 5-6 transcription against canonical chunks "
+            "without enabling retrieval."
+        ),
     )
 
     index_parser = commands.add_parser("index", help="Build and smoke-test retrieval indexes.")
