@@ -193,11 +193,22 @@ def main() -> int:
         type=Path,
         help="Optional output path. Defaults to eval/results/gold_review_packet.md.",
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Replace an existing output file. Without this flag, existing files are preserved.",
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     output = args.output or root / "eval" / "results" / "gold_review_packet.md"
     if not output.is_absolute():
         output = root / output
+    if output.exists() and not args.force:
+        parser.exit(
+            2,
+            f"Review packet not written: {output} already exists. "
+            "Choose another --output path or pass --force after inspecting the file.\\n",
+        )
     packet = build_review_packet(root)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(packet, encoding="utf-8")
