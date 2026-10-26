@@ -117,9 +117,7 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
                 "unanswerable question must not have gold passage IDs."
             )
         if isinstance(raw_ids, list):
-            valid_raw_ids = [
-                item for item in raw_ids if isinstance(item, str) and item.strip()
-            ]
+            valid_raw_ids = [item for item in raw_ids if isinstance(item, str) and item.strip()]
             if len(valid_raw_ids) != len(set(valid_raw_ids)):
                 structural_errors.append(
                     f"{row.get('question_id', '<missing-id>')}: duplicate gold passage IDs."
