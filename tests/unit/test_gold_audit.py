@@ -153,7 +153,6 @@ def test_gold_audit_distinguishes_unknown_ids_from_diagnostic_only(tmp_path: Pat
     assert report["passage_ids_present_in_diagnostic_only"] == ["diag-1"]
 
 
-
 def test_gold_audit_cli_preserves_existing_report_by_default(tmp_path: Path, capsys) -> None:
     create_fixture(tmp_path)
     output = tmp_path / "audit-report.json"
