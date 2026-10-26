@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
 from algolens.evaluation.gold_audit import question_type_review_flags
+from algolens.evaluation.review_queue import build_review_queue
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -43,6 +45,35 @@ def build_review_packet(root: Path) -> str:
         row["chunk_id"]: row for row in diagnostic if isinstance(row.get("chunk_id"), str)
     }
     canonical_ids = {row["chunk_id"] for row in canonical if isinstance(row.get("chunk_id"), str)}
+    review_rows: list[dict[str, Any]] = []
+    for question in questions:
+        gold_ids = question.get("gold_passage_ids")
+        if not isinstance(gold_ids, list):
+            gold_ids = []
+        gold_ids = [value for value in gold_ids if isinstance(value, str)]
+        review_rows.append(
+            {
+                "question_id": question.get("question_id"),
+                "split": question.get("split"),
+                "question_type": question.get("question_type"),
+                "answerable": question.get("answerable"),
+                "label_status": question.get("label_status"),
+                "question_type_review_flags": question_type_review_flags(question),
+                "gold_passage_ids": gold_ids,
+                "ids_in_canonical_corpus": sorted(set(gold_ids) & canonical_ids),
+                "ids_in_diagnostic_corpus_only": sorted(
+                    (set(gold_ids) & set(diagnostic_by_id)) - canonical_ids
+                ),
+                "ids_unknown_to_both_corpora": sorted(
+                    set(gold_ids) - canonical_ids - set(diagnostic_by_id)
+                ),
+            }
+        )
+    review_queue = build_review_queue(review_rows)
+    queue_by_id = {item["question_id"]: item for item in review_queue}
+    priority_counts: dict[str, int] = {}
+    for item in review_queue:
+        priority_counts[item["priority"]] = priority_counts.get(item["priority"], 0) + 1
 
     lines = [
         "# Gold-question human review packet",
@@ -72,8 +103,23 @@ def build_review_packet(root: Path) -> str:
         ),
         "",
         f"Candidate question count: **{len(questions)}**",
+        f"Prioritized review queue: **{len(review_queue)}** questions",
+        f"Priority counts: **{priority_counts or 'none'}**",
+        (
+            "P0 means evidence mapping blocker; P1 means pending human review "
+            "or advisory wording/type flag."
+        ),
         "",
     ]
+    lines.extend(["## Priority queue", ""])
+    for item in review_queue:
+        reasons = ", ".join(item["reasons"])
+        lines.append(
+            f"- **{item['priority']} — {item['question_id']}** ({item['split']}): {reasons}"
+        )
+    if not review_queue:
+        lines.append("No outstanding queue items were detected by the current heuristics.")
+    lines.append("")
 
     for question in questions:
         qid = _safe_text(question.get("question_id")) or "<missing question_id>"
@@ -85,6 +131,9 @@ def build_review_packet(root: Path) -> str:
         answerable = question.get("answerable")
         split = _safe_text(question.get("split")) or "unspecified"
         qtype = _safe_text(question.get("question_type")) or "unspecified"
+        queue_item = queue_by_id.get(question.get("question_id"), {})
+        priority = queue_item.get("priority", "No queue item")
+        review_reasons = ", ".join(queue_item.get("reasons", [])) or "None"
 
         lines.extend(
             [
@@ -93,6 +142,8 @@ def build_review_packet(root: Path) -> str:
                 f"- **Split:** {split}",
                 f"- **Answerable (candidate label):** {answerable}",
                 f"- **Label status:** {_safe_text(question.get('label_status')) or 'missing'}",
+                f"- **Review priority:** {priority}",
+                f"- **Review reasons:** {review_reasons}",
                 f"- **Question:** {qtext}",
                 f"- **Automated wording/type flags (advisory):** "
                 f"{'; '.join(question_type_review_flags(question)) or 'None triggered'}",
@@ -178,7 +229,7 @@ def build_review_packet(root: Path) -> str:
     return "\n".join(lines)
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Build a human-review packet from candidate questions and diagnostic passages."
     )
@@ -193,11 +244,22 @@ def main() -> int:
         type=Path,
         help="Optional output path. Defaults to eval/results/gold_review_packet.md.",
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Replace an existing output file. Without this flag, existing files are preserved.",
+    )
+    args = parser.parse_args(argv)
     root = args.root.resolve()
     output = args.output or root / "eval" / "results" / "gold_review_packet.md"
     if not output.is_absolute():
         output = root / output
+    if output.exists() and not args.force:
+        parser.exit(
+            2,
+            f"Review packet not written: {output} already exists. "
+            "Choose another --output path or pass --force after inspecting the file.\n",
+        )
     packet = build_review_packet(root)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(packet, encoding="utf-8")
