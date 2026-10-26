@@ -1,4 +1,6 @@
-from algolens.ingest.formula_quality import find_formula_warnings
+from pathlib import Path
+
+from algolens.ingest.formula_quality import find_formula_warnings, main
 
 
 def test_flags_known_probability_corruption_with_page() -> None:
@@ -59,5 +61,29 @@ _T_ ( _n_ ) _? maxn/_ 4 _?i?_ 3 _n/_ 4( _T_ ( _i_ ) + _T_ ( _n ? i_ )) + _E_ (#i
     warnings = find_formula_warnings(markdown)
 
     assert any(
-        warning.source_page == 5 and "recurrence" in warning.pattern.lower() for warning in warnings
+        warning.source_page == 5 and "recurrence" in warning.pattern.lower()
+        for warning in warnings
     )
+
+
+def test_cli_reports_warnings_and_can_fail_strictly(tmp_path: Path, capsys) -> None:
+    notes = tmp_path / "notes.md"
+    notes.write_text(
+        "<!-- source_page: 2 -->\nPr[output=YES] ≤ 12\n",
+        encoding="utf-8",
+    )
+
+    assert main(["--path", str(notes)]) == 0
+    output = capsys.readouterr().out
+    assert "Warnings found: 1" in output
+    assert "PDF page 2" in output
+
+    assert main(["--path", str(notes), "--fail-on-warning"]) == 1
+    assert "Warnings found: 1" in capsys.readouterr().out
+
+
+def test_cli_returns_two_for_missing_input(tmp_path: Path, capsys) -> None:
+    missing = tmp_path / "missing.md"
+
+    assert main(["--path", str(missing)]) == 2
+    assert "could not read" in capsys.readouterr().err.lower()
