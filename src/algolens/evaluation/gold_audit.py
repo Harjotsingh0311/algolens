@@ -125,15 +125,25 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
     reviewed_count = len(questions) - draft_count
 
     blockers = [
-        "Human review is required for every candidate question before labels can be treated as gold.",
-        "Canonical reviewed-corpus mapping is incomplete; diagnostic chunks are not production evidence.",
+        (
+            "Human review is required for every candidate question before labels "
+            "can be treated as gold."
+        ),
+        (
+            "Canonical reviewed-corpus mapping is incomplete; diagnostic chunks "
+            "are not production evidence."
+        ),
         "This report does not approve passages, change labels, or authorize final evaluation.",
     ]
     if unknown_ids:
         blockers.append("Some referenced passage IDs do not exist in either inspected corpus.")
 
     return {
-        "status": "gold_candidate_audit_completed" if not structural_errors else "gold_candidate_audit_has_errors",
+        "status": (
+            "gold_candidate_audit_completed"
+            if not structural_errors
+            else "gold_candidate_audit_has_errors"
+        ),
         "candidate_path": candidate_path.relative_to(root).as_posix(),
         "question_count": len(questions),
         "question_type_counts": dict(sorted(type_counts.items())),
