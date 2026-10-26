@@ -160,6 +160,157 @@ def verify_source_files(
     }
 
 
+def run_reviewed_candidate_check(root: Path) -> int:
+    """Audit the approved pages 5-6 candidate against canonical chunks without promoting it."""
+    from algolens.ingest.reviewed_candidate import (
+        build_reviewed_candidate_chunks,
+        validate_candidate_metadata,
+    )
+
+    candidate_dir = root / "corpus" / "processed" / "reviewed_candidates"
+    metadata_path = candidate_dir / "expectations_printed_pages_5_6.review.json"
+    if not metadata_path.is_file():
+        raise FileNotFoundError(f"Reviewed-candidate metadata is missing: {metadata_path}")
+
+    metadata_value = json.loads(metadata_path.read_text(encoding="utf-8"))
+    if not isinstance(metadata_value, dict):
+        raise ValueError("Reviewed-candidate metadata must be a JSON object.")
+
+    candidate_value = metadata_value.get("candidate_markdown_path")
+    if not isinstance(candidate_value, str) or not candidate_value.strip():
+        raise ValueError("Review metadata must name candidate_markdown_path.")
+
+    candidate_path = (root / candidate_value).resolve()
+    resolved_root = root.resolve()
+    if not candidate_path.is_relative_to(resolved_root):
+        raise ValueError("Candidate Markdown path must remain inside the project root.")
+    if not candidate_path.is_file():
+        raise FileNotFoundError(f"Reviewed candidate Markdown is missing: {candidate_path}")
+
+    sources = load_sources(root)
+    source_id_value = metadata_value.get("source_id")
+    if not isinstance(source_id_value, str) or source_id_value not in sources:
+        raise ValueError("Reviewed-candidate source_id is absent from the source manifest.")
+    source_record = sources[source_id_value]
+
+    source_path_value = source_record.get("local_path")
+    if not isinstance(source_path_value, str) or not source_path_value.strip():
+        raise ValueError("The source manifest has no local_path for the reviewed source.")
+    source_path = Path(source_path_value)
+    if not source_path.is_absolute():
+        source_path = root / source_path
+    if not source_path.is_file():
+        raise FileNotFoundError(f"Original source file is missing: {source_path}")
+
+    actual_source_hash = sha256_file(source_path)
+    manifest_source_hash = source_record.get("sha256")
+    if (
+        not isinstance(manifest_source_hash, str)
+        or manifest_source_hash.casefold() != actual_source_hash.casefold()
+    ):
+        raise ValueError("Original source SHA-256 does not match the source manifest.")
+    actual_candidate_hash = sha256_file(candidate_path)
+    validate_candidate_metadata(
+        metadata_value,
+        actual_source_sha256=actual_source_hash,
+        actual_candidate_sha256=actual_candidate_hash,
+    )
+
+    expected_parents, expected_children = build_reviewed_candidate_chunks(
+        candidate_path.read_text(encoding="utf-8"),
+        source_record,
+        source_path=Path(candidate_value).as_posix(),
+        artifact_sha256=actual_candidate_hash,
+    )
+
+    canonical_dir = root / "corpus" / "processed" / "reviewed_chunks"
+    canonical_parent_path = canonical_dir / "parents.jsonl"
+    canonical_child_path = canonical_dir / "children.jsonl"
+    canonical_parents = read_jsonl(canonical_parent_path)
+    canonical_children = read_jsonl(canonical_child_path)
+
+    checks: list[dict[str, Any]] = []
+    errors: list[str] = []
+
+    def check_level(
+        level: str,
+        expected_rows: list[dict[str, Any]],
+        canonical_rows: list[dict[str, Any]],
+    ) -> None:
+        canonical_ids = [str(row.get("chunk_id", "")) for row in canonical_rows]
+        canonical_by_id = {str(row.get("chunk_id", "")): row for row in canonical_rows}
+        if len(canonical_by_id) != len(canonical_ids):
+            errors.append(f"{level}: canonical corpus contains duplicate chunk IDs.")
+        expected_ids = {str(row.get("chunk_id", "")) for row in expected_rows}
+        present_ids = expected_ids.intersection(canonical_by_id)
+        missing_ids = sorted(expected_ids - present_ids)
+        if missing_ids:
+            errors.append(f"{level}: canonical corpus is missing expected IDs: {missing_ids}")
+        for expected in expected_rows:
+            chunk_id = str(expected.get("chunk_id", ""))
+            actual = canonical_by_id.get(chunk_id)
+            if actual is None:
+                continue
+            for field in (
+                "source_id",
+                "source_sha256",
+                "artifact_sha256",
+                "pages",
+                "citation",
+                "level",
+                "text",
+                "retrieval_text",
+                "parent_id",
+                "child_ids",
+                "ordinal",
+            ):
+                if actual.get(field) != expected.get(field):
+                    errors.append(
+                        f"{level} {chunk_id}: canonical {field} does not match candidate."
+                    )
+            if actual.get("review_status") != "approved_retrieval_disabled":
+                errors.append(f"{level} {chunk_id}: review status must remain retrieval-disabled.")
+            if (
+                actual.get("eligible_for_answer") is True
+                or actual.get("retrieval_eligible") is True
+            ):
+                errors.append(f"{level} {chunk_id}: candidate must not be answer-eligible.")
+        checks.append(
+            {
+                "level": level,
+                "expected_count": len(expected_rows),
+                "canonical_matching_count": len(present_ids),
+                "missing_ids": missing_ids,
+            }
+        )
+
+    check_level("parents", expected_parents, canonical_parents)
+    check_level("children", expected_children, canonical_children)
+
+    report = {
+        "status": (
+            "reviewed_candidate_audit_passed" if not errors else "reviewed_candidate_audit_failed"
+        ),
+        "candidate_id": metadata_value.get("artifact_id"),
+        "source_id": source_id_value,
+        "source_sha256": actual_source_hash,
+        "candidate_markdown_sha256": actual_candidate_hash,
+        "checks": checks,
+        "errors": errors,
+        "answer_generation_permitted": False,
+        "canonical_chunks_modified": False,
+        "approval_flags_modified": False,
+        "note": (
+            "This is an integrity audit only. Owner approval for integration does not enable "
+            "retrieval."
+        ),
+    }
+    report_path = root / "corpus" / "processed" / "generated" / "reviewed_candidate_audit.json"
+    write_json_atomic(report_path, report)
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+    return 0 if not errors else 2
+
+
 def corpus_status(root: Path) -> dict[str, Any]:
     sources = load_sources(root)
     verification = verify_source_files(root, sources)
@@ -585,6 +736,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     commands.add_parser("status", help="Inspect source, corpus, and evaluation readiness.")
     commands.add_parser("ingest", help="Verify sources and build separate derived artifacts.")
+    commands.add_parser(
+        "review-check",
+        help=(
+            "Audit the approved pages 5-6 transcription against canonical chunks "
+            "without enabling retrieval."
+        ),
+    )
 
     index_parser = commands.add_parser("index", help="Build and smoke-test retrieval indexes.")
     index_parser.add_argument(
@@ -623,6 +781,8 @@ def main(argv: list[str] | None = None) -> int:
             return 2 if report["status"] == "source_integrity_errors" else 0
         if args.command == "ingest":
             return run_ingest(root)
+        if args.command == "review-check":
+            return run_reviewed_candidate_check(root)
         if args.command == "index":
             return run_index(root, diagnostic=args.diagnostic, query=args.smoke_query)
         if args.command == "eval":

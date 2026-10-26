@@ -71,6 +71,15 @@ def test_atomic_json_writer_creates_valid_json(tmp_path: Path) -> None:
 
 def test_parser_exposes_expected_commands() -> None:
     parser = build_parser()
-    for command in ("status", "ingest", "index", "eval"):
+    for command in ("status", "ingest", "review-check", "index", "eval"):
         args = parser.parse_args([command])
         assert args.command == command
+
+
+def test_review_check_fails_closed_when_review_metadata_is_missing(
+    tmp_path: Path,
+) -> None:
+    from algolens.cli import run_reviewed_candidate_check
+
+    with pytest.raises(FileNotFoundError, match="Reviewed-candidate metadata is missing"):
+        run_reviewed_candidate_check(tmp_path)
