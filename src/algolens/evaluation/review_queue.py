@@ -3,6 +3,9 @@ from __future__ import annotations
 from typing import Any
 
 
+APPROVED_REVIEW_STATUSES = frozenset({"reviewed", "verified", "approved", "human_reviewed"})
+
+
 def build_review_queue(per_question: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Prioritize source-review work without changing candidate labels."""
     queue: list[dict[str, Any]] = []
@@ -19,7 +22,8 @@ def build_review_queue(per_question: list[dict[str, Any]]) -> list[dict[str, Any
             reasons.append("no_proposed_passage_ids")
         if item.get("question_type_review_flags"):
             reasons.append("question_type_wording_flag")
-        if item.get("label_status") != "human_reviewed":
+        status = str(item.get("label_status", "")).strip().casefold()
+        if status not in APPROVED_REVIEW_STATUSES:
             reasons.append("human_review_pending")
         if not reasons:
             continue
