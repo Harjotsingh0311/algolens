@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from algolens.evaluation.gold_audit import audit_gold_candidate, question_type_review_flags
+from algolens.evaluation.gold_audit import audit_gold_candidate, main, question_type_review_flags
 
 
 def write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
@@ -151,3 +151,21 @@ def test_gold_audit_distinguishes_unknown_ids_from_diagnostic_only(tmp_path: Pat
 
     assert report["passage_ids_unknown_to_both"] == ["not-found"]
     assert report["passage_ids_present_in_diagnostic_only"] == ["diag-1"]
+
+
+
+def test_gold_audit_cli_preserves_existing_report_by_default(tmp_path: Path, capsys) -> None:
+    create_fixture(tmp_path)
+    output = tmp_path / "audit-report.json"
+    original = '{"reviewer_notes": "preserve me"}\\n'
+    output.write_text(original, encoding="utf-8")
+
+    try:
+        main(["--root", str(tmp_path), "--output", str(output)])
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected existing audit report to be preserved")
+
+    assert output.read_text(encoding="utf-8") == original
+    assert "already exists" in capsys.readouterr().err
