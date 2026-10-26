@@ -2,9 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-APPROVED_REVIEW_STATUSES = frozenset(
-    {"reviewed", "verified", "approved", "human_reviewed"}
-)
+APPROVED_REVIEW_STATUSES = frozenset({"reviewed", "verified", "approved", "human_reviewed"})
 
 
 def build_review_queue(per_question: list[dict[str, Any]]) -> list[dict[str, Any]]:
