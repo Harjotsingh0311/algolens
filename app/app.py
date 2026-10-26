@@ -12,6 +12,7 @@ import yaml
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
+from algolens.algorithm_lab import randomized_quicksort, run_experiment
 from algolens.answer_cache import CachedAnswerProvider
 from algolens.fallback_provider import FallbackAnswerProvider
 from algolens.grounded_answering import GroundedAnswerService
@@ -392,6 +393,45 @@ def answer_question(question: str) -> tuple[str, str, str, Any, Any]:
     }
 
     return answer.answer_md, status, format_evidence(answer), claims, trace
+
+
+def run_algorithm_lab_ui(
+    n: int | float,
+    trials: int | float,
+    seed: int | float,
+) -> tuple[dict[str, Any], dict[str, Any], str]:
+    """Run the independent teaching lab without accessing the RAG corpus."""
+    try:
+        item_count = int(n)
+        trial_count = int(trials)
+        random_seed = int(seed)
+        if item_count != n or trial_count != trials or random_seed != seed:
+            raise ValueError("n, trials, and seed must be whole numbers.")
+        if item_count > 500:
+            raise ValueError("For the interactive demo, n must be at most 500.")
+        if trial_count > 1000:
+            raise ValueError("For the interactive demo, trials must be at most 1000.")
+
+        report = run_experiment(n=item_count, trials=trial_count, seed=random_seed)
+        example = randomized_quicksort(list(range(item_count)), seed=random_seed)
+        trace = {
+            "input": example.input_values,
+            "sorted": example.sorted_values,
+            "seed": example.seed,
+            "comparisons": example.comparisons,
+            "partitions": [step.__dict__ for step in example.trace],
+        }
+        summary = (
+            f"**Empirical mean:** {report['mean_comparisons']:.2f} comparisons across "
+            f"{trial_count} trials with n={item_count}.\n\n"
+            f"**Observed ratio:** {report['comparisons_per_n_log2_n']:.3f} for "
+            "C/(n log2 n). This is a finite-trial estimate, not a guarantee. "
+            "The lab is separate from the approved-evidence gate."
+        )
+        return report, trace, summary
+    except (TypeError, ValueError, OverflowError) as exc:
+        error = {"status": "invalid_input", "message": str(exc)}
+        return error, {}, f"**Could not run the experiment:** {exc}"
 
 
 APP_CSS = ""
@@ -1000,6 +1040,29 @@ def create_app() -> gr.Blocks:
                         Diagnostic report:
                         `eval/results/answerability_gate_diagnostic.json`
                         """
+                    )
+
+            with gr.Tab("Algorithm Lab"):
+                with gr.Group(elem_classes=["surface"]):
+                    gr.Markdown("### Randomized Quicksort experiment")
+                    gr.Markdown(
+                        "Run seeded trials, count element-to-pivot comparisons, and inspect "
+                        "the partition trace. This teaching lab does not use or approve RAG evidence.",
+                        elem_classes=["section-help"],
+                    )
+                    with gr.Row():
+                        lab_n = gr.Number(value=100, label="Array size n", precision=0)
+                        lab_trials = gr.Number(value=100, label="Trials", precision=0)
+                        lab_seed = gr.Number(value=42, label="Random seed", precision=0)
+                    lab_run = gr.Button("Run experiment", variant="primary")
+                    lab_summary = gr.Markdown("Run an experiment to see the empirical results.")
+                    with gr.Row():
+                        lab_metrics = gr.JSON(label="Experiment metrics")
+                        lab_trace = gr.JSON(label="Example partition trace")
+                    lab_run.click(
+                        run_algorithm_lab_ui,
+                        inputs=[lab_n, lab_trials, lab_seed],
+                        outputs=[lab_metrics, lab_trace, lab_summary],
                     )
 
             with gr.Tab("About"):
