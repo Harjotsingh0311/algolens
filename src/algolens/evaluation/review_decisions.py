@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -51,7 +52,9 @@ def validate_review_decisions(
     }
     decision_ids = [str(row.get("question_id", "")).strip() for row in decisions]
     if len(candidate) != EXPECTED_QUESTION_COUNT:
-        errors.append(f"Expected {EXPECTED_QUESTION_COUNT} candidate questions; found {len(candidate)}.")
+        errors.append(
+            f"Expected {EXPECTED_QUESTION_COUNT} candidate questions; found {len(candidate)}."
+        )
     if len(candidate_by_id) != len(candidate):
         errors.append("Candidate question IDs are missing or duplicated.")
     if any(not question_id for question_id in decision_ids):
@@ -87,8 +90,14 @@ def validate_review_decisions(
         if not isinstance(reviewer, str) or not reviewer.strip():
             errors.append(f"{question_id}: reviewer is required.")
         reviewed_at = decision.get("reviewed_at")
-        if not isinstance(reviewed_at, str) or not DATE_PATTERN.fullmatch(reviewed_at):
-            errors.append(f"{question_id}: reviewed_at must use YYYY-MM-DD.")
+        valid_date = isinstance(reviewed_at, str) and DATE_PATTERN.fullmatch(reviewed_at)
+        if valid_date:
+            try:
+                date.fromisoformat(reviewed_at)
+            except ValueError:
+                valid_date = False
+        if not valid_date:
+            errors.append(f"{question_id}: reviewed_at must be a valid date in YYYY-MM-DD format.")
         question = decision.get("question")
         if not isinstance(question, str) or not question.strip():
             errors.append(f"{question_id}: reviewed question text is required.")
@@ -223,7 +232,11 @@ def main() -> int:
         encoding="utf-8",
     )
     report["output_written"] = True
-    report["output_path"] = output_path.relative_to(root).as_posix() if output_path.is_relative_to(root) else str(output_path)
+    report["output_path"] = (
+        output_path.relative_to(root).as_posix()
+        if output_path.is_relative_to(root)
+        else str(output_path)
+    )
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
 
