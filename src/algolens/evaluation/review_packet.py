@@ -56,6 +56,7 @@ def build_review_packet(root: Path) -> str:
                 "question_id": question.get("question_id"),
                 "split": question.get("split"),
                 "question_type": question.get("question_type"),
+                "answerable": question.get("answerable"),
                 "label_status": question.get("label_status"),
                 "question_type_review_flags": question_type_review_flags(question),
                 "gold_passage_ids": gold_ids,
