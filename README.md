@@ -203,6 +203,7 @@ Run commands from the repository root:
 | `uv run python -m algolens.cli index --diagnostic` | Inspect retrieval on experimental chunks only |
 | `uv run python -m algolens.cli eval` | Check whether final evaluation prerequisites are met |
 | `uv run python -m algolens.cli eval --diagnostic --retriever bm25` | Run exploratory retrieval metrics; does not authorize answer generation |
+| `uv run python -m algolens.evaluation.review_decisions --write-template` | Create an unapproved review-decision template |
 | `uv run python -m algolens.evaluation.review_decisions` | Validate explicit human review records before creating a reviewed gold set |
 | `uv run python app/app.py` | Start the Gradio app |
 
