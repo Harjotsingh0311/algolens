@@ -102,7 +102,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Evaluate supplied answerability scores against reviewed gold labels."
     )
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument("--gold", type=Path, default=Path("eval/gold/questions_v1_reviewed.jsonl"))
     parser.add_argument("--scores", type=Path, required=True)
     parser.add_argument(
