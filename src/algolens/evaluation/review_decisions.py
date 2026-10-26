@@ -143,9 +143,7 @@ def validate_review_decisions(
                 question_type == "unanswerable"
             )
             if is_unanswerable_type == answerable:
-                errors.append(
-                    f"{question_id}: answerable label conflicts with question_type."
-                )
+                errors.append(f"{question_id}: answerable label conflicts with question_type.")
         key_points = decision.get("key_points")
         if (
             not isinstance(key_points, list)
