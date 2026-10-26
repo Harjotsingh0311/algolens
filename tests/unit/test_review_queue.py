@@ -88,3 +88,25 @@ def test_review_queue_accepts_validator_supported_review_statuses() -> None:
             ]
         )
         assert queue == []
+
+
+def test_review_queue_uses_answerability_label_for_missing_evidence() -> None:
+    queue = build_review_queue(
+        [
+            {
+                "question_id": "GQ009",
+                "split": "dev",
+                "question_type": "unanswerable_off_topic",
+                "answerable": True,
+                "label_status": "draft_needs_human_review",
+                "gold_passage_ids": [],
+                "ids_in_canonical_corpus": [],
+                "ids_in_diagnostic_corpus_only": [],
+                "ids_unknown_to_both_corpora": [],
+                "question_type_review_flags": [],
+            }
+        ]
+    )
+
+    assert queue[0]["priority"] == "P0"
+    assert "no_proposed_passage_ids" in queue[0]["reasons"]
