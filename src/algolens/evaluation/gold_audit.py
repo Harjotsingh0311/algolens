@@ -68,7 +68,14 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
     if duplicate_question_ids:
         structural_errors.append(f"Duplicate question IDs: {duplicate_question_ids}")
 
-    type_counts = Counter(str(row.get("question_type", "")) for row in questions)
+    type_counts = Counter(
+        (
+            "unanswerable"
+            if str(row.get("question_type", "")).startswith("unanswerable_")
+            else str(row.get("question_type", ""))
+        )
+        for row in questions
+    )
     split_counts = Counter(str(row.get("split", "")) for row in questions)
     if dict(type_counts) != EXPECTED_TYPE_COUNTS:
         structural_errors.append("Question-type distribution differs from the proposal.")
