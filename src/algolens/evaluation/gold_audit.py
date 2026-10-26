@@ -6,6 +6,8 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from algolens.evaluation.review_queue import build_review_queue
+
 EXPECTED_TYPE_COUNTS = {
     "definition_recall": 15,
     "why_reasoning": 20,
@@ -152,6 +154,7 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
             {
                 "question_id": row.get("question_id"),
                 "split": row.get("split"),
+                "question_type": row.get("question_type"),
                 "label_status": row.get("label_status"),
                 "question_type_review_flags": question_type_review_flags(row),
                 "gold_passage_ids": gold_ids,
@@ -186,6 +189,8 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
     if unknown_ids:
         blockers.append("Some referenced passage IDs do not exist in either inspected corpus.")
 
+    review_queue = build_review_queue(per_question)
+
     return {
         "status": (
             "gold_candidate_audit_completed"
@@ -210,6 +215,9 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
         "passage_ids_present_in_diagnostic_only": diagnostic_only,
         "passage_ids_unknown_to_both": unknown_ids,
         "per_question": per_question,
+        "review_queue_count": len(review_queue),
+        "review_queue_priority_counts": dict(sorted(Counter(item["priority"] for item in review_queue).items())),
+        "review_queue": review_queue,
         "question_type_review_flag_count": sum(
             bool(item["question_type_review_flags"]) for item in per_question
         ),
