@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -233,7 +234,7 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
     }
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Audit the 80-question gold candidate without promoting labels."
     )
@@ -248,12 +249,23 @@ def main() -> int:
         type=Path,
         help="Optional report path. Defaults to eval/results/gold_candidate_audit.json.",
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Replace an existing audit report. Without this flag, existing files are preserved.",
+    )
+    args = parser.parse_args(argv)
     root = args.root.resolve()
     report = audit_gold_candidate(root)
     output_path = args.output or root / "eval" / "results" / "gold_candidate_audit.json"
     if not output_path.is_absolute():
         output_path = root / output_path
+    if output_path.exists() and not args.force:
+        parser.exit(
+            2,
+            f"Audit report not written: {output_path} already exists. "
+            "Choose another --output path or pass --force after inspecting the file.\\n",
+        )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(report, indent=2, ensure_ascii=False) + "\n",
