@@ -287,7 +287,7 @@ uv run mypy src
 uv run pytest -q
 ```
 
-The repository's current local validation checkpoint has **245 passing tests**, successful Ruff lint/format checks, and a clean mypy run. These results are a code-quality checkpoint, not a production-readiness or answer-quality claim.
+The latest verified main-branch CI checkpoint (26 October 2026) passed **264 tests**, Ruff lint/format checks, and strict mypy across 31 source files. CI reported one non-fatal Starlette/httpx deprecation warning. These are code-quality results, not proof of production readiness or answer quality.
 
 ## Licensing and attribution
 
