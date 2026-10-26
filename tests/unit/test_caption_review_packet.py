@@ -78,8 +78,13 @@ def test_cli_refuses_to_overwrite_existing_review_packet(
         sys,
         "argv",
         [
-            "create_caption_review_packet", "--input", str(source),
-            "--output", str(output), "--count", "1",
+            "create_caption_review_packet",
+            "--input",
+            str(source),
+            "--output",
+            str(output),
+            "--count",
+            "1",
         ],
     )
 
