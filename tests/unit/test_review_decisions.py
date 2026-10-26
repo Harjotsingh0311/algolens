@@ -69,12 +69,14 @@ def test_review_decisions_reject_diagnostic_only_passage_ids() -> None:
 def test_review_decisions_reject_unchecked_source_and_unanswerable_evidence() -> None:
     candidate, decisions = make_rows()
     decisions[0]["source_checked"] = False
+    decisions[0]["reviewed_at"] = "2026-02-31"
     decisions[1]["answerable"] = False
     decisions[1]["gold_passage_ids"] = ["canon-1"]
 
     _, errors = validate_review_decisions(candidate, decisions, canonical_chunks())
 
     assert any("GQ001: source_checked must be true." in error for error in errors)
+    assert any("GQ001: reviewed_at must be a valid date" in error for error in errors)
     assert any(
         "GQ002: unanswerable question must have empty gold passage IDs." in error
         for error in errors
