@@ -46,11 +46,12 @@ uv run python -m algolens.evaluation.review_decisions
 ```
 
 The command creates `eval/gold/questions_v1_reviewed.jsonl` only if all 80 decisions are present,
-every decision is explicitly approved and source-checked, the split remains 50 dev / 30 test, and
-every answerable question maps to production-eligible canonical passages. It rejects diagnostic-only
-passages, missing reviewers/dates, duplicates, and inconsistent answerability/evidence pairs. It
-never overwrites an existing output and never changes the candidate bank, canonical chunks, or
-approval flags.
+every decision is explicitly approved and source-checked, the split remains 50 dev / 30 test, the
+proposal's question-type counts are preserved, and exactly 65 questions are answerable while 15 are
+unanswerable. Every answerable question must map to production-eligible canonical passages. It
+rejects diagnostic-only passages, missing reviewers/dates, duplicates, and inconsistent
+answerability/type/evidence pairs. It never overwrites an existing output and never changes the
+candidate bank, canonical chunks, or approval flags.
 
 **Current expected behavior:** validation is blocked until real human decisions are recorded and
 the canonical evidence is separately approved for retrieval and answer generation. That failure is

@@ -12,6 +12,19 @@ def make_rows() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
         question_id = f"GQ{index:03d}"
         split = "dev" if index <= 50 else "test"
         candidate.append({"question_id": question_id, "split": split})
+        if index <= 15:
+            question_type = "definition_recall"
+        elif index <= 35:
+            question_type = "why_reasoning"
+        elif index <= 45:
+            question_type = "procedure_trace"
+        elif index <= 55:
+            question_type = "compare"
+        elif index <= 65:
+            question_type = "multi_hop"
+        else:
+            question_type = "unanswerable_off_topic"
+        answerable = index <= 65
         decisions.append(
             {
                 "question_id": question_id,
@@ -20,11 +33,11 @@ def make_rows() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
                 "reviewer": "Reviewer",
                 "reviewed_at": "2026-10-26",
                 "question": f"Reviewed question {index}?",
-                "question_type": "definition_recall",
+                "question_type": question_type,
                 "difficulty": "easy",
-                "answerable": True,
+                "answerable": answerable,
                 "key_points": ["A checked key point."],
-                "gold_passage_ids": ["canon-1"],
+                "gold_passage_ids": ["canon-1"] if answerable else [],
                 "notes": "",
             }
         )
