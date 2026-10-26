@@ -224,6 +224,18 @@ Operational endpoints:
 - `GET /healthz` returns HTTP 200 when the process is up.
 - `GET /readyz` returns HTTP 200 only when canonical evidence and the grounded runtime are ready. HTTP 503 in safe mode is intentional.
 
+## Randomized Quicksort lab
+
+Run the lecture's algorithm as a reproducible experiment and inspect comparison counts:
+
+```powershell
+uv run python -m algolens.algorithm_lab --n 100 --trials 100 --seed 42
+uv run python -m algolens.algorithm_lab --n 20 --trials 10 --seed 42 --trace
+```
+
+The lab records pivot-partition traces and empirical comparison counts. It is a teaching utility,
+not a source of approved RAG evidence; see [the lab notes](docs/algorithm-lab.md).
+
 ## Evaluation status
 
 The active `eval/gold/questions_v0.jsonl` file still contains draft questions. A separate 80-question candidate bank and per-question review worksheet exist, but the candidate bank has not been promoted to the final gold set. The 50-question development / 30-question test split is not yet frozen, and gold passage IDs must map to approved canonical chunks.
