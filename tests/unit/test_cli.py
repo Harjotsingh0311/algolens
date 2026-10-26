@@ -83,4 +83,3 @@ def test_review_check_fails_closed_when_review_metadata_is_missing(
 
     with pytest.raises(FileNotFoundError, match="Reviewed-candidate metadata is missing"):
         run_reviewed_candidate_check(tmp_path)
-
