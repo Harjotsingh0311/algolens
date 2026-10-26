@@ -8,8 +8,8 @@ import pytest
 from tools.create_caption_review_packet import (
     CaptionCue,
     build_review_packet,
-    parse_cues,
     main,
+    parse_cues,
 )
 
 
