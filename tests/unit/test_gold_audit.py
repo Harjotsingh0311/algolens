@@ -88,4 +88,4 @@ def test_gold_audit_distinguishes_unknown_ids_from_diagnostic_only(tmp_path: Pat
     report = audit_gold_candidate(tmp_path)
 
     assert report["passage_ids_unknown_to_both"] == ["not-found"]
-    assert report["passage_ids_present_in_diagnostic_only"] == []
+    assert report["passage_ids_present_in_diagnostic_only"] == ["diag-1"]
