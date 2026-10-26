@@ -88,6 +88,9 @@ def test_gold_audit_reports_diagnostic_ids_without_promoting_them(tmp_path: Path
     assert report["final_evaluation_permitted"] is False
     assert report["candidate_questions_modified"] is False
     assert report["approval_flags_modified"] is False
+    assert report["review_queue_count"] == 80
+    assert report["review_queue_priority_counts"]["P0"] == 80
+    assert report["review_queue"][0]["priority"] == "P0"
 
 
 def test_gold_audit_flags_duplicate_question_ids(tmp_path: Path) -> None:
