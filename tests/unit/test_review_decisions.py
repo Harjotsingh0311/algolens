@@ -7,9 +7,9 @@ from typing import Any
 
 from algolens.evaluation.review_decisions import (
     build_review_template,
-    main as review_decisions_main,
     validate_review_decisions,
 )
+from algolens.evaluation.review_decisions import main as review_decisions_main
 
 
 def make_rows() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
