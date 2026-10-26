@@ -1,8 +1,15 @@
 from __future__ import annotations
 
+import json
+import sys
+from pathlib import Path
 from typing import Any
 
-from algolens.evaluation.review_decisions import build_review_template, validate_review_decisions
+from algolens.evaluation.review_decisions import (
+    build_review_template,
+    main as review_decisions_main,
+    validate_review_decisions,
+)
 
 
 def make_rows() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -128,3 +135,44 @@ def test_review_template_is_unapproved_and_keeps_proposed_ids_separate() -> None
     assert template[0]["reviewer"] == ""
     assert template[0]["gold_passage_ids"] == []
     assert template[0]["proposed_gold_passage_ids"] == ["diagnostic-1"]
+
+
+
+def test_cli_writes_pending_template_and_refuses_to_overwrite(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    candidate_path = tmp_path / "eval" / "gold" / "questions_v1_candidate.jsonl"
+    candidate_path.parent.mkdir(parents=True)
+    candidate_path.write_text(
+        json.dumps(
+            {
+                "question_id": "GQ001",
+                "question": "What does the pivot do?",
+                "question_type": "definition_recall",
+                "difficulty": "easy",
+                "answerable": True,
+                "key_points": ["It partitions the array."],
+                "gold_passage_ids": ["diagnostic-1"],
+            }
+        )
+        + "\\n",
+        encoding="utf-8",
+    )
+    decisions_path = tmp_path / "eval" / "gold" / "review_decisions_v1.jsonl"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["review_decisions", "--root", str(tmp_path), "--write-template"],
+    )
+
+    assert review_decisions_main() == 0
+    row = json.loads(decisions_path.read_text(encoding="utf-8").strip())
+    assert row["decision"] == "pending"
+    assert row["source_checked"] is False
+    assert row["gold_passage_ids"] == []
+    assert row["proposed_gold_passage_ids"] == ["diagnostic-1"]
+
+    before = decisions_path.read_text(encoding="utf-8")
+    assert review_decisions_main() == 2
+    assert decisions_path.read_text(encoding="utf-8") == before
