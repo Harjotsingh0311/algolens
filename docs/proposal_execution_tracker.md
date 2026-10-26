@@ -180,3 +180,12 @@ The captions are auto-generated and are not independently verified against the v
 - PR #7 merged as `533dd1f`: added an interactive Gradio Algorithm Lab tab with bounded inputs, metrics, and a sample partition trace.
 - Validation: each PR's CI check passed; main-branch CI was triggered after PR #7 merged.
 - Remaining production blockers are unchanged: the 80 candidate questions need human review, their 29 unique passage IDs are diagnostic-only rather than canonical, and the two canonical child chunks remain retrieval-disabled. No question or chunk approval was changed by these code improvements.
+
+
+## Gold-review assist checkpoint (2026-10-26)
+
+- Added conservative advisory question-type checks to the gold audit and human review packet. Current heuristic scan flags **GQ003** because it begins with “Why” while labeled `definition_recall`; this is a review suggestion, not an automatic correction.
+- The audit still finds 80 candidate questions, all requiring human review; 29 unique referenced passage IDs are diagnostic-only and none is canonical.
+- Latest verified main CI after these changes: https://github.com/Harjotsingh0311/algolens/actions/runs/40278220509 — Ruff lint/format passed, strict mypy passed for 31 source files, and **264 tests passed** (one non-fatal Starlette/httpx deprecation warning).
+- The Algorithm Lab now exists both as a seeded CLI experiment and a Gradio tab. It is separate from the RAG corpus and cannot approve evidence.
+- Remaining non-code gate: the project owner must explicitly review source-grounded questions/passages and decide retrieval eligibility. No tool, passing test, or heuristic flag can substitute for that decision.
