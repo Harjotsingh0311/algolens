@@ -137,7 +137,6 @@ def test_review_template_is_unapproved_and_keeps_proposed_ids_separate() -> None
     assert template[0]["proposed_gold_passage_ids"] == ["diagnostic-1"]
 
 
-
 def test_cli_writes_pending_template_and_refuses_to_overwrite(
     tmp_path: Path,
     monkeypatch: Any,
@@ -156,7 +155,7 @@ def test_cli_writes_pending_template_and_refuses_to_overwrite(
                 "gold_passage_ids": ["diagnostic-1"],
             }
         )
-        + "\\n",
+        + "\n",
         encoding="utf-8",
     )
     decisions_path = tmp_path / "eval" / "gold" / "review_decisions_v1.jsonl"
