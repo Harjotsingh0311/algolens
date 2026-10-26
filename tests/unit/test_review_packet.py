@@ -81,6 +81,7 @@ def test_review_packet_flags_empty_passage_list_for_human_check(tmp_path: Path) 
     assert "No passage IDs supplied." in packet
     assert "Confirm that this is intentional for an unanswerable question" in packet
 
+
 def test_review_packet_cli_preserves_existing_output_by_default(tmp_path: Path, capsys) -> None:
     output = tmp_path / "existing-review-packet.md"
     original = "Do not overwrite this review work.\\n"
