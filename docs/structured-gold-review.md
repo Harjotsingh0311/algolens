@@ -5,6 +5,17 @@ recorded an explicit decision for every question. The validator consumes a separ
 
 `eval/gold/review_decisions_v1.jsonl`
 
+Create the blank template first:
+
+```powershell
+uv run python -m algolens.evaluation.review_decisions --write-template
+```
+
+The template leaves every decision pending, sets `source_checked` to false, and separates the
+candidate passage IDs into `proposed_gold_passage_ids`. Review each question against its original
+source and fill in the final `gold_passage_ids` yourself. The command refuses to overwrite an
+existing decision file.
+
 Each line must contain the following fields:
 
 ```json
