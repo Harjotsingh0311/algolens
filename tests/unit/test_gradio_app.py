@@ -90,9 +90,7 @@ def test_algorithm_lab_ui_returns_reproducible_metrics_and_trace() -> None:
     assert metrics["n"] == 12
     assert metrics["trials"] == 3
     assert trace["sorted"] == list(range(12))
-    assert trace["comparisons"] == sum(
-        step["comparisons"] for step in trace["partitions"]
-    )
+    assert trace["comparisons"] == sum(step["comparisons"] for step in trace["partitions"])
     assert "finite-trial estimate" in summary
 
 
