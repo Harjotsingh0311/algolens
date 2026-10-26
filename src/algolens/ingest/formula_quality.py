@@ -100,13 +100,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             "Warnings require human review; this tool never edits the source."
         )
     )
-    project_root = Path(__file__).resolve().parents[3]
-    default_path = project_root / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
+    default_path = (
+        Path.cwd() / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
+    )
     parser.add_argument(
         "--path",
         type=Path,
         default=default_path,
-        help="Markdown file to inspect (default: the PyMuPDF4LLM experiment).",
+        help="Markdown file to inspect (default: ./corpus/experiments/pdf_extraction/notes.md).",
     )
     parser.add_argument(
         "--fail-on-warning",
