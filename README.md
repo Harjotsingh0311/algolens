@@ -206,6 +206,7 @@ Run commands from the repository root:
 | `uv run python -m algolens.evaluation.review_decisions --write-template` | Create an unapproved review-decision template |
 | `uv run python -m algolens.evaluation.review_decisions` | Validate explicit human review records before creating a reviewed gold set |
 | `uv run python -m algolens.evaluation.answerability_runner --scores eval/results/answerability_scores.jsonl` | Evaluate supplied scores against reviewed gold labels |
+| `uv run python -m algolens.evaluation.gold_audit` | Audit draft gold questions and prioritize evidence/review blockers |
 | `uv run python -m algolens.ingest.formula_quality` | Detect known formula extraction defects; warnings require PDF review |
 | `uv run python app/app.py` | Start the Gradio app |
 
