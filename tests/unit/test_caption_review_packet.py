@@ -77,7 +77,7 @@ def test_cli_refuses_to_overwrite_existing_review_packet(
     monkeypatch.setattr(
         sys,
         "argv",
-        ["create_caption_review_packet", "--input", str(source), "--output", str(output)],
+        ["create_caption_review_packet", "--input", str(source), "--output", str(output), "--count", "1"],
     )
 
     with pytest.raises(SystemExit, match="refusing to overwrite reviewer work"):
