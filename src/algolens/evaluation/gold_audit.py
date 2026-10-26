@@ -156,6 +156,7 @@ def audit_gold_candidate(root: Path) -> dict[str, Any]:
                 "question_id": row.get("question_id"),
                 "split": row.get("split"),
                 "question_type": row.get("question_type"),
+                "answerable": row.get("answerable"),
                 "label_status": row.get("label_status"),
                 "question_type_review_flags": question_type_review_flags(row),
                 "gold_passage_ids": gold_ids,
