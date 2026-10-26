@@ -18,14 +18,14 @@ class FormulaWarning:
     text: str
 
 
-_PAGE_MARKER = re.compile(r"<!--\\s*source_page:\\s*(\\d+)\\s*-->")
+_PAGE_MARKER = re.compile(r"<!--\s*source_page:\s*(\d+)\s*-->")
 
 _KNOWN_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "matrix-product probability fraction may be malformed",
         re.compile(
-            r"Pr\\s*\\[\\s*output\\s*=\\s*YES\\s*\\].{0,80}"
-            r"(?:≤|<=)\\s*(?:12\\b|1\\s+2\\b)",
+            r"Pr\s*\[\s*output\s*=\s*YES\s*\].{0,80}"
+            r"(?:≤|<=)\s*(?:12\b|1\s+2\b)",
             re.I,
         ),
     ),
@@ -40,16 +40,16 @@ _KNOWN_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "Quicksort recurrence may have malformed quarter-bound layout",
         re.compile(
-            r"T\\s*\\(\\s*n\\s*\\).{0,180}"
-            r"max\\s*n?\\s*/?\\s*_?\\s*4.{0,220}"
-            r"3\\s*_?\\s*n?\\s*/?\\s*_?\\s*4",
+            r"T\s*\(\s*n\s*\).{0,180}"
+            r"max\s*n?\s*/?\s*_?\s*4.{0,220}"
+            r"3\s*_?\s*n?\s*/?\s*_?\s*4",
             re.I,
         ),
     ),
     (
         "Quicksort recurrence may have lost recursive arguments",
         re.compile(
-            r"T\\s*\\(\\s*n\\s*\\)\\s*(?:≤|<=)\\s*T\\s*\\+\\s*T\\s*\\+\\s*2\\s*c\\s*n",
+            r"T\s*\(\s*n\s*\)\s*(?:≤|<=)\s*T\s*\+\s*T\s*\+\s*2\s*c\s*n",
             re.I,
         ),
     ),
@@ -101,10 +101,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
     )
     project_root = Path(__file__).resolve().parents[3]
+    default_path = (
+        project_root / "corpus" / "experiments" / "pdf_extraction" / "notes.md"
+    )
     parser.add_argument(
         "--path",
         type=Path,
-        default=project_root / "corpus" / "experiments" / "pdf_extraction" / "notes.md",
+        default=default_path,
         help="Markdown file to inspect (default: the PyMuPDF4LLM experiment).",
     )
     parser.add_argument(
