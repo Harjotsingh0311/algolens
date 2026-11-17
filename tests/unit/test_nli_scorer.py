@@ -51,6 +51,29 @@ def test_scorer_maps_output_to_named_probabilities() -> None:
     assert model.show_progress_bar is False
 
 
+def test_scorer_windows_long_passages_and_selects_strongest_decisive_score() -> None:
+    model = FakeCrossEncoder(
+        [
+            [0.05, 0.10, 0.85],
+            [0.02, 0.97, 0.01],
+            [0.05, 0.15, 0.80],
+            [0.05, 0.15, 0.80],
+            [0.05, 0.15, 0.80],
+            [0.05, 0.15, 0.80],
+        ]
+    )
+    scorer = NLIEntailmentScorer(model=model)
+    first = "The first sentence directly supports the claim."
+    second = "Background material is neutral."
+    padding = "x" * 620
+
+    result = scorer(f"{first}\n{second}\n{padding}", "The first sentence supports the claim.")
+
+    assert result["entailment"] == pytest.approx(0.97)
+    assert model.pairs is not None
+    assert len(model.pairs) > 1
+
+
 @pytest.mark.parametrize(
     ("premise", "hypothesis"),
     [

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import re
 from collections.abc import Sequence
 from typing import Protocol
 
@@ -117,10 +118,43 @@ class NLIEntailmentScorer:
         if not isinstance(hypothesis, str) or not hypothesis.strip():
             raise ValueError("hypothesis must be a non-empty string")
 
+        clean_premise = premise.strip()
+        clean_hypothesis = hypothesis.strip()
+        windows = [clean_premise]
+        if len(clean_premise) > 600:
+            units = [
+                item.strip()
+                for item in re.split(r"(?:\r?\n)+|(?<=[.!?])\s+", clean_premise)
+                if item.strip()
+            ]
+            windows.extend(units)
+            windows.extend(f"{left} {right}" for left, right in zip(units, units[1:], strict=False))
+            windows = list(dict.fromkeys(windows))
+
         model = self._get_model()
         output = model.predict(
-            [(premise.strip(), hypothesis.strip())],
+            [(window, clean_hypothesis) for window in windows],
             apply_softmax=True,
             show_progress_bar=False,
         )
-        return self._normalize_output(output)
+        if len(windows) == 1:
+            return self._normalize_output(output)
+
+        to_list = getattr(output, "tolist", None)
+        if callable(to_list):
+            output = to_list()
+        if (
+            not isinstance(output, Sequence)
+            or isinstance(output, (str, bytes))
+            or len(output) != len(windows)
+        ):
+            raise ValueError("NLI model output has an invalid shape for premise windows")
+
+        scores = [self._normalize_output([row]) for row in output]
+        return max(
+            scores,
+            key=lambda row: (
+                max(row["entailment"], row["contradiction"]),
+                row["contradiction"],
+            ),
+        )

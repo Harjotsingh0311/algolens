@@ -238,7 +238,10 @@ class AnswerService:
                 if hit is not None:
                     hits.append(hit)
 
-            assessment = self.gate.assess([hit.model_dump(mode="python") for hit in hits])
+            assessment = self.gate.assess(
+                [hit.model_dump(mode="python") for hit in hits],
+                question=question,
+            )
             if assessment.decision == "abstain":
                 return self._abstention(started, assessment.closest_topics)
 

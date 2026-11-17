@@ -67,7 +67,12 @@ class AlwaysAnswerGate:
     def __init__(self) -> None:
         self.received_hits: list[dict[str, Any]] = []
 
-    def assess(self, hits: list[dict[str, Any]]) -> Any:
+    def assess(
+        self,
+        hits: list[dict[str, Any]],
+        *,
+        question: str | None = None,
+    ) -> Any:
         self.received_hits = hits
 
         class Assessment:

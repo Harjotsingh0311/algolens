@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 
 from algolens.algorithm_lab import randomized_quicksort, run_experiment
 from algolens.answer_cache import CachedAnswerProvider
+from algolens.answerability import AnswerabilityGate
 from algolens.fallback_provider import FallbackAnswerProvider
 from algolens.grounded_answering import GroundedAnswerService
 from algolens.providers import OpenAICompatibleProvider
@@ -124,10 +125,11 @@ def startup_status() -> str:
 
 def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
     """Build the real retrieval-to-grounded-answer runtime only when evidence is approved."""
+    status: dict[str, Any] = {"candidate_passages": 0, "eligible_passages": 0}
     try:
         chunks = load_child_chunks()
         eligible = filter_answer_eligible_chunks(chunks)
-        status: dict[str, Any] = {
+        status = {
             "candidate_passages": len(chunks),
             "eligible_passages": len(eligible),
         }
@@ -159,7 +161,7 @@ def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
 
         provider_chain = FallbackAnswerProvider(configured_providers)
         model_id = primary_provider.model
-        cache_namespace = "provider-chain:" + "->".join(
+        cache_namespace = "provider-chain:prompt-v2:" + "->".join(
             f"{item.base_url}|{item.model}" for item in configured_providers
         )
         cached_provider = CachedAnswerProvider(
@@ -182,6 +184,7 @@ def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
             reranker=reranker,
             candidate_k=20,
             include_unreviewed=False,
+            pairing_enabled=True,
         )
 
         service = build_grounded_answer_service(
@@ -190,6 +193,11 @@ def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
             corpus_version=corpus_version,
             model_id=model_id,
             top_k=6,
+            gate=AnswerabilityGate(
+                answer_threshold=2.8120527267456055,
+                partial_threshold=0.0,
+                thresholds_calibrated=True,
+            ),
         )
         status["message"] = "Grounded-answer runtime initialized."
         status["model"] = model_id
@@ -203,8 +211,7 @@ def build_runtime() -> tuple[GroundedAnswerService | None, dict[str, Any]]:
         # Keep API keys, request headers, and internal exception messages out of the UI.
         print(f"AlgoLens runtime initialization failed: {type(exc).__name__}")
         return None, {
-            "candidate_passages": 0,
-            "eligible_passages": 0,
+            **status,
             "message": (
                 "Runtime initialization failed. Check the local environment and "
                 f"server console. Diagnostic type: {type(exc).__name__}."
@@ -1028,17 +1035,18 @@ def create_app() -> gr.Blocks:
                         """
                         ### Evaluation workspace
 
-                        Unit and contract tests check software behavior; they do not,
-                        by themselves, establish lecture-answer quality.
+                        The source-verified benchmark contains 80 questions: 50 development
+                        and 30 public test questions. Labels received AI-assisted source
+                        review, not independent human annotation.
 
-                        The current gold questions and answerability results remain
-                        provisional. Before reporting benchmark performance, complete
-                        human label review, freeze a development/test split, compare
-                        retrieval baselines, run ablations, and report confidence
-                        intervals.
+                        - Paired reranking overall question recall@5: **0.908**
+                        - Paired reranking test question recall@5: **0.783**
+                        - Best test question recall@5 (BM25): **0.870**
+                        - Test answerability accuracy: **0.933**
+                        - Test wrong-answer rate on unanswerable questions: **0.000**
 
-                        Diagnostic report:
-                        `eval/results/answerability_gate_diagnostic.json`
+                        See `eval/results/final_evaluation.md` for the full comparison,
+                        ablations, limitations, and reproducibility hashes.
                         """
                     )
 

@@ -181,6 +181,10 @@ Use "weak" when support is incomplete, and "unsupported" when the evidence
 does not support the claim. Do not label a claim supported merely because it
 is topically related. Do not create claims that have no citations.
 
+Make every claim atomic: one proposition supported by a single sentence or
+equation in its cited passage. Split multi-step reasoning into separate claims,
+paraphrase minimally, and never combine a supported fact with an extra detail.
+
 If the supplied evidence is insufficient, state that limitation clearly in
 answer_md and do not guess. The application performs additional validation.
 Do not include Markdown code fences around the JSON object.

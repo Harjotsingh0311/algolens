@@ -59,6 +59,24 @@ def test_runtime_fails_closed_for_disabled_corpus(monkeypatch: Any) -> None:
     assert readiness["eligible_passages"] == 0
 
 
+def test_runtime_failure_preserves_approved_corpus_counts(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "app.app.load_child_chunks",
+        lambda: [
+            {"review_status": "approved", "eligible_for_answer": True, "retrieval_eligible": True}
+        ],
+    )
+
+    def fail_manifest() -> None:
+        raise ValueError("sensitive configuration")
+
+    monkeypatch.setattr("app.app.load_manifest", fail_manifest)
+    service, readiness = build_runtime()
+    assert service is None
+    assert readiness["eligible_passages"] == 1
+    assert "sensitive configuration" not in readiness["message"]
+
+
 def test_empty_question_is_rejected_without_runtime(monkeypatch: Any) -> None:
     def forbidden_runtime() -> tuple[None, dict[str, Any]]:
         raise AssertionError("An empty question must not initialize the runtime.")
