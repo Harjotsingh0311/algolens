@@ -93,6 +93,47 @@ hosting platform.
 
 ## Commands
 
+Run commands from the repository root:
+
+| Command | Purpose |
+|---|---|
+| `uv run python -m algolens.cli status` | Check source integrity, corpus approval, and evaluation readiness |
+| `uv run python -m algolens.cli ingest` | Verify sources and build separate derived extraction artifacts |
+| `uv run python -m algolens.cli review-check` | Verify pages 5–6 review metadata, source/candidate hashes, and canonical chunk consistency without enabling retrieval |
+| `uv run python -m algolens.cli index` | Smoke-test the production index path; blocks if no approved passages exist |
+| `uv run python -m algolens.cli index --diagnostic` | Inspect retrieval on experimental chunks only |
+| `uv run python -m algolens.cli eval` | Check whether final evaluation prerequisites are met |
+| `uv run python -m algolens.cli eval --diagnostic --retriever bm25` | Run exploratory retrieval metrics; does not authorize answer generation |
+| `uv run python -m algolens.evaluation.review_decisions --write-template` | Create an unapproved review-decision template |
+| `uv run python -m algolens.evaluation.review_decisions` | Validate explicit human review records before creating a reviewed gold set |
+| `uv run python -m algolens.evaluation.answerability_runner --scores eval/results/answerability_scores.jsonl` | Evaluate supplied scores against reviewed gold labels |
+| `uv run python -m algolens.evaluation.gold_audit` | Audit draft gold questions and prioritize evidence/review blockers |
+| `uv run python -m algolens.ingest.formula_quality` | Detect known formula extraction defects; warnings require PDF review |
+| `uv run python app/app.py` | Start the Gradio app |
+
+The CLI writes reports beneath `corpus/processed/generated/`, `index/`, and `eval/results/` as applicable. `review-check` writes `corpus/processed/generated/reviewed_candidate_audit.json`; it is an integrity audit only and does not modify canonical chunks or approval flags. Ingestion also creates separate derived artifacts and does not automatically promote chunks or modify review approvals.
+
+## Corpus approval and safe mode
+
+AlgoLens requires all of the following on a canonical child passage before it can be used for answering:
+
+1. A reviewed/verified/approved `review_status`.
+2. `eligible_for_answer: true`.
+3. `retrieval_eligible: true`.
+
+A candidate being extracted, chunked, cited in a draft, or present in an experimental index does **not** satisfy these conditions. Do not weaken the gates to make the app answer. Review the source content, record the decision explicitly, then restart the app so its cached runtime reads the updated corpus.
+
+At this checkpoint, the printed pages 5–6 transcription has project-owner approval, and its two parent/child chunks are present in canonical reviewed-chunk files, but they remain retrieval-disabled pending a separate eligibility decision. Page 3–4 Quicksort candidates remain pending owner review. No canonical child passage currently satisfies all production signals.
+
+Operational endpoints:
+
+- `GET /healthz` returns HTTP 200 when the process is up.
+- `GET /readyz` returns HTTP 200 only when canonical evidence and the grounded runtime are ready. HTTP 503 in safe mode is intentional.
+
+## Randomized Quicksort lab
+
+Run the lecture's algorithm as a reproducible experiment and inspect comparison counts:
+
 ```powershell
 # Verify sources, approved corpus, and reviewed benchmark
 uv run python -m algolens.cli status

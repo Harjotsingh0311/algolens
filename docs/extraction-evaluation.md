@@ -71,3 +71,14 @@ The automatic extraction experiments are stored under
 
 These are experimental outputs, not approved canonical lecture content.
 See the README in that directory for the limitations and handling policy.
+
+
+## Formula-quality audit command
+
+The known-corruption detector can be run independently against the existing PyMuPDF4LLM extraction without rerunning extraction or changing the Markdown:
+
+```powershell
+uv run python -m algolens.ingest.formula_quality
+```
+
+Pass `--path` to inspect another Markdown artifact. By default, findings are warnings and the command exits successfully so reviewers can inspect the report. Use `--fail-on-warning` in a scripted quality gate when any known corruption signature should fail that run. The detector targets known defects observed in this lecture's extraction and is not a general mathematical validator. A clean report does not prove the extraction is correct; flagged equations must be checked against the original PDF before use as canonical evidence. The command never edits its input or changes corpus approval state.
