@@ -1,7 +1,8 @@
 # AlgoLens retrieval ablations
 
-Corpus SHA-256: `e52123ee972be4a6d3d89a3aad88e73678fd44b6ed01fd2a21663e1495599440`  
-Question set SHA-256: `7f5480c49e1d09085b30ffb2c0bede3cc7abdbf8a0d5fc3128df7c6f14f9748d`  
+Corpus SHA-256: `e52123ee972be4a6d3d89a3aad88e73678fd44b6ed01fd2a21663e1495599440`
+
+Question set SHA-256: `7f5480c49e1d09085b30ffb2c0bede3cc7abdbf8a0d5fc3128df7c6f14f9748d`
 Completed runs: **31**
 
 `question_recall@5` counts a question when at least one labelled passage appears in the first five results. `fractional_recall@5` averages the fraction of all labelled passages recovered for each question.

@@ -19,8 +19,16 @@ corpus/raw/
 
 # Local logs and temporary files
 *.log
+*.bak
+tmp/
 .DS_Store
 Thumbs.db
+
+# Superseded local review packets (final reviewed artifacts live in eval/gold/)
+corpus/processed/generated/reviewed_candidate_audit.json
+eval/results/caption_timestamp_review.md
+eval/results/gold_candidate_audit.json
+eval/results/gold_review_packet.md
 # Local manifest recovery artifacts
 corpus/manifest.yaml.bak.*
 corpus/manifest.repair.tmp
