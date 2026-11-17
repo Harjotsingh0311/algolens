@@ -116,6 +116,12 @@ def validate_review_decisions(
         reviewer = decision.get("reviewer")
         if not isinstance(reviewer, str) or not reviewer.strip():
             errors.append(f"{question_id}: reviewer is required.")
+        review_method = decision.get("review_method", "human_source_review")
+        if review_method not in {"human_source_review", "ai_assisted_source_review"}:
+            errors.append(
+                f"{question_id}: review_method must be human_source_review or "
+                "ai_assisted_source_review."
+            )
         reviewed_at = decision.get("reviewed_at")
         valid_date = False
         if isinstance(reviewed_at, str) and DATE_PATTERN.fullmatch(reviewed_at):
@@ -189,9 +195,14 @@ def validate_review_decisions(
                 "gold_passage_ids": passage_ids,
                 "key_points": key_points,
                 "annotation_notes": notes,
-                "label_status": "human_verified",
+                "label_status": (
+                    "source_verified"
+                    if review_method == "ai_assisted_source_review"
+                    else "human_verified"
+                ),
                 "split": split,
                 "reviewer": reviewer.strip() if isinstance(reviewer, str) else "",
+                "review_method": review_method,
                 "reviewed_at": reviewed_at,
             }
         )

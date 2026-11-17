@@ -62,6 +62,34 @@ def canonical_chunks() -> list[dict[str, Any]]:
     ]
 
 
+def test_final_preflight_consumes_reviewed_rows_and_checks_their_provenance(
+    tmp_path: Path,
+) -> None:
+    from algolens.cli import final_evaluation_blockers
+
+    candidate, decisions = make_rows()
+    chunks = canonical_chunks()
+    reviewed, errors = validate_review_decisions(candidate, decisions, chunks)
+    assert not errors
+
+    def write_rows(relative: str, rows: list[dict[str, Any]]) -> None:
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8")
+
+    write_rows("eval/gold/questions_v1_candidate.jsonl", candidate)
+    write_rows("eval/gold/review_decisions_v1.jsonl", decisions)
+    write_rows("eval/gold/questions_v1_reviewed.jsonl", reviewed)
+    write_rows("corpus/processed/reviewed_chunks/children.jsonl", chunks)
+    assert final_evaluation_blockers(tmp_path) == []
+
+    reviewed[0]["question"] = "A changed question?"
+    write_rows("eval/gold/questions_v1_reviewed.jsonl", reviewed)
+    assert "Reviewed gold does not match valid source review decisions." in (
+        final_evaluation_blockers(tmp_path)
+    )
+
+
 def test_review_decisions_require_explicit_review_and_eligible_canonical_evidence() -> None:
     candidate, decisions = make_rows()
 
@@ -73,6 +101,19 @@ def test_review_decisions_require_explicit_review_and_eligible_canonical_evidenc
     assert sum(row["split"] == "test" for row in reviewed) == 30
     assert all(row["label_status"] == "human_verified" for row in reviewed)
     assert all(row["reviewer"] == "Reviewer" for row in reviewed)
+    assert all(row["review_method"] == "human_source_review" for row in reviewed)
+
+
+def test_ai_assisted_review_is_labelled_without_claiming_human_verification() -> None:
+    candidate, decisions = make_rows()
+    for decision in decisions:
+        decision["review_method"] = "ai_assisted_source_review"
+
+    reviewed, errors = validate_review_decisions(candidate, decisions, canonical_chunks())
+
+    assert errors == []
+    assert all(row["label_status"] == "source_verified" for row in reviewed)
+    assert all(row["review_method"] == "ai_assisted_source_review" for row in reviewed)
 
 
 def test_review_decisions_reject_diagnostic_only_passage_ids() -> None:

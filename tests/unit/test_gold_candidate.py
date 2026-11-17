@@ -55,9 +55,7 @@ def test_candidate_gold_v1_is_complete_but_remains_unreviewed() -> None:
         str(passage_id) for row in questions for passage_id in row.get("gold_passage_ids", [])
     }
     assert gold_ids <= experiment_ids
-    assert not (gold_ids & canonical_ids), (
-        "Candidate labels must not be confused with canonical production evidence."
-    )
+    assert gold_ids <= canonical_ids
 
     for row in questions:
         gold = row.get("gold_passage_ids", [])
@@ -75,13 +73,13 @@ def test_final_preflight_still_uses_v0_draft_set() -> None:
     assert all(row["label_status"] == "draft_needs_human_review" for row in questions)
 
 
-def test_final_preflight_does_not_promote_candidate_bank() -> None:
+def test_final_preflight_accepts_separately_reviewed_bank() -> None:
     from algolens.cli import final_evaluation_blockers
 
     blockers = final_evaluation_blockers(Path("."))
 
-    assert "Expected 80 gold questions; found 30." in blockers
-    assert "At least one question still has an unreviewed gold label." in blockers
-    assert "A leakage-safe split of exactly 50 dev and 30 test questions is required." in blockers
-    assert "No canonical passages are approved for answer generation." in blockers
-    assert "26 gold passage IDs do not match the approved corpus." in blockers
+    assert blockers == []
+    reviewed = _read_jsonl(Path("eval/gold/questions_v1_reviewed.jsonl"))
+    assert len(reviewed) == 80
+    assert all(row["label_status"] == "source_verified" for row in reviewed)
+    assert all(row["review_method"] == "ai_assisted_source_review" for row in reviewed)

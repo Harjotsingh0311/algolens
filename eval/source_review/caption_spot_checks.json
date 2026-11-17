@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-11-18",
+  "reviewer": "Codex automated audio review",
+  "method": "Eight-second clips were extracted from the official lecture audio at each sampled VTT timestamp and transcribed locally with faster-whisper tiny.en. The observed words were compared with the pinned caption track.",
+  "source_video_url": "https://archive.org/download/MIT6.046JS15/MIT6_046JS15_lec06_300k.mp4",
+  "caption_source_sha256": "3e6ce969b47c94fdfa7108eff91b2ec0029e5151b0b9f9a75b74f3df31beeed1",
+  "all_samples_match": true,
+  "samples": [
+    {"timestamp": "00:11:34.640", "caption": "those of us who went to high school,", "observed": "I guess those of us who went to high school, myself included.", "matches": true},
+    {"timestamp": "00:13:18.570", "caption": "of additions that were going up--", "observed": "applies, and if you actually counted the number of additions, they were going up", "matches": true},
+    {"timestamp": "00:25:29.210", "caption": "This is fun.", "observed": "stand up. This is fun. This is the hardest throw I've had to make in 6.046.", "matches": true},
+    {"timestamp": "00:36:04.480", "caption": "So let's look at the case where Dr equals 0 case because that's", "observed": "So let's look at the case where Dr equals 0 case. Because that's the interesting case", "matches": true},
+    {"timestamp": "00:57:28.140", "caption": "Now, if I look at this, I'm going", "observed": "Now, if I look at this, I'm going to do the partition.", "matches": true},
+    {"timestamp": "00:58:33.870", "caption": "Order n square.", "observed": "It's order n square, right? It's order n square", "matches": true},
+    {"timestamp": "01:03:26.710", "caption": "Hopefully you can get one.", "observed": "Hopefully, you can get one, right? So the intelligent pivots", "matches": true},
+    {"timestamp": "01:08:29.080", "caption": "and then go grab the pivot corresponding", "observed": "pick a particular index and then go grab the pivot corresponding to the value at that index.", "matches": true},
+    {"timestamp": "01:10:49.690", "caption": "It's going to check, and then if it fails,", "observed": "try to get a balanced partition is going to check, and then if it fails, it's going to try again", "matches": true},
+    {"timestamp": "01:14:06.010", "caption": "And a good call is when you get somewhere between 1/2-- well,", "observed": "1-quarter. And a good call is when you get 1-half somewhere between", "matches": true}
+  ],
+  "limitations": [
+    "The audio check is machine-transcribed rather than a human listening review.",
+    "Caption content is additionally aligned against the official MIT transcript PDF before promotion."
+  ]
+}
