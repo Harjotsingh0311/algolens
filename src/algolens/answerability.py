@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -8,6 +9,33 @@ from typing import Any, Literal
 from algolens.retrieval.bm25 import is_answer_eligible
 
 Decision = Literal["answer", "partial", "abstain"]
+
+_PROMPT_INJECTION = re.compile(
+    r"\b(ignore|disregard|override)\b.{0,80}\b(source|evidence|instruction|lecture)\b"
+    r"|\b(even if|without)\b.{0,40}\b(supported|evidence|citation)\b",
+    flags=re.IGNORECASE,
+)
+_UNSUPPORTED_MEASUREMENT = re.compile(
+    r"\b(exact|measured|recorded|benchmark|wall[- ]clock|latency|memory usage|random seed|prng)\b"
+    r".{0,100}\b(count|runtime|distribution|machine|implementation|generator|seed|usage|runs?)\b"
+    r"|\bone million (runs?|elements?)\b",
+    flags=re.IGNORECASE,
+)
+_OUT_OF_SCOPE_TOPIC = re.compile(
+    r"\b(capital of|heap\s*sort|heapsort|introsort|lecture\s+10|randomized selection)\b",
+    flags=re.IGNORECASE,
+)
+
+
+def question_scope_reason(question: str) -> str | None:
+    """Return a stable refusal reason for requests outside the approved lecture scope."""
+    if _PROMPT_INJECTION.search(question):
+        return "prompt_injection"
+    if _UNSUPPORTED_MEASUREMENT.search(question):
+        return "unsupported_measurement"
+    if _OUT_OF_SCOPE_TOPIC.search(question):
+        return "out_of_scope_topic"
+    return None
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,6 +69,7 @@ class AnswerabilityGate:
         answer_threshold: float = 1.0,
         partial_threshold: float = 0.0,
         closest_topics_k: int = 3,
+        thresholds_calibrated: bool = False,
     ) -> None:
         for name, value in (
             ("answer_threshold", answer_threshold),
@@ -66,6 +95,7 @@ class AnswerabilityGate:
         self.answer_threshold = float(answer_threshold)
         self.partial_threshold = float(partial_threshold)
         self.closest_topics_k = closest_topics_k
+        self.thresholds_calibrated = bool(thresholds_calibrated)
 
     @staticmethod
     def _is_eligible(hit: Mapping[str, Any]) -> bool:
@@ -172,6 +202,8 @@ class AnswerabilityGate:
     def assess(
         self,
         hits: Sequence[Mapping[str, Any]],
+        *,
+        question: str | None = None,
     ) -> GateAssessment:
         """Assess evidence without mutating the supplied retrieval results."""
         if not hits:
@@ -218,6 +250,18 @@ class AnswerabilityGate:
             if len(topic_labels) >= self.closest_topics_k:
                 break
 
+        scope_reason = question_scope_reason(question) if question is not None else None
+        if scope_reason is not None:
+            return GateAssessment(
+                decision="abstain",
+                reason=scope_reason,
+                top_score=None,
+                score_margin=None,
+                supporting_hit_count=0,
+                closest_topics=tuple(topic_labels),
+                thresholds_calibrated=self.thresholds_calibrated,
+            )
+
         if top_score >= self.answer_threshold:
             decision: Decision = "answer"
             reason = "strong_retrieval_evidence"
@@ -235,7 +279,7 @@ class AnswerabilityGate:
             score_margin=score_margin,
             supporting_hit_count=supporting_hit_count,
             closest_topics=tuple(topic_labels),
-            thresholds_calibrated=False,
+            thresholds_calibrated=self.thresholds_calibrated,
         )
 
 

@@ -35,6 +35,10 @@ def test_ndcg_rewards_relevant_passage_at_higher_rank() -> None:
     assert high > low
 
 
+def test_ndcg_does_not_reward_duplicate_retrievals() -> None:
+    assert ndcg_at_k({"gold"}, ["gold", "gold"], 2) == pytest.approx(1.0)
+
+
 @pytest.mark.parametrize("metric_k", [0, -1])
 def test_metrics_reject_invalid_k(metric_k: int) -> None:
     with pytest.raises(ValueError):
@@ -79,8 +83,27 @@ def test_evaluator_scores_answerable_only_and_counts_unanswerable() -> None:
     assert report["answerable_question_count"] == 1
     assert report["unanswerable_question_count"] == 1
     assert report["retrieval_metrics"]["recall@5"] == 1.0
+    assert report["retrieval_metrics"]["question_recall@5"] == 1.0
     assert report["retrieval_metrics"]["mrr@10"] == 0.5
     assert report["retrieval_metrics"]["ndcg@10"] < 1.0
+
+
+def test_question_recall_requires_only_one_gold_passage() -> None:
+    report = evaluate_rankings(
+        [
+            {
+                "question_id": "Q1",
+                "answerable": True,
+                "question_type": "multi_hop",
+                "gold_passage_ids": ["a", "b"],
+            }
+        ],
+        {"Q1": ["a", "noise"]},
+        k_values=(1, 5),
+    )
+
+    assert report["retrieval_metrics"]["recall@1"] == 0.5
+    assert report["retrieval_metrics"]["question_recall@1"] == 1.0
 
 
 def test_evaluator_rejects_no_answerable_questions() -> None:

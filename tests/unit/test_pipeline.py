@@ -13,6 +13,8 @@ def make_candidate(
     *,
     review_status: str = "reviewed",
     score: float = 0.02,
+    source_id: str = "L06_TYPED_NOTES",
+    pair_id: str | None = None,
 ) -> dict[str, Any]:
     return {
         "chunk_id": chunk_id,
@@ -21,10 +23,11 @@ def make_candidate(
         "review_status": review_status,
         "eligible_for_answer": review_status in {"reviewed", "verified", "approved"},
         "citation": {"kind": "pdf_page", "display": f"p. {4 if chunk_id == 'a' else 5}"},
-        "source_id": "L06_TYPED_NOTES",
+        "source_id": source_id,
         "source_sha256": "a" * 64,
         "score": score,
         "retrieval_method": "hybrid_rff",
+        "pair_id": pair_id,
     }
 
 
@@ -84,6 +87,25 @@ def test_pipeline_runs_hybrid_retrieval_then_reranking() -> None:
     assert [item["chunk_id"] for item in results] == ["b", "a"]
     assert hybrid.calls == [("Explain the recurrence.", 8, 8)]
     assert reranker.calls == [("Explain the recurrence.", ["a", "b"], 2)]
+
+
+def test_pairing_interleaves_the_other_source_voice() -> None:
+    candidates = [
+        make_candidate("transcript", "Spoken explanation.", source_id="captions", pair_id="p"),
+        make_candidate("unrelated", "Another passage.", source_id="captions"),
+        make_candidate("notes", "Formal statement.", source_id="notes", pair_id="p"),
+    ]
+    reranker = FakeReranker({"transcript": 3.0, "unrelated": 2.0, "notes": 1.0})
+    pipeline = RetrievalPipeline(
+        hybrid_index=FakeHybridIndex(candidates),
+        reranker=reranker,
+        pairing_enabled=True,
+    )
+
+    results = pipeline.search("Explain it.", top_k=2)
+
+    assert [item["chunk_id"] for item in results] == ["transcript", "notes"]
+    assert reranker.calls[0][2] is None
 
 
 def test_pipeline_preserves_citations_and_hybrid_scores() -> None:

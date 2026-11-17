@@ -319,7 +319,10 @@ def corpus_status(root: Path) -> dict[str, Any]:
     children = read_jsonl(child_path) if child_path.exists() else []
     approved = [chunk for chunk in children if production_eligible(chunk)]
 
-    question_path = root / "eval" / "gold" / "questions_v0.jsonl"
+    reviewed_path = root / "eval" / "gold" / "questions_v1_reviewed.jsonl"
+    question_path = (
+        reviewed_path if reviewed_path.exists() else root / "eval" / "gold" / "questions_v0.jsonl"
+    )
     questions = read_jsonl(question_path) if question_path.exists() else []
 
     return {
@@ -338,6 +341,7 @@ def corpus_status(root: Path) -> dict[str, Any]:
         "draft_question_count": sum(
             row.get("label_status") == "draft_needs_human_review" for row in questions
         ),
+        "question_set": question_path.relative_to(root).as_posix(),
         "note": ("Status checking does not modify source files, chunks, or approvals."),
     }
 
@@ -371,6 +375,12 @@ def run_ingest(root: Path) -> int:
     if not caption_record or not notes_record:
         raise ValueError("The manifest must define caption and typed-notes sources.")
 
+    verified_ids = {
+        row["source_id"] for row in verification["checked"] if row["status"] == "hash_verified"
+    }
+    if not {"L06_YOUTUBE_CAPTIONS", "L06_TYPED_NOTES"} <= verified_ids:
+        raise ValueError("Both ingestion sources must have verified SHA-256 hashes.")
+
     caption_path_value = caption_record.get("local_path")
     notes_path_value = notes_record.get("local_path")
     if not isinstance(caption_path_value, str) or not isinstance(notes_path_value, str):
@@ -388,15 +398,13 @@ def run_ingest(root: Path) -> int:
     generated_transcript.parent.mkdir(parents=True, exist_ok=True)
     generated_markdown.parent.mkdir(parents=True, exist_ok=True)
 
-    if not generated_transcript.exists():
-        convert_vtt_to_jsonl(caption_path, generated_transcript)
+    convert_vtt_to_jsonl(caption_path, generated_transcript)
     transcript_rows = read_jsonl(generated_transcript)
     transcript_units = parse_transcript_jsonl(generated_transcript.read_text(encoding="utf-8"))
     if not transcript_rows or not transcript_units:
         raise ValueError("Generated caption JSONL contains no usable transcript units.")
 
-    if not generated_markdown.exists():
-        extract_pdf_to_markdown(notes_path, generated_markdown)
+    extract_pdf_to_markdown(notes_path, generated_markdown)
     markdown = generated_markdown.read_text(encoding="utf-8")
     pdf_units = parse_pdf_markdown(markdown)
     if not pdf_units:
@@ -545,7 +553,10 @@ def run_index(root: Path, *, diagnostic: bool, query: str) -> int:
 
 
 def final_evaluation_blockers(root: Path) -> list[str]:
-    question_path = root / "eval" / "gold" / "questions_v0.jsonl"
+    reviewed_path = root / "eval" / "gold" / "questions_v1_reviewed.jsonl"
+    question_path = (
+        reviewed_path if reviewed_path.exists() else root / "eval" / "gold" / "questions_v0.jsonl"
+    )
     corpus_path = root / "corpus" / "processed" / "reviewed_chunks" / "children.jsonl"
     blockers: list[str] = []
 
@@ -558,7 +569,14 @@ def final_evaluation_blockers(root: Path) -> list[str]:
 
     label_counts = Counter(str(row.get("label_status", "<missing>")) for row in questions)
     if any(
-        status not in {"reviewed", "verified", "reviewed_or_human_verified"}
+        status
+        not in {
+            "reviewed",
+            "verified",
+            "reviewed_or_human_verified",
+            "human_verified",
+            "source_verified",
+        }
         for status in label_counts
     ):
         blockers.append("At least one question still has an unreviewed gold label.")
@@ -572,6 +590,19 @@ def final_evaluation_blockers(root: Path) -> list[str]:
         return blockers
 
     chunks = read_jsonl(corpus_path)
+    if question_path == reviewed_path:
+        from algolens.evaluation.review_decisions import validate_review_decisions
+
+        candidate_path = root / "eval" / "gold" / "questions_v1_candidate.jsonl"
+        decisions_path = root / "eval" / "gold" / "review_decisions_v1.jsonl"
+        if not candidate_path.is_file() or not decisions_path.is_file():
+            blockers.append("Reviewed gold requires its candidate and review-decision records.")
+        else:
+            validated, errors = validate_review_decisions(
+                read_jsonl(candidate_path), read_jsonl(decisions_path), chunks
+            )
+            if errors or validated != questions:
+                blockers.append("Reviewed gold does not match valid source review decisions.")
     eligible = [chunk for chunk in chunks if production_eligible(chunk)]
     if not eligible:
         blockers.append("No canonical passages are approved for answer generation.")
@@ -594,24 +625,23 @@ def final_evaluation_blockers(root: Path) -> list[str]:
 
 
 def run_eval(root: Path, *, diagnostic: bool, retriever_name: str) -> int:
-    question_path = root / "eval" / "gold" / "questions_v0.jsonl"
-
     if not diagnostic:
         blockers = final_evaluation_blockers(root)
-        preflight_report: dict[str, Any] = {
-            "status": "blocked_final_evaluation" if blockers else "ready_for_evaluation",
-            "diagnostic_only": True,
-            "answer_generation_permitted": False,
-            "blockers": blockers,
-            "note": (
-                "The final evaluation command is intentionally blocked until the "
-                "gold labels, split, and approved corpus satisfy the required gates."
-            ),
-        }
-        report_path = root / "eval" / "results" / "final_evaluation_preflight.json"
-        write_json_atomic(report_path, preflight_report)
-        print(json.dumps(preflight_report, indent=2, ensure_ascii=False))
-        return 2 if blockers else 0
+        if blockers:
+            preflight_report: dict[str, Any] = {
+                "status": "blocked_final_evaluation",
+                "diagnostic_only": False,
+                "answer_generation_permitted": False,
+                "blockers": blockers,
+                "note": (
+                    "Final evaluation is blocked until the reviewed labels, split, "
+                    "and approved corpus satisfy the required gates."
+                ),
+            }
+            report_path = root / "eval" / "results" / "final_evaluation_preflight.json"
+            write_json_atomic(report_path, preflight_report)
+            print(json.dumps(preflight_report, indent=2, ensure_ascii=False))
+            return 2
 
     from algolens.evaluation.retrieval_metrics import evaluate_rankings
     from algolens.retrieval.bm25 import BM25Index
@@ -620,19 +650,23 @@ def run_eval(root: Path, *, diagnostic: bool, retriever_name: str) -> int:
     from algolens.retrieval.pipeline import RetrievalPipeline
     from algolens.retrieval.rerank import CrossEncoderReranker
 
-    corpus_path = root / "corpus" / "experiments" / "chunking" / "children.jsonl"
+    if diagnostic:
+        question_path = root / "eval" / "gold" / "questions_v0.jsonl"
+        corpus_path = root / "corpus" / "experiments" / "chunking" / "children.jsonl"
+        include_unreviewed = True
+    else:
+        question_path = root / "eval" / "gold" / "questions_v1_reviewed.jsonl"
+        corpus_path = root / "corpus" / "processed" / "reviewed_chunks" / "children.jsonl"
+        include_unreviewed = False
     if not corpus_path.exists() or not question_path.exists():
-        raise FileNotFoundError(
-            "Diagnostic evaluation requires the experimental child corpus "
-            "and the draft question JSONL."
-        )
+        raise FileNotFoundError("Evaluation requires its corpus and question JSONL files.")
 
     chunks = read_jsonl(corpus_path)
     questions = read_jsonl(question_path)
     if not chunks or not questions:
         raise ValueError("Diagnostic corpus and question set must not be empty.")
 
-    bm25 = BM25Index(chunks, include_unreviewed=True)
+    bm25 = BM25Index(chunks, include_unreviewed=include_unreviewed)
     from collections.abc import Callable
 
     search: Callable[[str], list[dict[str, Any]]]
@@ -643,19 +677,19 @@ def run_eval(root: Path, *, diagnostic: bool, retriever_name: str) -> int:
 
         search = bm25_search
     elif retriever_name == "dense":
-        dense = DenseIndex(chunks, include_unreviewed=True)
+        dense = DenseIndex(chunks, include_unreviewed=include_unreviewed)
 
         def dense_search(question: str) -> list[dict[str, Any]]:
             return dense.search(question, top_k=10)
 
         search = dense_search
     else:
-        dense = DenseIndex(chunks, include_unreviewed=True)
+        dense = DenseIndex(chunks, include_unreviewed=include_unreviewed)
         hybrid = HybridIndex(
             chunks,
             bm25_index=bm25,
             dense_index=dense,
-            include_unreviewed=True,
+            include_unreviewed=include_unreviewed,
         )
         if retriever_name == "hybrid":
 
@@ -664,12 +698,13 @@ def run_eval(root: Path, *, diagnostic: bool, retriever_name: str) -> int:
 
             search = hybrid_search
         else:
-            reranker = CrossEncoderReranker(include_unreviewed=True)
+            reranker = CrossEncoderReranker(include_unreviewed=include_unreviewed)
             pipeline = RetrievalPipeline(
                 hybrid_index=hybrid,
                 reranker=reranker,
                 candidate_k=20,
-                include_unreviewed=True,
+                include_unreviewed=include_unreviewed,
+                pairing_enabled=retriever_name == "hybrid-reranked-paired",
             )
 
             def reranked_search(question: str) -> list[dict[str, Any]]:
@@ -678,6 +713,7 @@ def run_eval(root: Path, *, diagnostic: bool, retriever_name: str) -> int:
             search = reranked_search
 
     rankings: dict[str, list[str]] = {}
+    top_scores: dict[str, float | None] = {}
     for row in questions:
         question_id = str(row.get("question_id", "")).strip()
         question = row.get("question")
@@ -687,16 +723,91 @@ def run_eval(root: Path, *, diagnostic: bool, retriever_name: str) -> int:
         rankings[question_id] = [
             str(result["chunk_id"]) for result in results if result.get("chunk_id")
         ]
+        if results:
+            raw_score = results[0].get("rerank_score", results[0].get("score"))
+            top_scores[question_id] = float(raw_score) if raw_score is not None else None
+        else:
+            top_scores[question_id] = None
 
-    metrics = evaluate_rankings(
+    overall_metrics = evaluate_rankings(
         questions,
         rankings,
         k_values=(1, 3, 5, 10),
     )
+    split_metrics: dict[str, Any] = {}
+    if not diagnostic:
+        for split in ("dev", "test"):
+            split_rows = [row for row in questions if row.get("split") == split]
+            split_metrics[split] = evaluate_rankings(
+                split_rows,
+                rankings,
+                k_values=(1, 3, 5, 10),
+            )
+
+    answerability: dict[str, Any] | None = None
+    if not diagnostic and retriever_name in {
+        "hybrid-reranked",
+        "hybrid-reranked-paired",
+    }:
+        from algolens.answerability import question_scope_reason
+        from algolens.evaluation.answerability_metrics import evaluate_answerability_scores
+
+        for row in questions:
+            question_id = str(row["question_id"])
+            if question_scope_reason(str(row["question"])) is not None:
+                top_scores[question_id] = None
+
+        dev_rows = [row for row in questions if row.get("split") == "dev"]
+        test_rows = [row for row in questions if row.get("split") == "test"]
+        unanswerable_dev_scores: list[float] = []
+        answerable_dev_scores: list[float] = []
+        for row in dev_rows:
+            score = top_scores[str(row["question_id"])]
+            if score is None:
+                continue
+            if row.get("answerable") is True:
+                answerable_dev_scores.append(score)
+            else:
+                unanswerable_dev_scores.append(score)
+        partial_threshold = max(unanswerable_dev_scores) + 1e-6 if unanswerable_dev_scores else 0.0
+        answerable_dev_scores.sort()
+        median_answerable = (
+            answerable_dev_scores[len(answerable_dev_scores) // 2]
+            if answerable_dev_scores
+            else partial_threshold + 0.1
+        )
+        answer_threshold = max(median_answerable, partial_threshold + 1e-6)
+
+        def score_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+            result = evaluate_answerability_scores(
+                answerable=[bool(row["answerable"]) for row in rows],
+                top_scores=[top_scores[str(row["question_id"])] for row in rows],
+                answer_threshold=answer_threshold,
+                partial_threshold=partial_threshold,
+            )
+            result["thresholds_calibrated"] = True
+            return result
+
+        answerability = {
+            "calibration_split": "dev",
+            "evaluation_split": "test",
+            "calibration_method": (
+                "Set the partial threshold just above the highest development-set "
+                "unanswerable score, then set the answer threshold at least as high as "
+                "the development answerable-score median."
+            ),
+            "answer_threshold": answer_threshold,
+            "partial_threshold": partial_threshold,
+            "top_scores": top_scores,
+            "dev": score_rows(dev_rows),
+            "test": score_rows(test_rows),
+        }
+
+    is_final = not diagnostic
     report = {
-        "status": "exploratory_diagnostic_only",
-        "diagnostic_only": True,
-        "answer_generation_permitted": False,
+        "status": "final_evaluation_completed" if is_final else "exploratory_diagnostic_only",
+        "diagnostic_only": diagnostic,
+        "answer_generation_permitted": is_final,
         "retriever": retriever_name,
         "corpus_path": corpus_path.relative_to(root).as_posix(),
         "corpus_sha256": sha256_file(corpus_path),
@@ -706,18 +817,70 @@ def run_eval(root: Path, *, diagnostic: bool, retriever_name: str) -> int:
         "label_status_counts": dict(
             Counter(str(row.get("label_status", "<missing>")) for row in questions)
         ),
-        "retrieval_metrics": metrics,
+        "retrieval_metrics": overall_metrics,
+        "retrieval_metrics_by_split": split_metrics,
+        "answerability": answerability,
         "rankings": rankings,
-        "limitations": [
-            "Question labels are not yet fully human-reviewed.",
-            "No approved development/test split is available.",
-            "The experimental corpus is not approved answer evidence.",
-            "No answer generation or answer-quality score is measured.",
-        ],
+        "limitations": (
+            [
+                "Question labels are not yet fully human-reviewed.",
+                "No approved development/test split is available.",
+                "The experimental corpus is not approved answer evidence.",
+                "No answer generation or answer-quality score is measured.",
+            ]
+            if diagnostic
+            else [
+                (
+                    "The question labels received AI-assisted source review rather than "
+                    "independent human annotation."
+                ),
+                (
+                    "The proposed test split is version-controlled and therefore is not "
+                    "a secret holdout."
+                ),
+                (
+                    "Retrieval and abstention metrics do not measure generated-answer "
+                    "style or usefulness."
+                ),
+            ]
+        ),
     }
-    report_path = root / "eval" / "results" / f"cli_{retriever_name}_diagnostic.json"
+    report_path = (
+        root
+        / "eval"
+        / "results"
+        / (
+            f"cli_{retriever_name}_diagnostic.json"
+            if diagnostic
+            else f"final_{retriever_name}.json"
+        )
+    )
     write_json_atomic(report_path, report)
-    print(json.dumps(report, indent=2, ensure_ascii=False))
+    summary: dict[str, Any] = {
+        "status": report["status"],
+        "retriever": retriever_name,
+        "report_path": report_path.relative_to(root).as_posix(),
+        "question_count": len(questions),
+        "overall": overall_metrics["retrieval_metrics"],
+    }
+    if split_metrics:
+        summary["test"] = split_metrics["test"]["retrieval_metrics"]
+    if answerability is not None:
+        test_answerability = answerability["test"]
+        summary["answerability_test"] = {
+            key: test_answerability[key]
+            for key in (
+                "coverage",
+                "risk",
+                "accuracy",
+                "wrong_answer_rate_on_unanswerable",
+                "false_refusal_rate_on_answerable",
+                "aurc",
+            )
+        }
+        summary["answer_threshold"] = answerability["answer_threshold"]
+        summary["partial_threshold"] = answerability["partial_threshold"]
+    print(json.dumps(summary, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -763,7 +926,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     eval_parser.add_argument(
         "--retriever",
-        choices=("bm25", "dense", "hybrid", "hybrid-reranked"),
+        choices=(
+            "bm25",
+            "dense",
+            "hybrid",
+            "hybrid-reranked",
+            "hybrid-reranked-paired",
+        ),
         default="bm25",
         help="Retriever for diagnostic evaluation.",
     )

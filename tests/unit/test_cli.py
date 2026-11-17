@@ -83,3 +83,55 @@ def test_review_check_fails_closed_when_review_metadata_is_missing(
 
     with pytest.raises(FileNotFoundError, match="Reviewed-candidate metadata is missing"):
         run_reviewed_candidate_check(tmp_path)
+
+
+def test_ingest_rebuilds_existing_artifacts_from_verified_sources(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from algolens.cli import run_ingest
+
+    caption = tmp_path / "caption.vtt"
+    notes = tmp_path / "notes.pdf"
+    caption.write_text("WEBVTT\n\n00:00:00.000 --> 00:00:01.000\nfirst\n", encoding="utf-8")
+    notes.write_text("first note", encoding="utf-8")
+
+    def sources(root: Path) -> dict:
+        return {
+            "L06_YOUTUBE_CAPTIONS": {"local_path": str(caption), "sha256": sha256_file(caption)},
+            "L06_TYPED_NOTES": {"local_path": str(notes), "sha256": sha256_file(notes)},
+        }
+
+    def extract(source: Path, destination: Path) -> Path:
+        destination.write_text(
+            f"<!-- source_page: 1 -->\n\n{source.read_text(encoding='utf-8')}\n", encoding="utf-8"
+        )
+        return destination
+
+    monkeypatch.setattr("algolens.cli.load_sources", sources)
+    monkeypatch.setattr("algolens.ingest.pdf.extract_pdf_to_markdown", extract)
+    assert run_ingest(tmp_path) == 0
+    caption.write_text("WEBVTT\n\n00:00:00.000 --> 00:00:01.000\nsecond\n", encoding="utf-8")
+    notes.write_text("second note", encoding="utf-8")
+    assert run_ingest(tmp_path) == 0
+    transcript = tmp_path / "corpus/processed/generated/transcript_from_captions.jsonl"
+    markdown = tmp_path / "corpus/experiments/cli_ingest/L06_TYPED_NOTES.md"
+    assert "second" in transcript.read_text(encoding="utf-8")
+    assert "second note" in markdown.read_text(encoding="utf-8")
+
+
+def test_ingest_refuses_unhashed_input(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from algolens.cli import run_ingest
+
+    caption = tmp_path / "caption.vtt"
+    notes = tmp_path / "notes.pdf"
+    caption.write_text("WEBVTT", encoding="utf-8")
+    notes.write_text("notes", encoding="utf-8")
+    monkeypatch.setattr(
+        "algolens.cli.load_sources",
+        lambda root: {
+            "L06_YOUTUBE_CAPTIONS": {"local_path": str(caption), "sha256": None},
+            "L06_TYPED_NOTES": {"local_path": str(notes), "sha256": sha256_file(notes)},
+        },
+    )
+    with pytest.raises(ValueError, match="verified SHA-256"):
+        run_ingest(tmp_path)

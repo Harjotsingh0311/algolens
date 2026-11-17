@@ -1,13 +1,10 @@
 {
-  "status": "blocked_final_evaluation",
-  "diagnostic_only": true,
-  "answer_generation_permitted": false,
-  "blockers": [
-    "Expected 80 gold questions; found 30.",
-    "At least one question still has an unreviewed gold label.",
-    "A leakage-safe split of exactly 50 dev and 30 test questions is required.",
-    "No canonical passages are approved for answer generation.",
-    "26 gold passage IDs do not match the approved corpus."
-  ],
-  "note": "The final evaluation command is intentionally blocked until the gold labels, split, and approved corpus satisfy the required gates."
+  "status": "final_evaluation_completed",
+  "diagnostic_only": false,
+  "answer_generation_permitted": true,
+  "blockers": [],
+  "question_set": "eval/gold/questions_v1_reviewed.jsonl",
+  "question_count": 80,
+  "production_eligible_passages": 32,
+  "note": "Final retriever reports and ablations are available under eval/results/."
 }

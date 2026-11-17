@@ -47,9 +47,11 @@ def ndcg_at_k(
         raise ValueError("nDCG requires at least one relevant passage.")
 
     dcg = 0.0
+    seen: set[str] = set()
     for rank, chunk_id in enumerate(ranked_ids[:k], start=1):
-        if chunk_id in relevant_ids:
+        if chunk_id in relevant_ids and chunk_id not in seen:
             dcg += 1.0 / math.log2(rank + 1)
+        seen.add(chunk_id)
 
     ideal_hits = min(len(relevant_ids), k)
     ideal_dcg = sum(1.0 / math.log2(rank + 1) for rank in range(1, ideal_hits + 1))
@@ -95,6 +97,9 @@ def evaluate_rankings(
         metrics: dict[str, float] = {
             f"recall@{k}": recall_at_k(relevant, ranked, k) for k in k_values
         }
+        metrics.update(
+            {f"question_recall@{k}": float(bool(relevant & set(ranked[:k]))) for k in k_values}
+        )
         metrics["mrr@10"] = reciprocal_rank(relevant, ranked[:10])
         metrics["ndcg@10"] = ndcg_at_k(relevant, ranked, 10)
 
@@ -125,6 +130,8 @@ def evaluate_rankings(
         "per_question": per_question,
         "unanswerable_evaluation_note": (
             "Unanswerable questions are excluded from retrieval relevance "
-            "metrics. This report does not measure abstention or answer quality."
+            "metrics. recall@k is the mean fraction of all labelled passages found; "
+            "question_recall@k is the fraction of questions with at least one labelled "
+            "passage found. This report does not measure abstention or answer quality."
         ),
     }

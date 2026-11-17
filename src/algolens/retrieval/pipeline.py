@@ -52,6 +52,7 @@ class RetrievalPipeline:
         reranker: Reranker,
         candidate_k: int = 20,
         include_unreviewed: bool = False,
+        pairing_enabled: bool = False,
     ) -> None:
         if candidate_k < 1:
             raise ValueError("candidate_k must be at least 1.")
@@ -60,6 +61,7 @@ class RetrievalPipeline:
         self.reranker = reranker
         self.candidate_k = candidate_k
         self.include_unreviewed = include_unreviewed
+        self.pairing_enabled = pairing_enabled
 
     @staticmethod
     def _chunk_id(candidate: Mapping[str, Any], stage: str) -> str:
@@ -113,7 +115,7 @@ class RetrievalPipeline:
         reranked = self.reranker.rerank(
             query,
             eligible_candidates,
-            top_k=top_k,
+            top_k=None if self.pairing_enabled else top_k,
         )
 
         results: list[dict[str, Any]] = []
@@ -155,4 +157,51 @@ class RetrievalPipeline:
             result["eligible_for_answer"] = is_answer_eligible(result)
             results.append(result)
 
-        return results
+        if not self.pairing_enabled:
+            return results[:top_k]
+
+        def pair_ids(item: Mapping[str, Any]) -> set[str]:
+            values: set[str] = set()
+            pair_id = item.get("pair_id")
+            if isinstance(pair_id, str) and pair_id.strip():
+                values.add(pair_id.strip())
+            raw_pair_ids = item.get("pair_ids", [])
+            if isinstance(raw_pair_ids, list):
+                values.update(
+                    value.strip()
+                    for value in raw_pair_ids
+                    if isinstance(value, str) and value.strip()
+                )
+            return values
+
+        selected: list[dict[str, Any]] = []
+        selected_ids: set[str] = set()
+        for result in results:
+            chunk_id = str(result["chunk_id"])
+            if chunk_id in selected_ids:
+                continue
+            selected.append(result)
+            selected_ids.add(chunk_id)
+            if len(selected) >= top_k:
+                break
+
+            groups = pair_ids(result)
+            source_id = result.get("source_id")
+            if groups:
+                partner = next(
+                    (
+                        candidate
+                        for candidate in results
+                        if candidate["chunk_id"] not in selected_ids
+                        and candidate.get("source_id") != source_id
+                        and groups & pair_ids(candidate)
+                    ),
+                    None,
+                )
+                if partner is not None:
+                    selected.append(partner)
+                    selected_ids.add(str(partner["chunk_id"]))
+                    if len(selected) >= top_k:
+                        break
+
+        return selected[:top_k]
