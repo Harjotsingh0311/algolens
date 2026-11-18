@@ -50,11 +50,14 @@ record and evaluation report.
 | Hybrid + reranker | 0.877 | 0.826 | **0.565** |
 | Hybrid + reranker + pairing | **0.908** | 0.783 | 0.549 |
 
-On the 30-question public test split, the answerability gate achieved 0.933 accuracy,
-0.000 risk among accepted questions, 0.000 wrong-answer rate on unanswerable questions,
-and an 0.087 false-refusal rate on answerable questions. It accepted 21 of 23
-answerable questions (0.913), meeting the proposal's 0.80 answerable-coverage target.
-Overall decision coverage was 0.700 because correct abstentions are not accepted.
+On the 30-question public test split, the answerability gate achieved AUROC 1.000,
+0.933 accuracy, and a 0.000 wrong-answer rate on unanswerable questions. It accepted
+21 of 23 answerable questions (0.913). This is a pre-generation gate result. In the
+full retrieval → generation → NLI run, 18 of 23 answerable responses were released
+(0.783), while all seven unanswerable requests were safely refused. This is one
+question short of the proposal's 0.80 target. The required
+no-retrieval baseline answered all seven unanswerable requests and had zero citation
+recall. These conservative end-to-end results are reported rather than hidden.
 
 See [the final evaluation](eval/results/final_evaluation.md) for metric definitions,
 ablations, limitations, hashes, and the live grounded-answer smoke test.
@@ -109,6 +112,8 @@ Run commands from the repository root:
 | `uv run python -m algolens.evaluation.answerability_runner --scores eval/results/answerability_scores.jsonl` | Evaluate supplied scores against reviewed gold labels |
 | `uv run python -m algolens.evaluation.gold_audit` | Audit draft gold questions and prioritize evidence/review blockers |
 | `uv run python -m algolens.ingest.formula_quality` | Detect known formula extraction defects; warnings require PDF review |
+| `uv run python tools/run_retrieval_ablations.py` | Reproduce all 34 retrieval/representation ablations |
+| `uv run python -m tools.run_generation_evaluation --split test --mode all` | Compare grounded generation with the no-retrieval baseline |
 | `uv run python app/app.py` | Start the Gradio app |
 
 The CLI writes reports beneath `corpus/processed/generated/`, `index/`, and `eval/results/` as applicable. `review-check` writes `corpus/processed/generated/reviewed_candidate_audit.json`; it is an integrity audit only and does not modify canonical chunks or approval flags. Ingestion also creates separate derived artifacts and does not automatically promote chunks or modify review approvals.
@@ -123,7 +128,10 @@ AlgoLens requires all of the following on a canonical child passage before it ca
 
 A candidate being extracted, chunked, cited in a draft, or present in an experimental index does **not** satisfy these conditions. Do not weaken the gates to make the app answer. Review the source content, record the decision explicitly, then restart the app so its cached runtime reads the updated corpus.
 
-At this checkpoint, the printed pages 5–6 transcription has project-owner approval, and its two parent/child chunks are present in canonical reviewed-chunk files, but they remain retrieval-disabled pending a separate eligibility decision. Page 3–4 Quicksort candidates remain pending owner review. No canonical child passage currently satisfies all production signals.
+At this checkpoint, all 32 canonical child passages satisfy the production signals.
+They cover the randomized-Quicksort scope using 28 timestamped caption passages and
+four typed-note passages. The review was AI-assisted and project-owner-authorized;
+independent human sign-off remains a separate release requirement.
 
 Operational endpoints:
 
@@ -148,8 +156,11 @@ uv run python -m algolens.cli index
 uv run python -m algolens.cli eval --retriever bm25
 uv run python -m algolens.cli eval --retriever hybrid-reranked-paired
 
-# Reproduce 31 retrieval ablations
+# Reproduce 34 retrieval ablations
 uv run python tools/run_retrieval_ablations.py
+
+# Reproduce grounded generation and the no-retrieval baseline
+uv run python -m tools.run_generation_evaluation --split test --mode all
 
 # Run the seeded randomized-Quicksort teaching lab
 uv run python -m algolens.algorithm_lab --n 100 --trials 100 --seed 42
@@ -175,8 +186,8 @@ licensed. See [source attribution](docs/sources.md) and [LICENSE](LICENSE).
 
 ```powershell
 uv lock --check
-uv run ruff format --check src tests app
-uv run ruff check src tests app
+uv run ruff format --check src tests app tools
+uv run ruff check src tests app tools
 uv run mypy src
 uv run pytest -q
 ```

@@ -3,9 +3,13 @@ from __future__ import annotations
 from typing import Any
 
 from app.app import (
+    ablation_table_markdown,
     answer_question,
     build_runtime,
+    evaluation_summary_markdown,
     filter_answer_eligible_chunks,
+    generation_table_markdown,
+    risk_coverage_svg,
     run_algorithm_lab_ui,
 )
 
@@ -117,3 +121,21 @@ def test_algorithm_lab_ui_rejects_excessive_interactive_input() -> None:
     assert metrics["status"] == "invalid_input"
     assert trace == {}
     assert "at most 500" in summary
+
+
+def test_evaluation_dashboard_renders_saved_results() -> None:
+    summary = evaluation_summary_markdown()
+    curve = risk_coverage_svg()
+    ablations = ablation_table_markdown()
+    generation = generation_table_markdown()
+
+    assert "Baseline to final" in summary
+    assert "Hybrid + reranker + pairing" in summary
+    assert "Wrong-answer rate" in summary
+    assert "<svg" in curve
+    assert "Risk-coverage curve" in curve
+    assert "Top retrieval ablations" in ablations
+    assert "bm25-" in ablations
+    assert "End-to-end generation" in generation
+    assert "No-retrieval LLM" in generation
+    assert "1.000" in generation

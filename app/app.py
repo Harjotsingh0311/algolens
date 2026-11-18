@@ -28,12 +28,202 @@ from algolens.runtime import build_grounded_answer_service
 ROOT = Path(__file__).resolve().parents[1]
 CHILDREN_PATH = ROOT / "corpus" / "processed" / "reviewed_chunks" / "children.jsonl"
 MANIFEST_PATH = ROOT / "corpus" / "manifest.yaml"
+EVALUATION_RESULTS_PATH = ROOT / "eval" / "results"
 MAX_QUESTION_LENGTH = 10_000
 
 SAFE_ABSTENTION = (
     "I cannot provide a reliable lecture answer yet. "
     "AlgoLens requires explicitly approved evidence before generation."
 )
+
+
+def _read_json_object(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {}
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def evaluation_summary_markdown() -> str:
+    """Render saved retriever and abstention results as a compact UI table."""
+    labels = (
+        ("BM25", "final_bm25.json"),
+        ("Dense", "final_dense.json"),
+        ("Hybrid RRF", "final_hybrid.json"),
+        ("Hybrid + reranker", "final_hybrid-reranked.json"),
+        ("Hybrid + reranker + pairing", "final_hybrid-reranked-paired.json"),
+    )
+    lines = [
+        "### Baseline to final",
+        "",
+        "| Retriever | Overall question recall@5 | Test question recall@5 | Test MRR@10 |",
+        "|---|---:|---:|---:|",
+    ]
+    for label, filename in labels:
+        report = _read_json_object(EVALUATION_RESULTS_PATH / filename)
+        try:
+            overall = report["retrieval_metrics"]["retrieval_metrics"]
+            test = report["retrieval_metrics_by_split"]["test"]["retrieval_metrics"]
+            lines.append(
+                f"| {label} | {overall['question_recall@5']:.3f} | "
+                f"{test['question_recall@5']:.3f} | {test['mrr@10']:.3f} |"
+            )
+        except (KeyError, TypeError, ValueError):
+            lines.append(f"| {label} | unavailable | unavailable | unavailable |")
+
+    paired = _read_json_object(EVALUATION_RESULTS_PATH / "final_hybrid-reranked-paired.json")
+    try:
+        answerability = paired["answerability"]["test"]
+        lines.extend(
+            [
+                "",
+                "### Abstention on the public test split",
+                "",
+                f"- Accuracy: **{answerability['accuracy']:.3f}**",
+                f"- Overall decision coverage: **{answerability['coverage']:.3f}**",
+                f"- Risk among accepted questions: **{answerability['risk']:.3f}**",
+                "- Wrong-answer rate on unanswerable questions: "
+                f"**{answerability['wrong_answer_rate_on_unanswerable']:.3f}**",
+                "- False-refusal rate on answerable questions: "
+                f"**{answerability['false_refusal_rate_on_answerable']:.3f}**",
+            ]
+        )
+    except (KeyError, TypeError, ValueError):
+        lines.extend(["", "Abstention results are unavailable."])
+    return "\n".join(lines)
+
+
+def risk_coverage_svg() -> str:
+    """Render the saved test risk-coverage curve without a plotting dependency."""
+    report = _read_json_object(EVALUATION_RESULTS_PATH / "final_hybrid-reranked-paired.json")
+    try:
+        raw_points = report["answerability"]["test"]["risk_coverage_curve"]
+        points = [
+            (float(item["coverage"]), float(item["risk"]))
+            for item in raw_points
+            if isinstance(item, dict)
+        ]
+    except (KeyError, TypeError, ValueError):
+        points = []
+    if not points:
+        return "<p>Risk-coverage curve is unavailable.</p>"
+
+    width, height = 720, 300
+    left, right, top, bottom = 58, 20, 24, 48
+    plot_width = width - left - right
+    plot_height = height - top - bottom
+    maximum_risk = max(0.05, max(risk for _, risk in points))
+
+    def xy(coverage: float, risk: float) -> tuple[float, float]:
+        x = left + max(0.0, min(1.0, coverage)) * plot_width
+        y = top + (1.0 - max(0.0, min(maximum_risk, risk)) / maximum_risk) * plot_height
+        return x, y
+
+    coordinates = " ".join(f"{x:.1f},{y:.1f}" for x, y in (xy(*point) for point in points))
+    ticks = []
+    for index in range(6):
+        coverage = index / 5
+        x, _ = xy(coverage, 0.0)
+        ticks.append(
+            f'<line x1="{x:.1f}" y1="{top}" x2="{x:.1f}" y2="{top + plot_height}" '
+            'stroke="#e5e9f4" stroke-width="1" />'
+            f'<text x="{x:.1f}" y="{height - 22}" text-anchor="middle" '
+            f'font-size="12" fill="#4b5575">{coverage:.1f}</text>'
+        )
+    return (
+        '<div class="surface" style="overflow-x:auto">'
+        "<h3>Risk-coverage curve (public test split)</h3>"
+        f'<svg viewBox="0 0 {width} {height}" role="img" '
+        'aria-label="Risk among accepted questions as coverage increases" '
+        'style="width:100%;min-width:560px;background:#fff;border-radius:12px">'
+        + "".join(ticks)
+        + f'<line x1="{left}" y1="{top + plot_height}" x2="{width - right}" '
+        f'y2="{top + plot_height}" stroke="#59627f" />'
+        f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top + plot_height}" '
+        'stroke="#59627f" />'
+        f'<polyline points="{coordinates}" fill="none" stroke="#6555db" '
+        'stroke-width="4" stroke-linejoin="round" />'
+        f'<text x="{width / 2:.1f}" y="{height - 4}" text-anchor="middle" '
+        'font-size="13" fill="#2d3552">Coverage</text>'
+        f'<text x="16" y="{height / 2:.1f}" text-anchor="middle" '
+        'font-size="13" fill="#2d3552" '
+        f'transform="rotate(-90 16 {height / 2:.1f})">Risk (0 to {maximum_risk:.2f})</text>'
+        "</svg></div>"
+    )
+
+
+def ablation_table_markdown(limit: int = 10) -> str:
+    """Render the strongest saved ablation rows for the Evaluation tab."""
+    report = _read_json_object(EVALUATION_RESULTS_PATH / "retrieval_ablations.json")
+    rows = report.get("runs", [])
+    if not isinstance(rows, list):
+        rows = []
+    lines = [
+        "### Top retrieval ablations",
+        "",
+        "| Run | Test question recall@5 | Test MRR@10 |",
+        "|---|---:|---:|",
+    ]
+    for row in rows[:limit]:
+        try:
+            metrics = row["metrics"]["test"]
+            lines.append(
+                f"| {row['name']} | {metrics['question_recall@5']:.3f} | {metrics['mrr@10']:.3f} |"
+            )
+        except (KeyError, TypeError, ValueError):
+            continue
+    if len(lines) == 4:
+        lines.append("| unavailable | unavailable | unavailable |")
+    lines.extend(
+        [
+            "",
+            "The test split is public and labels received AI-assisted source review. "
+            "See `eval/results/final_evaluation.md` for limitations and hashes.",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def generation_table_markdown() -> str:
+    """Render the saved end-to-end generation comparison for the test split."""
+    systems = (
+        ("AlgoLens grounded", "generation_current_test.json"),
+        ("No-retrieval LLM", "generation_no_retrieval_test.json"),
+    )
+    lines = [
+        "### End-to-end generation",
+        "",
+        "| System | Answerable coverage | Unanswerable answer rate | "
+        "Citation recall | p50 latency | p95 latency |",
+        "|---|---:|---:|---:|---:|---:|",
+    ]
+    for label, filename in systems:
+        report = _read_json_object(EVALUATION_RESULTS_PATH / filename)
+        try:
+            metrics = report["metrics"]
+            citation_recall = metrics.get("citation_recall")
+            citation_text = "n/a" if citation_recall is None else f"{citation_recall:.3f}"
+            lines.append(
+                f"| {label} | {metrics['answerable_coverage']:.3f} | "
+                f"{metrics['unanswerable_answer_rate']:.3f} | {citation_text} | "
+                f"{metrics['p50_latency_ms'] / 1000:.2f}s | "
+                f"{metrics['p95_latency_ms'] / 1000:.2f}s |"
+            )
+        except (KeyError, TypeError, ValueError):
+            lines.append(
+                f"| {label} | unavailable | unavailable | unavailable | unavailable | unavailable |"
+            )
+    lines.extend(
+        [
+            "",
+            "The no-retrieval baseline answers from model memory and has no lecture citations. "
+            "AlgoLens releases only claims that pass retrieval, citation, and NLI checks.",
+        ]
+    )
+    return "\n".join(lines)
 
 
 def load_child_chunks() -> list[dict[str, Any]]:
@@ -1038,17 +1228,12 @@ def create_app() -> gr.Blocks:
                         The source-verified benchmark contains 80 questions: 50 development
                         and 30 public test questions. Labels received AI-assisted source
                         review, not independent human annotation.
-
-                        - Paired reranking overall question recall@5: **0.908**
-                        - Paired reranking test question recall@5: **0.783**
-                        - Best test question recall@5 (BM25): **0.870**
-                        - Test answerability accuracy: **0.933**
-                        - Test wrong-answer rate on unanswerable questions: **0.000**
-
-                        See `eval/results/final_evaluation.md` for the full comparison,
-                        ablations, limitations, and reproducibility hashes.
                         """
                     )
+                    gr.Markdown(evaluation_summary_markdown())
+                    gr.HTML(risk_coverage_svg())
+                    gr.Markdown(generation_table_markdown())
+                    gr.Markdown(ablation_table_markdown())
 
             with gr.Tab("Algorithm Lab"):
                 with gr.Group(elem_classes=["surface"]):
