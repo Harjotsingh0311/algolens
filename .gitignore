@@ -29,6 +29,7 @@ corpus/processed/generated/reviewed_candidate_audit.json
 eval/results/caption_timestamp_review.md
 eval/results/gold_candidate_audit.json
 eval/results/gold_review_packet.md
+eval/results/*_cache.sqlite3
 # Local manifest recovery artifacts
 corpus/manifest.yaml.bak.*
 corpus/manifest.repair.tmp

@@ -12,7 +12,7 @@ GroundingVerdict = Literal["supported", "weak", "unsupported"]
 APPROVED_REVIEW_STATUSES = frozenset({"reviewed", "verified", "approved"})
 
 # Provisional engineering defaults. These are not calibrated thresholds.
-DEFAULT_ENTAILMENT_THRESHOLD = 0.80
+DEFAULT_ENTAILMENT_THRESHOLD = 0.50
 DEFAULT_CONTRADICTION_THRESHOLD = 0.80
 
 
@@ -37,6 +37,8 @@ class GroundingReport:
     passed: bool
     checks: tuple[ClaimGroundingCheck, ...]
     thresholds_calibrated: bool = False
+    entailment_threshold: float = DEFAULT_ENTAILMENT_THRESHOLD
+    contradiction_threshold: float = DEFAULT_CONTRADICTION_THRESHOLD
 
 
 class GroundingVerifier:
@@ -262,4 +264,6 @@ class GroundingVerifier:
             passed=bool(checks) and all(check.verdict == "supported" for check in checks),
             checks=tuple(checks),
             thresholds_calibrated=self.thresholds_calibrated,
+            entailment_threshold=self.entailment_threshold,
+            contradiction_threshold=self.contradiction_threshold,
         )

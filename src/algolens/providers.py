@@ -3,10 +3,13 @@ from __future__ import annotations
 import json
 import math
 import os
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections.abc import Sequence
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -25,6 +28,7 @@ class OpenAICompatibleProvider:
         model: str,
         api_key: str | None = None,
         timeout_seconds: float = 30.0,
+        max_retries: int = 4,
     ) -> None:
         if not isinstance(base_url, str) or not base_url.strip():
             raise ValueError("base_url must be a non-empty HTTP(S) URL")
@@ -45,11 +49,31 @@ class OpenAICompatibleProvider:
 
         if api_key is not None and not isinstance(api_key, str):
             raise ValueError("api_key must be a string or None")
+        if isinstance(max_retries, bool) or not isinstance(max_retries, int) or max_retries < 0:
+            raise ValueError("max_retries must be a nonnegative integer")
 
         self.base_url = normalized_url
         self.model = model.strip()
         self.api_key = api_key.strip() if api_key and api_key.strip() else None
         self.timeout_seconds = float(timeout_seconds)
+        self.max_retries = max_retries
+
+    def _urlopen_with_retry(self, request: urllib.request.Request) -> Any:
+        """Retry transient provider failures while respecting Retry-After."""
+        retryable = {429, 500, 502, 503, 504}
+        for attempt in range(self.max_retries + 1):
+            try:
+                return urllib.request.urlopen(request, timeout=self.timeout_seconds)
+            except urllib.error.HTTPError as exc:
+                if exc.code not in retryable or attempt >= self.max_retries:
+                    raise
+                raw_retry_after = exc.headers.get("Retry-After") if exc.headers else None
+                try:
+                    delay = float(raw_retry_after) if raw_retry_after else 2.0**attempt
+                except ValueError:
+                    delay = 2.0**attempt
+                time.sleep(min(30.0, max(0.25, delay)))
+        raise RuntimeError("Provider retry loop ended without a response.")
 
     @classmethod
     def from_env(cls, *, prefix: str = "ALGOLENS_") -> OpenAICompatibleProvider:
@@ -230,10 +254,7 @@ Do not include Markdown code fences around the JSON object.
         )
 
         # Use urllib directly so tests can monkeypatch urlopen and avoid network calls.
-        response = urllib.request.urlopen(
-            request,
-            timeout=self.timeout_seconds,
-        )
+        response = self._urlopen_with_retry(request)
         try:
             body = response.read()
         finally:

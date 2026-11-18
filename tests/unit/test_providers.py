@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import urllib.error
 from pathlib import Path
 from typing import Any
 
@@ -277,6 +278,52 @@ def test_provider_adds_bearer_auth_when_key_is_configured(
     assert captured_headers["user-agent"] == "AlgoLens/0.1.0"
     assert captured_body["reasoning_effort"] == "low"
     assert captured_body["max_completion_tokens"] == 4096
+
+
+def test_provider_retries_rate_limits(monkeypatch: pytest.MonkeyPatch) -> None:
+    attempts = 0
+    delays: list[float] = []
+
+    def fake_urlopen(request: Any, timeout: float) -> FakeResponse:
+        nonlocal attempts
+        attempts += 1
+        if attempts < 3:
+            raise urllib.error.HTTPError(
+                request.full_url,
+                429,
+                "rate limited",
+                {"Retry-After": "0.25"},  # type: ignore[arg-type]
+                None,
+            )
+        return FakeResponse(
+            provider_payload(
+                json.dumps(
+                    {
+                        "answer_md": "A cited answer.",
+                        "claims": [
+                            {
+                                "text": "A supported claim.",
+                                "cites": ["passage-001"],
+                                "support": "supported",
+                            }
+                        ],
+                    }
+                )
+            )
+        )
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("algolens.providers.time.sleep", delays.append)
+    provider = OpenAICompatibleProvider(
+        base_url="https://api.groq.com/openai/v1",
+        model="test-model",
+        api_key="test-key",
+    )
+
+    provider.generate("Question?", [eligible_hit()], allow_partial=False)
+
+    assert attempts == 3
+    assert delays == [0.25, 0.25]
 
 
 def test_from_env_supports_llm_provider_template(

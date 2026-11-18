@@ -105,13 +105,49 @@ class GroundedAnswerService:
             return self._abstain(generated, report)
 
         every_claim_supported = all(check.verdict == "supported" for check in report.checks)
+        if report.passed is True and every_claim_supported:
+            verified_claims = self._with_support_labels(generated.claims, report)
+        else:
+            # A generator can attach a useful supporting citation and an additional
+            # merely topical citation to the same atomic claim. Keep the claim only
+            # when at least one cited passage independently entails it, remove the
+            # non-entailing citations, and continue to fail closed on contradictions.
+            verified_claims = []
+            for claim, check in zip(generated.claims, report.checks, strict=True):
+                if any(
+                    scores.get("contradiction", 0.0) >= report.contradiction_threshold
+                    for scores in check.citation_scores.values()
+                ):
+                    continue
+                supported_cites = [
+                    citation_id
+                    for citation_id in claim.cites
+                    if check.citation_scores.get(citation_id, {}).get("entailment", 0.0)
+                    >= report.entailment_threshold
+                ]
+                if not supported_cites:
+                    continue
+                verified_claims.append(
+                    claim.model_copy(update={"cites": supported_cites, "support": "supported"})
+                )
 
-        if report.passed is not True or not every_claim_supported:
-            return self._abstain(generated, report)
+            if not verified_claims:
+                return self._abstain(generated, report)
 
-        verified_claims = self._with_support_labels(
-            generated.claims,
-            report,
-        )
+            if len(verified_claims) < len(generated.claims):
+                partial_lines = [
+                    "I could verify only part of the requested answer from the approved evidence:",
+                    "",
+                ]
+                partial_lines.extend(
+                    f"- {claim.text} [{', '.join(claim.cites)}]" for claim in verified_claims
+                )
+                return generated.model_copy(
+                    update={
+                        "status": "partial",
+                        "answer_md": "\n".join(partial_lines),
+                        "claims": verified_claims,
+                    }
+                )
 
         return generated.model_copy(update={"claims": verified_claims})

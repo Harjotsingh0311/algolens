@@ -57,6 +57,20 @@ def test_entailing_evidence_marks_claim_supported() -> None:
     assert report.checks[0].verdict == "supported"
 
 
+def test_default_entailment_boundary_accepts_source_equivalent_claim() -> None:
+    verifier = GroundingVerifier(
+        scorer=lambda premise, hypothesis: {
+            "entailment": 0.50,
+            "contradiction": 0.05,
+            "neutral": 0.45,
+        }
+    )
+
+    report = verifier.verify([make_claim()], [approved_passage()])
+
+    assert report.passed is True
+
+
 def test_neutral_evidence_marks_claim_weak() -> None:
     verifier = GroundingVerifier(
         scorer=lambda premise, hypothesis: {

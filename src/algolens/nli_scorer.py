@@ -120,13 +120,13 @@ class NLIEntailmentScorer:
 
         clean_premise = premise.strip()
         clean_hypothesis = hypothesis.strip()
+        units = [
+            item.strip()
+            for item in re.split(r"(?:\r?\n)+|(?<=[.!?])\s+", clean_premise)
+            if item.strip()
+        ]
         windows = [clean_premise]
-        if len(clean_premise) > 600:
-            units = [
-                item.strip()
-                for item in re.split(r"(?:\r?\n)+|(?<=[.!?])\s+", clean_premise)
-                if item.strip()
-            ]
+        if len(units) > 1:
             windows.extend(units)
             windows.extend(f"{left} {right}" for left, right in zip(units, units[1:], strict=False))
             windows = list(dict.fromkeys(windows))
@@ -151,10 +151,7 @@ class NLIEntailmentScorer:
             raise ValueError("NLI model output has an invalid shape for premise windows")
 
         scores = [self._normalize_output([row]) for row in output]
-        return max(
-            scores,
-            key=lambda row: (
-                max(row["entailment"], row["contradiction"]),
-                row["contradiction"],
-            ),
-        )
+        # A long passage supports a claim when any local evidence window entails it.
+        # Selecting the strongest score of either class can let an unrelated sentence's
+        # contradiction override an exact supporting sentence elsewhere in the passage.
+        return max(scores, key=lambda row: row["entailment"])

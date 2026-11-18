@@ -27,6 +27,15 @@ def approved_passage() -> Passage:
     )
 
 
+def related_passage() -> Passage:
+    return approved_passage().model_copy(
+        update={
+            "id": "p2",
+            "text": "Quicksort is an in-place divide-and-conquer sorting algorithm.",
+        }
+    )
+
+
 def draft_answer(status: str = "answered") -> Answer:
     claims = (
         [
@@ -102,6 +111,67 @@ def test_weak_evidence_withholds_generated_answer() -> None:
     assert "The pivot is selected uniformly at random." not in result.answer_md
     assert len(result.claims) == 1
     assert result.claims[0].support == "weak"
+
+
+def test_non_entailing_extra_citation_is_pruned_when_one_source_supports_claim() -> None:
+    answer = draft_answer().model_copy(
+        update={
+            "claims": [
+                Claim(
+                    text="The pivot is selected uniformly at random.",
+                    cites=["p1", "p2"],
+                    support="supported",
+                )
+            ],
+            "sources": [
+                Hit(passage=approved_passage(), score=0.95),
+                Hit(passage=related_passage(), score=0.80),
+            ],
+        }
+    )
+    verifier = GroundingVerifier(
+        scorer=lambda premise, hypothesis: (
+            {"entailment": 0.96, "contradiction": 0.02, "neutral": 0.02}
+            if "uniformly" in premise
+            else {"entailment": 0.20, "contradiction": 0.05, "neutral": 0.75}
+        )
+    )
+
+    result = GroundedAnswerService(FakeAnswerService(answer), verifier).answer("Pivot?")
+
+    assert result.status == "answered"
+    assert result.claims[0].cites == ["p1"]
+    assert result.claims[0].support == "supported"
+
+
+def test_supported_subset_is_released_as_reconstructed_partial_answer() -> None:
+    answer = draft_answer().model_copy(
+        update={
+            "answer_md": "A supported statement. An unsupported statement.",
+            "claims": [
+                Claim(text="A supported statement.", cites=["p1"], support="supported"),
+                Claim(text="An unsupported statement.", cites=["p2"], support="supported"),
+            ],
+            "sources": [
+                Hit(passage=approved_passage(), score=0.95),
+                Hit(passage=related_passage(), score=0.80),
+            ],
+        }
+    )
+    verifier = GroundingVerifier(
+        scorer=lambda premise, hypothesis: (
+            {"entailment": 0.95, "contradiction": 0.02, "neutral": 0.03}
+            if premise == approved_passage().text
+            else {"entailment": 0.10, "contradiction": 0.05, "neutral": 0.85}
+        )
+    )
+
+    result = GroundedAnswerService(FakeAnswerService(answer), verifier).answer("Question?")
+
+    assert result.status == "partial"
+    assert [claim.text for claim in result.claims] == ["A supported statement."]
+    assert "A supported statement." in result.answer_md
+    assert "An unsupported statement." not in result.answer_md
 
 
 def test_verifier_failure_withholds_generated_answer() -> None:
