@@ -876,6 +876,7 @@ def run_eval(root: Path, *, diagnostic: bool, retriever_name: str) -> int:
                 "wrong_answer_rate_on_unanswerable",
                 "false_refusal_rate_on_answerable",
                 "aurc",
+                "auroc",
             )
         }
         summary["answer_threshold"] = answerability["answer_threshold"]

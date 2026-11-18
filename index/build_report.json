@@ -1,12 +1,106 @@
 {
   "corpus_path": "corpus/processed/reviewed_chunks/children.jsonl",
-  "corpus_sha256": "5906acf7be4ca24dbadecfa1ceb90beaf7d5965931d137741ede5aad47be3875",
-  "candidate_chunk_count": 2,
-  "production_eligible_chunk_count": 0,
-  "indexed_chunk_count": 0,
+  "corpus_sha256": "e52123ee972be4a6d3d89a3aad88e73678fd44b6ed01fd2a21663e1495599440",
+  "candidate_chunk_count": 32,
+  "production_eligible_chunk_count": 32,
+  "indexed_chunk_count": 32,
   "diagnostic_only": false,
-  "answer_generation_permitted": false,
+  "answer_generation_permitted": true,
   "persistence": "in-memory; the current index classes do not serialize reusable vectors",
-  "status": "blocked_no_approved_chunks",
-  "message": "No passages have all required approval signals. Review the corpus first; diagnostic mode is available for retrieval-only experiments."
+  "status": "index_smoke_passed",
+  "query": "How does randomized Quicksort achieve expected n log n running time?",
+  "result_count": 5,
+  "results": [
+    {
+      "chunk_id": "L06_YOUTUBE_CAPTIONS-parent-0006-child-0002",
+      "score": 0.03252247488101534,
+      "rerank_score": 5.612700939178467,
+      "citation": {
+        "display": "01:08:42.380–01:09:57.564",
+        "end_seconds": 4197.564,
+        "kind": "video_timestamp",
+        "page_end": null,
+        "page_start": null,
+        "pages": [],
+        "start_seconds": 4122.38
+      },
+      "source_id": "L06_YOUTUBE_CAPTIONS",
+      "review_status": "approved",
+      "eligible_for_answer": true
+    },
+    {
+      "chunk_id": "L06_TYPED_NOTES-parent-0001-child-0003",
+      "score": 0.031754032258064516,
+      "rerank_score": 3.9013242721557617,
+      "citation": {
+        "display": "p. 4",
+        "end_seconds": null,
+        "kind": "pdf_page",
+        "page_end": 4,
+        "page_start": 4,
+        "pages": [
+          4
+        ],
+        "start_seconds": null
+      },
+      "source_id": "L06_TYPED_NOTES",
+      "review_status": "approved",
+      "eligible_for_answer": true
+    },
+    {
+      "chunk_id": "L06_TYPED_NOTES-parent-0002-child-0001",
+      "score": 0.029386529386529386,
+      "rerank_score": 3.6583783626556396,
+      "citation": {
+        "display": "pp. 5-6",
+        "end_seconds": null,
+        "kind": "pdf_page",
+        "page_end": 6,
+        "page_start": 5,
+        "pages": [
+          5,
+          6
+        ],
+        "start_seconds": null
+      },
+      "source_id": "L06_TYPED_NOTES",
+      "review_status": "approved",
+      "eligible_for_answer": true
+    },
+    {
+      "chunk_id": "L06_YOUTUBE_CAPTIONS-parent-0006-child-0003",
+      "score": 0.03036576949620428,
+      "rerank_score": 3.506967306137085,
+      "citation": {
+        "display": "01:09:57.564–01:11:00.470",
+        "end_seconds": 4260.47,
+        "kind": "video_timestamp",
+        "page_end": null,
+        "page_start": null,
+        "pages": [],
+        "start_seconds": 4197.564
+      },
+      "source_id": "L06_YOUTUBE_CAPTIONS",
+      "review_status": "approved",
+      "eligible_for_answer": true
+    },
+    {
+      "chunk_id": "L06_YOUTUBE_CAPTIONS-parent-0004-child-0001",
+      "score": 0.030776515151515152,
+      "rerank_score": 1.9827086925506592,
+      "citation": {
+        "display": "01:00:45.060–01:01:45.140",
+        "end_seconds": 3705.14,
+        "kind": "video_timestamp",
+        "page_end": null,
+        "page_start": null,
+        "pages": [],
+        "start_seconds": 3645.06
+      },
+      "source_id": "L06_YOUTUBE_CAPTIONS",
+      "review_status": "approved",
+      "eligible_for_answer": true
+    }
+  ],
+  "note": "This validates index construction; indexes are rebuilt in memory."
 }

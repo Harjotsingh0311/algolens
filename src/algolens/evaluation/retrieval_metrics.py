@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import random
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from typing import Any
@@ -63,11 +64,52 @@ def _mean(values: Sequence[float]) -> float:
     return sum(values) / len(values) if values else 0.0
 
 
+def _bootstrap_intervals(
+    per_question: Sequence[Mapping[str, Any]],
+    metric_names: Sequence[str],
+    *,
+    confidence: float,
+    samples: int,
+    seed: int,
+) -> dict[str, dict[str, float | int]]:
+    """Return deterministic percentile confidence intervals over questions."""
+    if not 0.0 < confidence < 1.0:
+        raise ValueError("confidence must be between zero and one.")
+    if samples < 100:
+        raise ValueError("bootstrap_samples must be at least 100.")
+
+    size = len(per_question)
+    generator = random.Random(seed)
+    distributions: dict[str, list[float]] = {name: [] for name in metric_names}
+    for _ in range(samples):
+        selected = [per_question[generator.randrange(size)]["metrics"] for _ in range(size)]
+        for name in metric_names:
+            distributions[name].append(_mean([float(row[name]) for row in selected]))
+
+    tail = (1.0 - confidence) / 2.0
+    lower_index = int(tail * (samples - 1))
+    upper_index = math.ceil((1.0 - tail) * (samples - 1))
+    intervals: dict[str, dict[str, float | int]] = {}
+    for name, values in distributions.items():
+        values.sort()
+        intervals[name] = {
+            "confidence": confidence,
+            "lower": values[lower_index],
+            "upper": values[upper_index],
+            "bootstrap_samples": samples,
+            "seed": seed,
+        }
+    return intervals
+
+
 def evaluate_rankings(
     questions: Sequence[Mapping[str, Any]],
     rankings: Mapping[str, Sequence[str]],
     *,
     k_values: Sequence[int] = (1, 3, 5, 10),
+    bootstrap_confidence: float = 0.95,
+    bootstrap_samples: int = 2000,
+    bootstrap_seed: int = 6046,
 ) -> dict[str, Any]:
     """Calculate retrieval metrics on answerable questions only.
 
@@ -121,11 +163,19 @@ def evaluate_rankings(
         question_type: {name: _mean([row[name] for row in values]) for name in metric_names}
         for question_type, values in sorted(by_type.items())
     }
+    confidence_intervals = _bootstrap_intervals(
+        per_question,
+        metric_names,
+        confidence=bootstrap_confidence,
+        samples=bootstrap_samples,
+        seed=bootstrap_seed,
+    )
 
     return {
         "answerable_question_count": len(answerable),
         "unanswerable_question_count": len(unanswerable),
         "retrieval_metrics": averages,
+        "bootstrap_confidence_intervals": confidence_intervals,
         "retrieval_metrics_by_type": type_averages,
         "per_question": per_question,
         "unanswerable_evaluation_note": (

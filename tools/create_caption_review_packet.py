@@ -38,9 +38,7 @@ def parse_cues(raw: str) -> list[CaptionCue]:
     return cues
 
 
-def build_review_packet(
-    cues: list[CaptionCue], *, count: int = 10, seed: int = 2026
-) -> str:
+def build_review_packet(cues: list[CaptionCue], *, count: int = 10, seed: int = 2026) -> str:
     """Create a reproducible manual-review checklist; never imply cues are verified."""
     if count < 1:
         raise ValueError("count must be at least 1.")
@@ -64,7 +62,8 @@ def build_review_packet(
         "For each row, open the original lecture video at the timestamp, listen to the spoken",
         "content, and record what you actually hear. Mark match only after checking the video.",
         "",
-        "| # | Caption timestamp | Caption text from VTT | Matches video? | Observed words / notes |",
+        "| # | Caption timestamp | Caption text from VTT | Matches video? "
+        "| Observed words / notes |",
         "|---:|---|---|---|---|",
     ]
     for index, cue in enumerate(selected, start=1):

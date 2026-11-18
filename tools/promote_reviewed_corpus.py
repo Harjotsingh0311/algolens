@@ -126,7 +126,9 @@ def promote_captions(root: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
         if anchor not in transcript:
             anchor = " ".join(words[8:16])
         if not anchor or anchor not in transcript:
-            raise ValueError(f"Caption chunk is not aligned to official transcript: {row['chunk_id']}")
+            raise ValueError(
+                f"Caption chunk is not aligned to official transcript: {row['chunk_id']}"
+            )
         pair_id = caption_pair(str(row["parent_id"]))
         value = approve(row, pair_id=pair_id)
         value["trust"] = "official_transcript_aligned_and_audio_spot_checked"
@@ -206,8 +208,7 @@ def promote_notes(root: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]
         combined["text"] = combined_text
         combined["retrieval_text"] = (
             "MIT 6.046J Lecture 6 | Source ID: L06_TYPED_NOTES | "
-            "Sections: Paranoid Quicksort Analysis > Expectations | pp. 5-6\n\n"
-            + combined_text
+            "Sections: Paranoid Quicksort Analysis > Expectations | pp. 5-6\n\n" + combined_text
         )
         combined["citation"] = {
             "display": "pp. 5-6",
@@ -260,9 +261,7 @@ def promote_notes(root: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]
     return [parent_one, parent_two], children
 
 
-def build_decisions(
-    questions: list[dict[str, Any]], reviewer: str
-) -> list[dict[str, Any]]:
+def build_decisions(questions: list[dict[str, Any]], reviewer: str) -> list[dict[str, Any]]:
     decisions: list[dict[str, Any]] = []
     for row in questions:
         passage_ids = list(row.get("gold_passage_ids", []))
@@ -283,7 +282,8 @@ def build_decisions(
                 "proposed_gold_passage_ids": passage_ids,
                 "notes": (
                     "Checked against the hash-pinned MIT typed notes and official transcript; "
-                    "timestamped caption evidence also passed transcript alignment and audio spot checks."
+                    "timestamped caption evidence also passed transcript alignment "
+                    "and audio spot checks."
                     if row["answerable"]
                     else "Confirmed absent from the approved Lecture 6 Quicksort corpus."
                 ),
@@ -333,8 +333,14 @@ def main() -> int:
             "official_transcript": TRANSCRIPT_SHA256,
         },
         "limitations": [
-            "The source and question review was performed by Codex under project-owner authorization, not by an independent human annotator.",
-            "The ten timestamp spot checks used local speech recognition in addition to full caption-to-official-transcript alignment.",
+            (
+                "The source and question review was performed by Codex under project-owner "
+                "authorization, not by an independent human annotator."
+            ),
+            (
+                "The ten timestamp spot checks used local speech recognition in addition to "
+                "full caption-to-official-transcript alignment."
+            ),
         ],
     }
     if not args.apply:

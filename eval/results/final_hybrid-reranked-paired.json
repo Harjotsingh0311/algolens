@@ -6,7 +6,7 @@
   "corpus_path": "corpus/processed/reviewed_chunks/children.jsonl",
   "corpus_sha256": "e52123ee972be4a6d3d89a3aad88e73678fd44b6ed01fd2a21663e1495599440",
   "question_set_path": "eval/gold/questions_v1_reviewed.jsonl",
-  "question_set_sha256": "7f5480c49e1d09085b30ffb2c0bede3cc7abdbf8a0d5fc3128df7c6f14f9748d",
+  "question_set_sha256": "911b694a0af5c0678192f4de0d4f38aad7a13b41f2d4ef99ad06d8a033096abf",
   "question_count": 80,
   "label_status_counts": {
     "source_verified": 80
@@ -25,6 +25,78 @@
       "question_recall@10": 0.9538461538461539,
       "mrr@10": 0.6497435897435898,
       "ndcg@10": 0.5883642946458918
+    },
+    "bootstrap_confidence_intervals": {
+      "recall@1": {
+        "confidence": 0.95,
+        "lower": 0.1512820512820513,
+        "upper": 0.2871794871794872,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "recall@3": {
+        "confidence": 0.95,
+        "lower": 0.412051282051282,
+        "upper": 0.5628205128205128,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "recall@5": {
+        "confidence": 0.95,
+        "lower": 0.5146153846153847,
+        "upper": 0.6705128205128206,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "recall@10": {
+        "confidence": 0.95,
+        "lower": 0.6694871794871795,
+        "upper": 0.8133333333333334,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "question_recall@1": {
+        "confidence": 0.95,
+        "lower": 0.3384615384615385,
+        "upper": 0.5846153846153846,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "question_recall@3": {
+        "confidence": 0.95,
+        "lower": 0.7692307692307693,
+        "upper": 0.9384615384615385,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "question_recall@5": {
+        "confidence": 0.95,
+        "lower": 0.8307692307692308,
+        "upper": 0.9692307692307692,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "question_recall@10": {
+        "confidence": 0.95,
+        "lower": 0.8923076923076924,
+        "upper": 1.0,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "mrr@10": {
+        "confidence": 0.95,
+        "lower": 0.5647435897435897,
+        "upper": 0.7332051282051282,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      },
+      "ndcg@10": {
+        "confidence": 0.95,
+        "lower": 0.5225774805615732,
+        "upper": 0.6482042410062194,
+        "bootstrap_samples": 2000,
+        "seed": 6046
+      }
     },
     "retrieval_metrics_by_type": {
       "compare": {
@@ -2224,6 +2296,78 @@
         "mrr@10": 0.7049603174603175,
         "ndcg@10": 0.6485599856457043
       },
+      "bootstrap_confidence_intervals": {
+        "recall@1": {
+          "confidence": 0.95,
+          "lower": 0.18055555555555555,
+          "upper": 0.35714285714285715,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "recall@3": {
+          "confidence": 0.95,
+          "lower": 0.4503968253968254,
+          "upper": 0.6369047619047619,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "recall@5": {
+          "confidence": 0.95,
+          "lower": 0.5972222222222222,
+          "upper": 0.7658730158730158,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "recall@10": {
+          "confidence": 0.95,
+          "lower": 0.7341269841269841,
+          "upper": 0.878968253968254,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "question_recall@1": {
+          "confidence": 0.95,
+          "lower": 0.38095238095238093,
+          "upper": 0.6666666666666666,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "question_recall@3": {
+          "confidence": 0.95,
+          "lower": 0.8095238095238095,
+          "upper": 0.9761904761904762,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "question_recall@5": {
+          "confidence": 0.95,
+          "lower": 0.9285714285714286,
+          "upper": 1.0,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "question_recall@10": {
+          "confidence": 0.95,
+          "lower": 1.0,
+          "upper": 1.0,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "mrr@10": {
+          "confidence": 0.95,
+          "lower": 0.6101190476190477,
+          "upper": 0.7984126984126984,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "ndcg@10": {
+          "confidence": 0.95,
+          "lower": 0.5780356941487667,
+          "upper": 0.7161700315407962,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        }
+      },
       "retrieval_metrics_by_type": {
         "compare": {
           "recall@1": 0.08333333333333333,
@@ -3666,6 +3810,78 @@
         "mrr@10": 0.5489130434782609,
         "ndcg@10": 0.4784417284723212
       },
+      "bootstrap_confidence_intervals": {
+        "recall@1": {
+          "confidence": 0.95,
+          "lower": 0.05797101449275362,
+          "upper": 0.21014492753623187,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "recall@3": {
+          "confidence": 0.95,
+          "lower": 0.2688405797101449,
+          "upper": 0.4818840579710145,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "recall@5": {
+          "confidence": 0.95,
+          "lower": 0.2985507246376811,
+          "upper": 0.5355072463768116,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "recall@10": {
+          "confidence": 0.95,
+          "lower": 0.4811594202898551,
+          "upper": 0.7572463768115942,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "question_recall@1": {
+          "confidence": 0.95,
+          "lower": 0.17391304347826086,
+          "upper": 0.5652173913043478,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "question_recall@3": {
+          "confidence": 0.95,
+          "lower": 0.6086956521739131,
+          "upper": 0.9565217391304348,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "question_recall@5": {
+          "confidence": 0.95,
+          "lower": 0.6086956521739131,
+          "upper": 0.9565217391304348,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "question_recall@10": {
+          "confidence": 0.95,
+          "lower": 0.7391304347826086,
+          "upper": 1.0,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "mrr@10": {
+          "confidence": 0.95,
+          "lower": 0.40217391304347827,
+          "upper": 0.7010869565217391,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        },
+        "ndcg@10": {
+          "confidence": 0.95,
+          "lower": 0.35903948381966067,
+          "upper": 0.5959424406284376,
+          "bootstrap_samples": 2000,
+          "seed": 6046
+        }
+      },
       "retrieval_metrics_by_type": {
         "compare": {
           "recall@1": 0.1875,
@@ -4901,12 +5117,14 @@
         }
       ],
       "aurc": 0.0,
+      "auroc": 1.0,
       "limitations": [
         "Thresholds are supplied configuration, not calibrated probabilities.",
         "Partial decisions count as accepted for coverage and risk.",
         "Questions with missing scores are always abstained on.",
         "Metrics are only as reliable as the answerability labels supplied.",
-        "AURC uses the trapezoidal rule over observed unique score thresholds."
+        "AURC uses the trapezoidal rule over observed unique score thresholds.",
+        "AUROC treats deterministic scope-guard refusals as lower than every finite score."
       ]
     },
     "test": {
@@ -5100,12 +5318,14 @@
         }
       ],
       "aurc": 0.0,
+      "auroc": 1.0,
       "limitations": [
         "Thresholds are supplied configuration, not calibrated probabilities.",
         "Partial decisions count as accepted for coverage and risk.",
         "Questions with missing scores are always abstained on.",
         "Metrics are only as reliable as the answerability labels supplied.",
-        "AURC uses the trapezoidal rule over observed unique score thresholds."
+        "AURC uses the trapezoidal rule over observed unique score thresholds.",
+        "AUROC treats deterministic scope-guard refusals as lower than every finite score."
       ]
     }
   },

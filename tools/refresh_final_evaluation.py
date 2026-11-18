@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from algolens.cli import read_jsonl, sha256_file, write_json_atomic
+from algolens.evaluation.answerability_metrics import evaluate_answerability_scores
 from algolens.evaluation.retrieval_metrics import evaluate_rankings
 
 
@@ -44,6 +45,21 @@ def main() -> int:
             )
             for split in ("dev", "test")
         }
+        answerability = report.get("answerability")
+        if isinstance(answerability, dict) and isinstance(answerability.get("top_scores"), dict):
+            top_scores = answerability["top_scores"]
+            answer_threshold = float(answerability["answer_threshold"])
+            partial_threshold = float(answerability["partial_threshold"])
+            for split in ("dev", "test"):
+                rows = [row for row in questions if row.get("split") == split]
+                refreshed_answerability = evaluate_answerability_scores(
+                    answerable=[bool(row["answerable"]) for row in rows],
+                    top_scores=[top_scores.get(str(row["question_id"])) for row in rows],
+                    answer_threshold=answer_threshold,
+                    partial_threshold=partial_threshold,
+                )
+                refreshed_answerability["thresholds_calibrated"] = True
+                answerability[split] = refreshed_answerability
         report["corpus_sha256"] = sha256_file(corpus_path)
         report["question_set_sha256"] = sha256_file(questions_path)
         write_json_atomic(path, report)

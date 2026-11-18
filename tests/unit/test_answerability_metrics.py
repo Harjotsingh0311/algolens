@@ -31,6 +31,7 @@ def test_score_threshold_metrics_report_decisions_coverage_and_risk() -> None:
     assert report["wrong_answer_rate_on_unanswerable"] == pytest.approx(0.5)
     assert report["false_refusal_rate_on_answerable"] == pytest.approx(0.5)
     assert report["accuracy"] == pytest.approx(0.5)
+    assert report["auroc"] == pytest.approx(0.75)
     assert report["thresholds_calibrated"] is False
 
 
@@ -77,6 +78,7 @@ def test_no_scores_produces_zero_coverage_and_no_aurc() -> None:
     assert report["coverage"] == 0.0
     assert report["risk"] is None
     assert report["aurc"] is None
+    assert report["auroc"] == pytest.approx(0.5)
     assert report["risk_coverage_curve"] == []
 
 
@@ -96,6 +98,8 @@ def test_metrics_handle_single_class_labels() -> None:
 
     assert all_answerable["wrong_answer_rate_on_unanswerable"] is None
     assert all_unanswerable["false_refusal_rate_on_answerable"] is None
+    assert all_answerable["auroc"] is None
+    assert all_unanswerable["auroc"] is None
 
 
 def test_metrics_reject_mismatched_input_lengths() -> None:

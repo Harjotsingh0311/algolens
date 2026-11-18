@@ -5,8 +5,8 @@ install:
 
 check:
 	uv lock --check
-	uv run ruff check src tests app
-	uv run ruff format --check src tests app
+	uv run ruff check src tests app tools
+	uv run ruff format --check src tests app tools
 	uv run mypy src
 
 test:

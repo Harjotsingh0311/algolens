@@ -86,6 +86,31 @@ def test_evaluator_scores_answerable_only_and_counts_unanswerable() -> None:
     assert report["retrieval_metrics"]["question_recall@5"] == 1.0
     assert report["retrieval_metrics"]["mrr@10"] == 0.5
     assert report["retrieval_metrics"]["ndcg@10"] < 1.0
+    interval = report["bootstrap_confidence_intervals"]["question_recall@5"]
+    assert interval["confidence"] == 0.95
+    assert interval["bootstrap_samples"] == 2000
+    assert interval["lower"] == 1.0
+    assert interval["upper"] == 1.0
+
+
+def test_bootstrap_confidence_intervals_are_deterministic() -> None:
+    questions = [
+        {
+            "question_id": f"Q{index}",
+            "answerable": True,
+            "question_type": "recall",
+            "gold_passage_ids": ["gold"],
+        }
+        for index in range(4)
+    ]
+    rankings = {"Q0": ["gold"], "Q1": ["gold"], "Q2": [], "Q3": []}
+
+    first = evaluate_rankings(questions, rankings, bootstrap_samples=200, bootstrap_seed=7)
+    second = evaluate_rankings(questions, rankings, bootstrap_samples=200, bootstrap_seed=7)
+
+    assert first["bootstrap_confidence_intervals"] == second["bootstrap_confidence_intervals"]
+    interval = first["bootstrap_confidence_intervals"]["question_recall@1"]
+    assert interval["lower"] <= 0.5 <= interval["upper"]
 
 
 def test_question_recall_requires_only_one_gold_passage() -> None:

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import tempfile
+from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +12,8 @@ from algolens.cli import read_jsonl, sha256_file, write_json_atomic
 from algolens.evaluation.retrieval_metrics import evaluate_rankings
 from algolens.retrieval.bm25 import BM25Index, reciprocal_rank_fusion
 from algolens.retrieval.dense import DenseIndex
+
+GLOSSARY_EXPANSION = "randomized quicksort pivot partition good pivot recurrence expected time"
 
 
 def summary(metrics: dict[str, Any]) -> dict[str, float]:
@@ -25,9 +29,7 @@ def summary(metrics: dict[str, Any]) -> dict[str, float]:
     }
 
 
-def evaluate(
-    questions: list[dict[str, Any]], rankings: dict[str, list[str]]
-) -> dict[str, Any]:
+def evaluate(questions: list[dict[str, Any]], rankings: dict[str, list[str]]) -> dict[str, Any]:
     overall = evaluate_rankings(questions, rankings, k_values=(1, 3, 5, 10))
     return {
         "overall": summary(overall),
@@ -48,13 +50,92 @@ def evaluate(
     }
 
 
-def query_rankings(index: Any, questions: list[dict[str, Any]], *, top_k: int) -> dict[str, list[str]]:
+def query_rankings(
+    index: Any,
+    questions: list[dict[str, Any]],
+    *,
+    top_k: int,
+    query_suffix: str = "",
+) -> dict[str, list[str]]:
     return {
         str(row["question_id"]): [
-            str(hit["chunk_id"]) for hit in index.search(str(row["question"]), top_k=top_k)
+            str(hit["chunk_id"])
+            for hit in index.search(
+                f"{row['question']} {query_suffix}".strip(),
+                top_k=top_k,
+            )
         ]
         for row in questions
     }
+
+
+def fixed_size_baseline(
+    chunks: list[dict[str, Any]],
+    questions: list[dict[str, Any]],
+    *,
+    words_per_chunk: int = 512,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Build a naive fixed-window corpus and remap gold IDs to its coarse chunks."""
+    by_source: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for chunk in chunks:
+        by_source[str(chunk.get("source_id", "unknown"))].append(chunk)
+
+    baseline: list[dict[str, Any]] = []
+    origin_to_fixed: dict[str, set[str]] = defaultdict(set)
+    ordinal = 0
+    for source_id, source_chunks in sorted(by_source.items()):
+        source_chunks.sort(key=lambda row: (str(row.get("parent_id", "")), int(row["ordinal"])))
+        pending_words: list[str] = []
+        pending_origins: list[str] = []
+
+        def flush(
+            template_source: dict[str, Any] = source_chunks[0],
+            current_source_id: str = source_id,
+        ) -> None:
+            nonlocal ordinal, pending_words, pending_origins
+            if not pending_words:
+                return
+            ordinal += 1
+            chunk_id = f"naive-fixed-512-{ordinal:04d}"
+            template = copy.deepcopy(template_source)
+            text = " ".join(pending_words)
+            template.update(
+                {
+                    "chunk_id": chunk_id,
+                    "parent_id": f"naive-fixed-{current_source_id}",
+                    "ordinal": ordinal,
+                    "text": text,
+                    "retrieval_text": text,
+                    "context_header": "",
+                    "origin_chunk_ids": sorted(set(pending_origins)),
+                    "word_count": len(pending_words),
+                }
+            )
+            baseline.append(template)
+            for origin_id in pending_origins:
+                origin_to_fixed[origin_id].add(chunk_id)
+            pending_words = []
+            pending_origins = []
+
+        for source_chunk in source_chunks:
+            origin_id = str(source_chunk["chunk_id"])
+            words = str(source_chunk["text"]).split()
+            while words:
+                capacity = words_per_chunk - len(pending_words)
+                pending_words.extend(words[:capacity])
+                pending_origins.append(origin_id)
+                words = words[capacity:]
+                if len(pending_words) == words_per_chunk:
+                    flush()
+        flush()
+
+    remapped_questions = copy.deepcopy(questions)
+    for row in remapped_questions:
+        remapped: set[str] = set()
+        for origin_id in row.get("gold_passage_ids", []):
+            remapped.update(origin_to_fixed[str(origin_id)])
+        row["gold_passage_ids"] = sorted(remapped)
+    return baseline, remapped_questions
 
 
 def markdown_report(report: dict[str, Any]) -> str:
@@ -69,15 +150,17 @@ def markdown_report(report: dict[str, Any]) -> str:
     lines = [
         "# AlgoLens retrieval ablations",
         "",
-        f"Corpus SHA-256: `{report['corpus_sha256']}`  ",
-        f"Question set SHA-256: `{report['question_set_sha256']}`  ",
+        f"Corpus SHA-256: `{report['corpus_sha256']}`",
+        "",
+        f"Question set SHA-256: `{report['question_set_sha256']}`",
         f"Completed runs: **{len(runs)}**",
         "",
         "`question_recall@5` counts a question when at least one labelled passage appears "
         "in the first five results. `fractional_recall@5` averages the fraction of all "
         "labelled passages recovered for each question.",
         "",
-        "| Run | Test question recall@5 | Test fractional recall@5 | Test MRR@10 | Overall question recall@5 |",
+        "| Run | Test question recall@5 | Test fractional recall@5 "
+        "| Test MRR@10 | Overall question recall@5 |",
         "|---|---:|---:|---:|---:|",
     ]
     for row in runs:
@@ -150,6 +233,57 @@ def main() -> int:
         }
     )
 
+    headerless_chunks = [
+        {**chunk, "retrieval_text": str(chunk["text"]), "context_header": ""} for chunk in chunks
+    ]
+    headerless_dense = DenseIndex(headerless_chunks)
+    runs.append(
+        {
+            "name": "dense-context-headers-off",
+            "family": "dense",
+            "parameters": {"context_headers": False, "model": headerless_dense.model_name},
+            "metrics": evaluate(
+                questions,
+                query_rankings(headerless_dense, questions, top_k=30),
+            ),
+        }
+    )
+    runs.append(
+        {
+            "name": "dense-query-expansion-glossary",
+            "family": "dense",
+            "parameters": {"query_expansion": "glossary", "model": dense.model_name},
+            "metrics": evaluate(
+                questions,
+                query_rankings(
+                    dense,
+                    questions,
+                    top_k=30,
+                    query_suffix=GLOSSARY_EXPANSION,
+                ),
+            ),
+        }
+    )
+
+    fixed_chunks, fixed_questions = fixed_size_baseline(chunks, questions)
+    fixed_dense = DenseIndex(fixed_chunks)
+    fixed_rankings = query_rankings(fixed_dense, fixed_questions, top_k=30)
+    runs.append(
+        {
+            "name": "naive-fixed-512-dense",
+            "family": "naive_rag",
+            "parameters": {
+                "chunking": "fixed_512_whitespace_tokens",
+                "retriever": "dense",
+                "reranker": False,
+                "gate": False,
+                "chunk_count": len(fixed_chunks),
+                "model": fixed_dense.model_name,
+            },
+            "metrics": evaluate(fixed_questions, fixed_rankings),
+        }
+    )
+
     for rrf_k in (10, 30, 60, 100):
         for candidate_k in (10, 20, 30):
             rankings: dict[str, list[str]] = {}
@@ -196,9 +330,16 @@ def main() -> int:
         "question_count": len(questions),
         "runs": runs,
         "limitations": [
-            "Question labels received AI-assisted source review rather than independent human annotation.",
+            (
+                "Question labels received AI-assisted source review rather than independent "
+                "human annotation."
+            ),
             "The test split is version-controlled and is not a secret benchmark.",
             "Reranked rows reuse saved inference rankings for the same corpus and question hashes.",
+            (
+                "The fixed-512 baseline uses whitespace tokens and remaps each gold teach-unit "
+                "ID to the fixed window containing it."
+            ),
         ],
     }
     output_dir = root / "eval/results"

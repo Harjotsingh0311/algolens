@@ -99,6 +99,36 @@ def _risk_coverage_curve(
     return curve, area
 
 
+def _answerability_auroc(
+    answerable: Sequence[bool],
+    top_scores: Sequence[float | None],
+) -> float | None:
+    """Return pairwise AUROC, treating a scope-guard refusal as the lowest score."""
+    positive = [score for label, score in zip(answerable, top_scores, strict=True) if label]
+    negative = [score for label, score in zip(answerable, top_scores, strict=True) if not label]
+    if not positive or not negative:
+        return None
+
+    finite = [float(score) for score in top_scores if score is not None]
+    floor = min(finite) - 1.0 if finite else 0.0
+
+    def normalized(score: float | None) -> float:
+        return floor if score is None else float(score)
+
+    wins = 0.0
+    comparisons = 0
+    for positive_score in positive:
+        for negative_score in negative:
+            comparisons += 1
+            left = normalized(positive_score)
+            right = normalized(negative_score)
+            if left > right:
+                wins += 1.0
+            elif left == right:
+                wins += 0.5
+    return wins / comparisons
+
+
 def evaluate_answerability_scores(
     *,
     answerable: Sequence[bool],
@@ -162,6 +192,7 @@ def evaluate_answerability_scores(
     false_refusal_rate = refused_answerable / answerable_count if answerable_count else None
 
     curve, aurc = _risk_coverage_curve(answerable, top_scores)
+    auroc = _answerability_auroc(answerable, top_scores)
 
     return {
         "schema_version": 1,
@@ -184,11 +215,13 @@ def evaluate_answerability_scores(
         "false_refusal_rate_on_answerable": false_refusal_rate,
         "risk_coverage_curve": curve,
         "aurc": aurc,
+        "auroc": auroc,
         "limitations": [
             "Thresholds are supplied configuration, not calibrated probabilities.",
             "Partial decisions count as accepted for coverage and risk.",
             "Questions with missing scores are always abstained on.",
             "Metrics are only as reliable as the answerability labels supplied.",
             "AURC uses the trapezoidal rule over observed unique score thresholds.",
+            "AUROC treats deterministic scope-guard refusals as lower than every finite score.",
         ],
     }
